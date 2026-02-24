@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import QRCode from 'qrcode';
 
 @Component({
   selector: 'app-login',
@@ -12,11 +13,15 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+
+  @ViewChild('qrCanvas') qrCanvas!: ElementRef<HTMLCanvasElement>;
   loginForm: FormGroup;
   totpForm: FormGroup;
   errorMsg = '';
   submitting = false;
-  requireTotp = false;
+  loginStep: 'CREDENTIALS' | 'TOTP_SETUP' | 'TOTP_VERIFY' = 'CREDENTIALS';
+  secretKey: string = '';
+  tempUsername: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -34,64 +39,170 @@ export class LoginComponent {
   }
 
   onLogin(): void {
-  if (this.loginForm.invalid) {
+    if (this.loginForm.invalid) {
+      return;
+    }
+
+    this.submitting = true;
+    this.errorMsg = '';
+
+    this.authService.login(this.loginForm.value).subscribe({
+      next: (response) => {
+        console.log('Login Response:', response);
+        // CASE 1: Login Complete (e.g. 2FA not enabled globally, or specific logic)
+        if (response.token) {
+          this.finalizeLogin(response);
+          return;
+        }
+
+        /// CASE 2: Mandatory Setup Required (User has no secret key yet)
+        if (response.action === 'SETUP_REQUIRED') {
+          // Use username from form if backend doesn't return it
+          this.tempUsername = response.username || this.loginForm.value.username;
+          // Save the temporary token if provided by backend
+          if (response.tempToken) {
+            console.log('Saving temp token');
+            this.authService.saveTempToken(response.tempToken);
+          } else {
+            console.warn('No tempToken in response');
+          }
+          this.initiateSetup(this.tempUsername);
+          return;
+        }
+
+        // CASE 3: Verification Required (User has secret key, needs to prove it)
+        if (response.action === 'CODE_REQUIRED') {
+          this.loginStep = 'TOTP_VERIFY';
+          this.submitting = false;
+        }
+      },
+      error: (err) => {
+        console.log('Login error:', err);
+        // Sometimes 401 is used for "Code Required" depending on backend implementation
+        if (err.status === 401 && err.error?.action === 'CODE_REQUIRED') {
+          this.tempUsername = this.loginForm.value.username; // Save username for verification
+          this.loginStep = 'TOTP_VERIFY';
+        } else {
+          this.errorMsg = err.error?.message || 'Invalid username or password.';
+        }
+        this.submitting = false;
+      }
+    });
+  }
+
+  // Fetch the secret and Generate QR Code
+  initiateSetup(username: string): void {
+    this.authService.setupTotp(username).subscribe({ // Assuming setupTotp handles the username internally or via token
+      next: (res) => {
+        console.log('Setup response:', res);
+        console.log('Secret:', res.secret);
+        this.secretKey = res.secret;
+        this.loginStep = 'TOTP_SETUP';
+        this.submitting = false;
+
+        // Wait for Angular to render the canvas, then draw the QR code
+        setTimeout(() => {
+          this.generateQRCode(res.otpAuthUrl);
+        }, 0);
+      },
+      error: (err) => {
+        console.error('Setup TOTP Error:', err);
+        this.errorMsg = err.error?.message || err.message || "Could not start 2FA setup.";
+        this.submitting = false;
+      }
+    });
+  }
+
+  generateQRCode(url: string): void {
+    if (this.qrCanvas && this.qrCanvas.nativeElement) {
+      QRCode.toCanvas(this.qrCanvas.nativeElement, url, { width: 200, margin: 1 }, (error) => {
+        if (error) console.error(error);
+      });
+    }
+  }
+
+  onVerifyTotp(): void {
+  if (this.totpForm.invalid) {
     return;
   }
   this.submitting = true;
   this.errorMsg = '';
 
-  this.authService.login(this.loginForm.value).subscribe({
-    next: (response) => {
-      // After valid credentials, always require TOTP for officers
-      this.authService.saveTempToken(response.tempToken);
-      this.requireTotp = true;
-      this.submitting = false;
+  const code = this.totpForm.value.totpCode;
+
+  if (this.loginStep === 'TOTP_SETUP') {
+    const verifyPayload = {
+      username: this.tempUsername,
+      code: code
+    };
+    
+    this.authService.verifyTotp(verifyPayload).subscribe({
+      next: (response) => {
+        console.log('Verification successful:', response);
+        
+        // Save token and role from response
+        if (response.token) {
+          this.authService.saveToken(response.token);
+          this.authService.saveRole(response.role);
+          const username = this.tempUsername || this.loginForm.value.username;
+          alert(`Login successful, welcome ${username}!`);
+          this.router.navigate(['/officer/dashboard']);
+        } else {
+          // Text response for setup completion
+          this.authService.clearTempToken();
+          alert("Setup Successful! Please log in again.");
+          this.resetToLogin();
+        }
+      },
+      error: (err) => {
+        console.error('Verification error:', err);
+        this.errorMsg = err.error?.error || err.error?.message || "Invalid code.";
+        this.submitting = false;
+      }
+    });
+    return;
+  }
+
+  // Normal login with 2FA code
+  const loginPayload = {
+    username: this.tempUsername || this.loginForm.value.username,
+    password: this.loginForm.value.password,
+    code: parseInt(code, 10)
+  };
+
+  this.authService.login(loginPayload).subscribe({
+    next: (res) => {
+      console.log('Login successful:', res);
+      this.authService.saveToken(res.token);
+      this.authService.saveRole(res.role);
+      const username = this.tempUsername || this.loginForm.value.username;
+      alert(`Login successful, welcome ${username}!`);
+      this.router.navigate(['/officer/dashboard']);
     },
     error: (err) => {
-      this.errorMsg = 'Invalid username or password. Please try again.';
+      console.error('Login error:', err);
+      this.errorMsg = err.error?.error || err.error?.message || "Invalid 2FA Code.";
       this.submitting = false;
-      console.error(err);
+      this.totpForm.reset();
     }
   });
 }
 
-  onVerifyTotp(): void {
-    if (this.totpForm.invalid) {
-      return;
-    }
-    this.submitting = true;
-    this.errorMsg = '';
-
-    const tempToken = this.authService.getTempToken();
-    const totpCode = this.totpForm.value.totpCode;
-
-    if (!tempToken) {
-      this.errorMsg = 'Session expired. Please login again.';
-      this.resetToLogin();
-      return;
-    }
-
-    this.authService.verifyTotp(tempToken, totpCode).subscribe({
-      next: () => {
-        this.authService.clearTempToken();
-        this.router.navigate(['/officer/dashboard']);
-      },
-      error: (err) => {
-        this.errorMsg = 'Invalid verification code. Please try again.';
-        this.submitting = false;
-        this.totpForm.patchValue({ totpCode: '' });
-        console.error(err);
-      }
-    });
+  finalizeLogin(response: any): void {
+    this.authService.saveToken(response.token);
+    this.authService.saveRole(response.role);
+    const username = this.tempUsername || this.loginForm.value.username;
+    alert(`Login successful, welcome ${username}!`);
+    this.router.navigate(['/officer/dashboard']);
   }
 
   resetToLogin(): void {
-    this.requireTotp = false;
+    this.loginStep = 'CREDENTIALS';
     this.submitting = false;
     this.errorMsg = '';
     this.loginForm.reset();
     this.totpForm.reset();
-    this.authService.clearTempToken();
+    this.secretKey = '';
   }
 
   goBack(): void {

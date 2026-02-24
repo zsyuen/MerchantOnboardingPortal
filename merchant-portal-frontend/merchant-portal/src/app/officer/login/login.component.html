@@ -1,7 +1,7 @@
 <div class="login-container">
-    <div class="form-card">
-        <!-- Stage 1: Username/Password Login -->
-        <div *ngIf="!requireTotp">
+    <div class="form-card" [ngSwitch]="loginStep">
+        
+        <div *ngSwitchCase="'CREDENTIALS'">
             <h3 class="mb-4 text-center">Officer Login</h3>
             <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
                 <div class="mb-3">
@@ -24,11 +24,46 @@
             </form>
         </div>
 
-        <!-- Stage 2: TOTP Verification -->
-        <div *ngIf="requireTotp">
-            <h3 class="mb-4 text-center">Two-Factor Authentication</h3>
+        <div *ngSwitchCase="'TOTP_SETUP'" class="text-center">
+            <h3 class="mb-3">Setup 2FA</h3>
+            <p class="text-muted small">
+                Scan this QR code with your Google Authenticator app.
+            </p>
+            
+            <div class="my-3 d-flex justify-content-center">
+                <canvas #qrCanvas class="border rounded"></canvas>
+            </div>
+
+            <div class="alert alert-info py-2 small mb-3">
+                <strong>Secret:</strong> {{ secretKey }}
+            </div>
+
+            <form [formGroup]="totpForm" (ngSubmit)="onVerifyTotp()">
+                <div class="mb-3">
+                    <label class="form-label">Enter the 6-digit code generated</label>
+                    <input 
+                        type="text" 
+                        class="form-control text-center totp-input mx-auto" 
+                        style="max-width: 200px;"
+                        formControlName="totpCode"
+                        maxlength="6"
+                        placeholder="000 000">
+                </div>
+                <div *ngIf="errorMsg" class="alert alert-danger">
+                    {{ errorMsg }}
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success" [disabled]="totpForm.invalid || submitting">
+                        Activate Account
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div *ngSwitchCase="'TOTP_VERIFY'">
+            <h3 class="mb-4 text-center">Security Check</h3>
             <p class="text-center text-muted mb-4">
-                Enter the 6-digit code from your Google Authenticator app
+                Enter the 6-digit code from your app
             </p>
             <form [formGroup]="totpForm" (ngSubmit)="onVerifyTotp()">
                 <div class="mb-3">
@@ -60,5 +95,6 @@
                 </div>
             </form>
         </div>
+
     </div>
 </div>
