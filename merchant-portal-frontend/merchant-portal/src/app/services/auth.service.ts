@@ -25,18 +25,27 @@ export class AuthService {
       })
     );
   }
-
-  verifyTotp(tempToken: string, totpCode: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/verify-totp`, { tempToken, totpCode }).pipe(
-      tap((response: any) => {
+  
+verifyTotp(payload: { username: string, code: string | number }): Observable<any> {
+  // Convert code to integer if it's a string
+  const body = { 
+    username: payload.username, 
+    code: typeof payload.code === 'string' ? parseInt(payload.code, 10) : payload.code 
+  };
+  console.log('Sending verifyTotp payload:', body);
+  return this.http.post(`${this.apiUrl}/verify-totp`, body).pipe(
+    tap((response: any) => {
+      if (response.token) {
         this.saveToken(response.token);
         this.saveRole(response.role);
-      })
-    );
-  }
+      }
+    })
+  );
+}
 
-  setupTotp(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/setup-totp`, {});
+  setupTotp(username?: string): Observable<any> {
+    const body = username ? { username } : {};
+    return this.http.post(`${this.apiUrl}/setup-totp`, body);
   }
 
   saveTempToken(token: string): void {

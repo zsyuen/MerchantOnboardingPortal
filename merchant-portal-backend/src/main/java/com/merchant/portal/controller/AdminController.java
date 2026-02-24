@@ -4,6 +4,7 @@ import com.merchant.portal.model.User;
 import com.merchant.portal.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,9 +15,11 @@ import java.util.List;
 public class AdminController {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public AdminController(UserRepository userRepository) {
+    public AdminController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // 1. Create a new Admin (POST /api/admins)
@@ -30,6 +33,11 @@ public class AdminController {
         // Ensure role is set
         if (user.getRole() == null || user.getRole().isEmpty()) {
             user.setRole("admin");
+        }
+
+        // Encode password before saving
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
         // Save to database

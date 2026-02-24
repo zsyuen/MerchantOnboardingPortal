@@ -13,11 +13,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
-
     private String username;
 
     @Column(name = "password_hash")
     private String password;
     private String email;
     private String role;
+
+    @Column(name = "totp_secret")
+    private String totpSecret;
+
+    @Column(name = "is_mfa_enabled")
+    private boolean mfaEnabled = false;
 }
