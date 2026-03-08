@@ -3,14 +3,18 @@ package com.merchant.portal.controller;
 import com.merchant.portal.model.User;
 import com.merchant.portal.repository.UserRepository;
 import com.merchant.portal.security.JwtUtil;
+import com.merchant.portal.service.UserRoleService;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorConfig;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,11 +26,13 @@ public class AuthController {
     private final GoogleAuthenticator gAuth;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final UserRoleService userRoleService;
 
-    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, UserRoleService userRoleService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
+        this.userRoleService = userRoleService;
 
         GoogleAuthenticatorConfig config = new GoogleAuthenticatorConfig.GoogleAuthenticatorConfigBuilder()
                 .setTimeStepSizeInMillis(30000)
@@ -51,6 +57,12 @@ public class AuthController {
 
             // Use BCrypt to verify password
             if (passwordEncoder.matches(loginRequest.password, user.getPassword())) {
+
+                // 0. CHECK IF ACCOUNT IS REVOKED
+                if ("Revoked".equals(user.getStatus())) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(Map.of("error", "Your account has been revoked. Please contact the reviewer."));
+                }
 
                 // 1. MANDATORY 2FA CHECK
                 if (!user.isMfaEnabled()) {
@@ -140,6 +152,12 @@ public class AuthController {
         }
         User user = userOptional.get();
 
+        // CHECK IF ACCOUNT IS REVOKED
+        if ("Revoked".equals(user.getStatus())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "Your account has been revoked. Please contact the reviewer."));
+        }
+
         boolean isCodeValid = gAuth.authorize(user.getTotpSecret(), code);
 
         if (isCodeValid) {
@@ -159,5 +177,26 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Invalid Code"));
         }
+    }
+
+    @GetMapping("/my-permissions")
+    public ResponseEntity<?> getMyPermissions() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Not authenticated"));
+        }
+
+        String username = auth.getName();
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "User not found"));
+        }
+
+        List<String> permissions = userRoleService.getPermissionsForUser(userOptional.get());
+        return ResponseEntity.ok(Map.of(
+                "username", username,
+                "role", userOptional.get().getRole(),
+                "permissions", permissions
+        ));
     }
 }

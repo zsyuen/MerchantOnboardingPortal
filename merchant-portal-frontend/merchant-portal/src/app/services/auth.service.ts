@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { tap, switchMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +11,7 @@ export class AuthService {
   private apiUrl = 'http://localhost:8080/api/auth';
   private authTokenKey = 'auth-token';
   private authRoleKey = 'auth-role';
+  private authPermissionsKey = 'auth-permissions';
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -25,23 +26,43 @@ export class AuthService {
       })
     );
   }
-  
-verifyTotp(payload: { username: string, code: string | number }): Observable<any> {
-  // Convert code to integer if it's a string
-  const body = { 
-    username: payload.username, 
-    code: typeof payload.code === 'string' ? parseInt(payload.code, 10) : payload.code 
-  };
-  console.log('Sending verifyTotp payload:', body);
-  return this.http.post(`${this.apiUrl}/verify-totp`, body).pipe(
-    tap((response: any) => {
-      if (response.token) {
-        this.saveToken(response.token);
-        this.saveRole(response.role);
-      }
-    })
-  );
-}
+
+  verifyTotp(payload: { username: string, code: string | number }): Observable<any> {
+    // Convert code to integer if it's a string
+    const body = {
+      username: payload.username,
+      code: typeof payload.code === 'string' ? parseInt(payload.code, 10) : payload.code
+    };
+    console.log('Sending verifyTotp payload:', body);
+    return this.http.post(`${this.apiUrl}/verify-totp`, body).pipe(
+      tap((response: any) => {
+        if (response.token) {
+          this.saveToken(response.token);
+          this.saveRole(response.role);
+        }
+      }),
+      switchMap((response: any) => {
+        if (response.token) {
+          // Fetch and store permissions after successful login
+          return this.fetchAndStorePermissions().pipe(
+            switchMap(() => of(response))
+          );
+        }
+        return of(response);
+      })
+    );
+  }
+
+  /** Fetches permissions from backend and stores them in localStorage */
+  fetchAndStorePermissions(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/my-permissions`).pipe(
+      tap((res: any) => {
+        if (res.permissions) {
+          this.savePermissions(res.permissions);
+        }
+      })
+    );
+  }
 
   setupTotp(username?: string): Observable<any> {
     const body = username ? { username } : {};
@@ -76,9 +97,23 @@ verifyTotp(payload: { username: string, code: string | number }): Observable<any
     return localStorage.getItem(this.authRoleKey);
   }
 
+  savePermissions(permissions: string[]): void {
+    localStorage.setItem(this.authPermissionsKey, JSON.stringify(permissions));
+  }
+
+  getPermissions(): string[] {
+    const stored = localStorage.getItem(this.authPermissionsKey);
+    return stored ? JSON.parse(stored) : [];
+  }
+
+  hasPermission(permission: string): boolean {
+    return this.getPermissions().includes(permission);
+  }
+
   // Check if user is a Reviewer (Super Admin)
   isReviewer(): boolean {
-    return this.getRole() === 'reviewer';
+    const role = this.getRole()?.toLowerCase();
+    return role === 'reviewer';
   }
 
   isAuthenticated(): boolean {
@@ -89,6 +124,7 @@ verifyTotp(payload: { username: string, code: string | number }): Observable<any
   logout(): void {
     localStorage.removeItem(this.authTokenKey);
     localStorage.removeItem(this.authRoleKey);
+    localStorage.removeItem(this.authPermissionsKey);
     this.clearTempToken();
     this.router.navigate(['/officer/login']);
   }

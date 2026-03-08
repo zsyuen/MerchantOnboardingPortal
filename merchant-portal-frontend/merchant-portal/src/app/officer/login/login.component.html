@@ -3,6 +3,8 @@
         
         <div *ngSwitchCase="'CREDENTIALS'">
             <h3 class="mb-4 text-center">Officer Login</h3>
+            <div *ngIf="revokedMsg" class="alert alert-warning d-flex align-items-center" role="alert">
+            </div>
             <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>

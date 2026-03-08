@@ -12,12 +12,12 @@ export const roleGuard: CanActivateFn = (route, state) => {
     return false;
   }
 
-  // 2. Check if the user has the 'reviewer' role
-  if (authService.isReviewer()) {
+  // 2. Reviewers (super admins) always have access; otherwise check specific permission
+  if (authService.isReviewer() || authService.hasPermission('MANAGE_ADMIN_ACCESS')) {
     return true; // Authorized
   } else {
-    // 3. User is logged in but NOT a reviewer
-    alert('Access Denied: Only Reviewers can register new Admins.');
+    // 3. User is logged in but does NOT have the required permission
+    alert('Access Denied: You do not have permission to manage admins.');
     router.navigate(['/officer/dashboard']);
     return false;
   }

@@ -2,12 +2,14 @@ package com.merchant.portal.controller;
 
 import com.merchant.portal.model.User;
 import com.merchant.portal.repository.UserRepository;
+import com.merchant.portal.service.UserRoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/admins")
@@ -16,10 +18,12 @@ public class AdminController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserRoleService userRoleService;
 
-    public AdminController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AdminController(UserRepository userRepository, PasswordEncoder passwordEncoder, UserRoleService userRoleService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userRoleService = userRoleService;
     }
 
     // 1. Create a new Admin (POST /api/admins)
@@ -30,10 +34,13 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
         }
 
-        // Ensure role is set
+        // Role is set
         if (user.getRole() == null || user.getRole().isEmpty()) {
             user.setRole("admin");
         }
+
+        // New admins are granted access by default
+        user.setStatus("Granted");
 
         // Encode password before saving
         if (user.getPassword() != null && !user.getPassword().isEmpty()) {
@@ -42,25 +49,50 @@ public class AdminController {
 
         // Save to database
         User savedUser = userRepository.save(user);
+
+        // Auto-assign role in userrole table
+        userRoleService.assignRoleToUser(savedUser);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
     // 2. Get all Admins (GET /api/admins) - Used by ManageAdminsComponent
     @GetMapping
-    public List<User> getAllAdmins() {
-        return userRepository.findAll();
+    public ResponseEntity<List<User>> getAllAdmins() {
+
+        // Fetch only users with the 'admin' role, so Reviewers don't revoke themselves
+        List<User> admins = userRepository.findByRole("admin");
+        return ResponseEntity.ok(admins);
     }
 
     // 3. Revoke/Grant placeholder methods (Optional, prevents 404 errors if you click those buttons)
     @PostMapping("/{id}/revoke")
     public ResponseEntity<?> revokeAdmin(@PathVariable Long id) {
-        // Add logic here if needed, for now just return OK
-        return ResponseEntity.ok("Revoked");
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        User user = optionalUser.get();
+        user.setStatus("Revoked");
+        userRepository.save(user);
+
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping("/{id}/grant")
     public ResponseEntity<?> grantAdmin(@PathVariable Long id) {
-        // Add logic here if needed
-        return ResponseEntity.ok("Granted");
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        User user = optionalUser.get();
+        user.setStatus("Granted");
+        userRepository.save(user);
+
+        return ResponseEntity.ok(user);
     }
 }

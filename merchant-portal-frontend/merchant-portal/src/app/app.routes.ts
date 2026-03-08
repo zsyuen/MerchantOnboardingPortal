@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { MerchantRegisterComponent } from './merchant/merchant-register.component';
-import { MerchantStatusComponent } from './merchant/merchant-status.component';
-import { DashboardComponent } from './officer/dashboard.component';
-import { AdminRegisterComponent } from './officer/admin-register.component';
-import { ManageAdminsComponent } from './officer/manage-admins.component';
-import { ViewApplicationComponent } from './officer/view-application.component';
+import { MerchantRegisterComponent } from './merchant/register-merchants/register-merchants.component';
+import { MerchantStatusComponent } from './merchant/check-merchant-status/check-merchant-status.component';
+import { DashboardComponent } from './officer/view-dashboard/view-dashboard.component';
+import { AdminRegisterComponent } from './officer/register-admins/register-admins.component';
+import { ManageAdminsComponent } from './officer/manage-admins/manage-admins.component';
+import { ViewApplicationComponent } from './officer/view-applications/view-applications.component';
 import { LoginComponent } from './officer/login/login.component';
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
@@ -24,14 +24,14 @@ export const routes: Routes = [
     canActivate: [authGuard] // <-- 4. Protect this route
   },
   { 
-    path: 'officer/register', 
+    path: 'officer/register-admins', 
     component: AdminRegisterComponent,
     canActivate: [authGuard, roleGuard] // <-- 4. Protect this route
   },
   { 
-    path: 'officer/manage', 
+    path: 'officer/manage-admins', 
     component: ManageAdminsComponent,
-    canActivate: [authGuard] // <-- 4. Protect this route
+    canActivate: [authGuard, roleGuard]
   },
   { 
     path: 'officer/view/:id', 

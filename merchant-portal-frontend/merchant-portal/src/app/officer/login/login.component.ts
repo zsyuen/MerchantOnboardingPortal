@@ -18,6 +18,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   totpForm: FormGroup;
   errorMsg = '';
+  revokedMsg = '';
   submitting = false;
   loginStep: 'CREDENTIALS' | 'TOTP_SETUP' | 'TOTP_VERIFY' = 'CREDENTIALS';
   secretKey: string = '';
@@ -36,6 +37,14 @@ export class LoginComponent {
     this.totpForm = this.fb.group({
       totpCode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
     });
+  }
+
+  // Helper method to clear lingering Bootstrap modal backdrops
+  private cleanupModal(): void {
+    document.body.classList.remove('modal-open');
+    const backdrops = document.querySelectorAll('.modal-backdrop');
+    backdrops.forEach((backdrop) => backdrop.remove());
+    document.body.style.overflow = 'auto';
   }
 
   onLogin(): void {
@@ -77,13 +86,16 @@ export class LoginComponent {
         }
       },
       error: (err) => {
-        console.log('Login error:', err);
+        // Account revoked - show specific message and stay on login screen
+        if (err.status === 403) {
+          alert('Your account has been revoked. Please contact the reviewer.');
+          this.errorMsg = '';
         // Sometimes 401 is used for "Code Required" depending on backend implementation
-        if (err.status === 401 && err.error?.action === 'CODE_REQUIRED') {
-          this.tempUsername = this.loginForm.value.username; // Save username for verification
+        } else if (err.status === 401 && err.error?.action === 'CODE_REQUIRED') {
+          this.tempUsername = this.loginForm.value.username;
           this.loginStep = 'TOTP_VERIFY';
         } else {
-          this.errorMsg = err.error?.message || 'Invalid username or password.';
+          this.errorMsg = err.error?.error || err.error?.message || 'Invalid username or password.';
         }
         this.submitting = false;
       }
@@ -122,78 +134,82 @@ export class LoginComponent {
   }
 
   onVerifyTotp(): void {
-  if (this.totpForm.invalid) {
-    return;
-  }
-  this.submitting = true;
-  this.errorMsg = '';
+    if (this.totpForm.invalid) {
+      return;
+    }
+    this.submitting = true;
+    this.errorMsg = '';
 
-  const code = this.totpForm.value.totpCode;
+    const code = this.totpForm.value.totpCode;
 
-  if (this.loginStep === 'TOTP_SETUP') {
-    const verifyPayload = {
-      username: this.tempUsername,
-      code: code
-    };
-    
-    this.authService.verifyTotp(verifyPayload).subscribe({
-      next: (response) => {
-        console.log('Verification successful:', response);
-        
-        // Save token and role from response
-        if (response.token) {
-          this.authService.saveToken(response.token);
-          this.authService.saveRole(response.role);
-          const username = this.tempUsername || this.loginForm.value.username;
-          alert(`Login successful, welcome ${username}!`);
-          this.router.navigate(['/officer/dashboard']);
-        } else {
-          // Text response for setup completion
-          this.authService.clearTempToken();
-          alert("Setup Successful! Please log in again.");
-          this.resetToLogin();
+    if (this.loginStep === 'TOTP_SETUP') {
+      const verifyPayload = {
+        username: this.tempUsername,
+        code: code
+      };
+
+      this.authService.verifyTotp(verifyPayload).subscribe({
+        next: (response) => {
+          console.log('Verification successful:', response);
+
+          if (response.token) {
+            this.finalizeLogin(response);
+          } else {
+            this.authService.clearTempToken();
+            alert("Setup Successful! Please log in again.");
+            this.resetToLogin();
+          }
+        },
+        error: (err) => {
+          console.error('Verification error:', err);
+          this.errorMsg = err.error?.error || err.error?.message || "Invalid code.";
+          this.submitting = false;
         }
+      });
+      return;
+    }
+
+    // Normal login with 2FA code
+    const loginPayload = {
+      username: this.tempUsername || this.loginForm.value.username,
+      password: this.loginForm.value.password,
+      code: parseInt(code, 10)
+    };
+
+    this.authService.login(loginPayload).subscribe({
+      next: (res) => {
+        console.log('Login successful:', res);
+        this.finalizeLogin(res);
       },
       error: (err) => {
-        console.error('Verification error:', err);
-        this.errorMsg = err.error?.error || err.error?.message || "Invalid code.";
+        console.error('Login error:', err);
+        this.errorMsg = err.error?.error || err.error?.message || "Invalid 2FA Code.";
         this.submitting = false;
+        this.totpForm.reset();
       }
     });
-    return;
   }
-
-  // Normal login with 2FA code
-  const loginPayload = {
-    username: this.tempUsername || this.loginForm.value.username,
-    password: this.loginForm.value.password,
-    code: parseInt(code, 10)
-  };
-
-  this.authService.login(loginPayload).subscribe({
-    next: (res) => {
-      console.log('Login successful:', res);
-      this.authService.saveToken(res.token);
-      this.authService.saveRole(res.role);
-      const username = this.tempUsername || this.loginForm.value.username;
-      alert(`Login successful, welcome ${username}!`);
-      this.router.navigate(['/officer/dashboard']);
-    },
-    error: (err) => {
-      console.error('Login error:', err);
-      this.errorMsg = err.error?.error || err.error?.message || "Invalid 2FA Code.";
-      this.submitting = false;
-      this.totpForm.reset();
-    }
-  });
-}
 
   finalizeLogin(response: any): void {
     this.authService.saveToken(response.token);
     this.authService.saveRole(response.role);
-    const username = this.tempUsername || this.loginForm.value.username;
-    alert(`Login successful, welcome ${username}!`);
-    this.router.navigate(['/officer/dashboard']);
+
+    // Fetch and store permissions from backend
+    this.authService.fetchAndStorePermissions().subscribe({
+      next: () => {
+        const username = this.tempUsername || this.loginForm.value.username;
+        alert(`Login successful, welcome ${username}!`);
+        this.cleanupModal();
+        this.router.navigate(['/officer/dashboard']);
+      },
+      error: () => {
+        // Proceed even if permissions fetch fails
+        const username = this.tempUsername || this.loginForm.value.username;
+        alert(`Login successful, welcome ${username}!`);
+        this.cleanupModal();
+        this.router.navigate(['/officer/dashboard']);
+      }
+    });
   }
 
   resetToLogin(): void {

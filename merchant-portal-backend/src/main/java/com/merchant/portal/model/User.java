@@ -25,4 +25,7 @@ public class User {
 
     @Column(name = "is_mfa_enabled")
     private boolean mfaEnabled = false;
+
+    @Column(name = "status")
+    private String status = "Granted";
 }

@@ -1,25 +1,182 @@
+/* ===== Login Page Layout ===== */
 .login-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
 }
 
-.form-card {
-    width: 100%;
-    max-width: 400px;
-    padding: 2rem;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+/* ===== Login Card ===== */
+.login-container .form-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 2.5rem;
 }
 
+/* ===== Card heading ===== */
+.login-container .form-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--clr-text);
+}
+
+/* ===== Accent divider under heading ===== */
+.login-container .form-card h3::after {
+  content: '';
+  display: block;
+  width: 2.5rem;
+  height: 3px;
+  background: var(--clr-primary);
+  border-radius: 2px;
+  margin: 0.5rem auto 0;
+}
+
+/* ===== Subtitle / muted paragraph ===== */
+.login-container .text-muted {
+  font-size: 0.88rem;
+  color: var(--clr-text-muted);
+}
+
+/* ===== Form Labels ===== */
+.login-container .form-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--clr-text-muted);
+  margin-bottom: 0.3rem;
+}
+
+/* ===== Inputs ===== */
+.login-container .form-control {
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  padding: 0.6rem 0.9rem;
+  color: var(--clr-text);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.login-container .form-control:focus {
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px rgba(98, 188, 230, 0.15);
+  outline: none;
+}
+
+/* ===== Primary submit button ===== */
+.login-container .btn-primary {
+  background: var(--clr-primary);
+  border-color: var(--clr-primary);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.65rem;
+  border-radius: var(--radius-sm);
+  transition: background 0.18s, transform 0.12s, box-shadow 0.15s;
+  box-shadow: var(--shadow);
+}
+
+.login-container .btn-primary:hover:not(:disabled) {
+  background: var(--clr-primary-hover);
+  border-color: var(--clr-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.login-container .btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ===== Success / activate button ===== */
+.login-container .btn-success {
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.65rem;
+  border-radius: var(--radius-sm);
+  transition: opacity 0.18s, transform 0.12s;
+  box-shadow: var(--shadow);
+}
+
+.login-container .btn-success:hover:not(:disabled) {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+/* ===== Back to Login secondary button ===== */
+.login-container .btn-outline-secondary {
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.6rem;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--clr-border);
+  color: var(--clr-text-muted);
+  background: #f1f5f9;
+  transition: background 0.15s, color 0.15s, transform 0.12s;
+}
+
+.login-container .btn-outline-secondary:hover:not(:disabled) {
+  background: #e2e8f0;
+  color: var(--clr-text);
+  transform: translateY(-1px);
+}
+
+/* ===== Error / Warning alerts ===== */
+.login-container .alert-danger {
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--clr-danger-light);
+  background: var(--clr-danger-light);
+  color: var(--clr-danger);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.login-container .alert-warning {
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* ===== TOTP / 2FA info box ===== */
+.login-container .alert-info {
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  background: var(--clr-primary-light);
+  border: 1px solid var(--clr-primary);
+  color: var(--clr-text);
+}
+
+/* ===== QR code canvas ===== */
+.login-container canvas.border {
+  border: 2px solid var(--clr-border) !important;
+  border-radius: var(--radius-sm);
+  padding: 0.5rem;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+/* ===== TOTP digit input ===== */
 .totp-input {
-    font-size: 1.5rem;
-    letter-spacing: 0.5rem;
-    font-weight: 600;
+  font-size: 1.6rem;
+  letter-spacing: 0.6rem;
+  font-weight: 700;
+  text-align: center;
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 1rem;
+  max-width: 300px;
+  margin: 0 auto;
+  display: block;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.totp-input:focus {
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px rgba(98, 188, 230, 0.15);
+  outline: none;
 }
 
 .totp-input::placeholder {
-    letter-spacing: 0.3rem;
+  letter-spacing: 0.35rem;
+  color: var(--clr-text-muted);
+  font-weight: 400;
 }

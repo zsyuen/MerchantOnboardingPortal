@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, catchError, throwError, tap } from 'rxjs';
 
@@ -11,28 +11,35 @@ export class PortalService {
 
   constructor(private http: HttpClient) { }
 
+  //helper method to attach JWT token
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('auth-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    return headers;
+  }
+
   updateApplicationStatus(id: string, status: string): Observable<any> {
     const payload = { status: status };
-    return this.http.put(`${this.apiBase}/applications/${id}/status`, payload);
+    return this.http.put(`${this.apiBase}/applications/${id}/status`, payload, { headers: this.getAuthHeaders() });
   }
 
   deleteApplication(id: string): Observable<any> {
-    return this.http.delete(`${this.apiBase}/applications/${id}`);
+    return this.http.delete(`${this.apiBase}/applications/${id}`, { headers: this.getAuthHeaders() });
   }
 
+  //public endpoint, no auth headers needed
   submitApplication(formData: FormData): Observable<any> {
   return this.http.post(`${this.apiBase}/applications`, formData).pipe(
-    tap(res => console.log('✅ FormData submit response:', res)),
+    tap(res => console.log('FormData submit response:', res)),
     catchError(err => {
       console.error('❌ Service Error:', err);
       return throwError(() => err);
     })
   );
   }
-
-  /* 
-    Check application status by reference ID
-  */
 
   //Fetches a single application by its reference ID.
   getApplicationByRef(refId: string): Observable<any> {
@@ -41,41 +48,27 @@ export class PortalService {
 
   //Fetches a single application by its database ID.
   getApplicationById(id: string): Observable<any> {
-    return this.http.get(`${this.apiBase}/applications/${id}`);
+    return this.http.get(`${this.apiBase}/applications/${id}`, { headers: this.getAuthHeaders() });
   }
 
    //Fetches all merchant applications.
   getApplications(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiBase}/applications`);
+    return this.http.get<any[]>(`${this.apiBase}/applications`, { headers: this.getAuthHeaders() });
   }
 
-
-  //Not yet implemented in mini project
-  /**
-   * Creates a new admin user.
-   */
   createAdmin(data: any): Observable<any> {
-    return this.http.post(`${this.apiBase}/admins`, data);
+    return this.http.post(`${this.apiBase}/admins`, data, { headers: this.getAuthHeaders() });  
   }
 
-  /**
-   * Fetches all admin users.
-   */
   getAdmins(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiBase}/admins`);
+    return this.http.get<any[]>(`${this.apiBase}/admins`, { headers: this.getAuthHeaders() });
   }
 
-  /**
-   * Grants admin privileges to a user.
-   */
   grantAdmin(adminId: number): Observable<any> {
-    return this.http.post(`${this.apiBase}/admins/${adminId}/grant`, {});
+    return this.http.post(`${this.apiBase}/admins/${adminId}/grant`, {}, { headers: this.getAuthHeaders() });
   }
 
-  /**
-   * Revokes admin privileges from a user.
-   */
   revokeAdmin(adminId: number): Observable<any> {
-    return this.http.post(`${this.apiBase}/admins/${adminId}/revoke`, {});
+    return this.http.post(`${this.apiBase}/admins/${adminId}/revoke`, {}, { headers: this.getAuthHeaders() });
   }
 }
