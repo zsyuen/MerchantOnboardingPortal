@@ -1,0 +1,77 @@
+<div class="container">
+
+    <div class="top-bar">
+        <h1>Hello {{ isReviewer ? 'Reviewer' : 'Admin' }}!</h1>
+        
+        <div>
+            <button class="admin-btn btn-logout" (click)="logout()">Logout</button>
+            <button *ngIf="isReviewer" routerLink="/officer/manage-admins" class="admin-btn">Manage Admin Access</button>
+
+        </div>
+    </div>
+
+    <div class="stats" *ngIf="!isLoading">
+        <div class="card card-low">
+            <h2>{{ lowCount }}</h2>
+            <p>Low Match Confidence</p>
+        </div>
+
+        <div class="card card-medium">
+            <h2>{{ mediumCount }}</h2>
+            <p>Medium Match Confidence</p>
+        </div>
+
+        <div class="card card-high">
+            <h2>{{ highCount }}</h2>
+            <p>High Match Confidence</p>
+        </div>
+    </div>
+
+    <div class="filters">
+        <div class="filter-buttons">
+            <button [class.active]="currentConfidenceFilter === 'All'" (click)="setFilter('All')">All</button>
+            <button [class.active]="currentConfidenceFilter === 'Low'" (click)="setFilter('Low')">Low</button>
+            <button [class.active]="currentConfidenceFilter === 'Medium'" (click)="setFilter('Medium')">Medium</button>
+            <button [class.active]="currentConfidenceFilter === 'High'" (click)="setFilter('High')">High</button>
+        </div>
+
+        <div class="search-box">
+            <input type="text" placeholder="Search by merchant, ref ID" [(ngModel)]="searchTerm" (input)="filterApplications()">
+        </div>
+    </div>
+
+    <div *ngIf="isLoading" style="text-align: center; margin-top: 20px;">Loading applications...</div>
+    <div *ngIf="errorMsg" style="color: red; text-align: center; margin-top: 20px;">{{ errorMsg }}</div>
+
+    <table *ngIf="!isLoading">
+        <thead>
+            <tr>
+                <th>Merchant Name</th>
+                <th>Reference ID</th>
+                <th>Submission Date</th>
+                <th>Submission Time</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let app of filteredApplications">
+                <td>{{ app.companyName }}</td>
+                <td>{{ app.referenceId }}</td>
+                <td>{{ app.submissionDate | date:'yyyy-MM-dd' }}</td>
+                <td>{{ app.submissionDate | date:'hh:mm a' }}</td>
+                <td>{{ app.status }}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button [routerLink]="['/officer/view', app.id]" class="open-btn">Open</button>
+                        <button class="delete-btn" (click)="delete(app.id)">Delete</button>
+                    </div>
+                </td>
+            </tr>
+            <tr *ngIf="filteredApplications.length === 0">
+                <td colspan="6">No applications found.</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

@@ -1,0 +1,172 @@
+/* merchant-status.component.css */
+
+/* Status badges reuse global .status-badge + .status-* classes from styles.css */
+
+/* ===== Contextual "not applied" bar ===== */
+.not-applied-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+  font-size: 0.83rem;
+  color: var(--clr-text-muted);
+}
+
+.not-applied-link {
+  font-weight: 600;
+  color: var(--clr-primary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.not-applied-link:hover {
+  color: var(--clr-primary-hover);
+  text-decoration: underline;
+}
+
+/* ===== Search Card heading ===== */
+.page-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  margin-bottom: 0.4rem;
+}
+
+.page-subtitle {
+  font-size: 0.95rem;
+  color: var(--clr-text-muted);
+  margin-bottom: 0;
+}
+
+/* ===== Search input + button ===== */
+.search-input {
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  font-size: 1.05rem;
+  padding: 0.75rem 1rem;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+
+.search-input:focus {
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px rgba(98, 188, 230, 0.15);
+  outline: none;
+}
+
+.btn-check-status {
+  width: auto;
+  padding: 0.7rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.02em;
+  transition: background 0.18s, transform 0.12s, box-shadow 0.15s;
+  box-shadow: var(--shadow);
+}
+
+.search-action {
+  margin-top: 1.2rem;
+}
+
+.btn-check-status:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===== Result card ===== */
+.result-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ===== Status Hero banner ===== */
+.status-hero {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--clr-border);
+}
+
+.status-hero--pending  { background: var(--clr-warning-light); }
+.status-hero--approved { background: var(--clr-success-light); }
+.status-hero--rejected { background: var(--clr-danger-light);  }
+
+.status-hero-icon {
+  font-size: 2.4rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.status-hero-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--clr-text-muted);
+  margin-bottom: 0.15rem;
+}
+
+.status-hero-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--clr-text);
+}
+
+.status-hero--pending  .status-hero-value { color: var(--clr-warning); }
+.status-hero--approved .status-hero-value { color: var(--clr-success); }
+.status-hero--rejected .status-hero-value { color: var(--clr-danger);  }
+
+.status-hero-desc {
+  font-size: 0.95rem;
+  color: var(--clr-text-muted);
+  margin-top: 0.3rem;
+}
+
+/* ===== Details grid ===== */
+.result-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0;
+  padding: 1.25rem 2rem;
+}
+
+.result-item {
+  padding: 0.75rem 1rem 0.75rem 0;
+  border-right: 1px solid var(--clr-border);
+}
+
+.result-item:last-child {
+  border-right: none;
+  padding-left: 1rem;
+  padding-right: 0;
+}
+
+.result-item label {
+  font-weight: 700;
+  display: block;
+  color: var(--clr-text-muted);
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.3rem;
+}
+
+.result-item span {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--clr-text);
+}
+
+/* ===== Error alert ===== */
+.alert-danger {
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--clr-danger-light);
+  background: var(--clr-danger-light);
+  color: var(--clr-danger);
+  font-size: 0.9rem;
+  font-weight: 500;
+}

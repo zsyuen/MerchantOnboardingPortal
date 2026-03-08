@@ -1,0 +1,84 @@
+/* ===== Controls Bar ===== */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--clr-card);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  padding: 0.85rem 1.25rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+/* ===== Add User Button ===== */
+.add-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 1.2rem;
+  background: var(--clr-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.18s, transform 0.12s;
+}
+
+.add-btn:hover  { background: var(--clr-primary-hover); transform: translateY(-1px); }
+.add-btn:active { transform: translateY(0); }
+
+/* ===== Search Box ===== */
+.search-box input {
+  padding: 0.4rem 0.9rem;
+  border: 1.5px solid var(--clr-border);
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.15s;
+  min-width: 220px;
+}
+
+.search-box input:focus { border-color: var(--clr-primary); }
+
+/* ===== Table Action Buttons ===== */
+.action-btn {
+  padding: 0.3rem 0.9rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.action-btn:hover { opacity: 0.82; transform: translateY(-1px); }
+
+.revoke { background: var(--clr-danger-light);  color: var(--clr-danger);  }
+.grant  { background: var(--clr-success-light); color: var(--clr-success); }
+
+/* Status text colours in table */
+.text-success { color: var(--clr-success) !important; font-weight: 600; }
+.text-danger  { color: var(--clr-danger)  !important; font-weight: 600; }
+
+/* ===== Back Button (top bar) ===== */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 1.1rem;
+  background: #f1f5f9;
+  color: var(--clr-text);
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.12s;
+}
+
+.back-btn:hover  { background: #e2e8f0; transform: translateY(-1px); }
+.back-btn:active { transform: translateY(0); }

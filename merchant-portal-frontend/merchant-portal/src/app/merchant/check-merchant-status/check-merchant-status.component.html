@@ -1,0 +1,65 @@
+<div class="container">
+
+    <!-- Contextual link above card -->
+    <div class="not-applied-bar">
+        <span>Haven't applied yet?</span>
+        <a routerLink="/merchant/register" class="not-applied-link">Apply as a merchant &rarr;</a>
+    </div>
+
+    <div class="form-card mb-4">
+        <h3 class="page-title">Check Application Status</h3>
+        <p class="page-subtitle">Enter the Reference ID from your application confirmation to see your current status.</p>
+        <input type="text" class="form-control search-input mt-3" placeholder="Enter your Reference ID"
+            [(ngModel)]="refId">
+        <div class="search-action">
+            <button class="btn btn-primary btn-check-status" (click)="checkStatus()">Check Status</button>
+        </div>
+    </div>
+
+    <div *ngIf="result" class="form-card result-card">
+
+        <!-- Status hero -->
+        <div class="status-hero" [ngClass]="{
+            'status-hero--pending':  result.status.toLowerCase() === 'pending',
+            'status-hero--approved': result.status.toLowerCase() === 'approved',
+            'status-hero--rejected': result.status.toLowerCase() === 'rejected'
+        }">
+            <div class="status-hero-icon">
+                <span *ngIf="result.status.toLowerCase() === 'pending'">⏳</span>
+                <span *ngIf="result.status.toLowerCase() === 'approved'">✅</span>
+                <span *ngIf="result.status.toLowerCase() === 'rejected'">❌</span>
+            </div>
+            <div>
+                <div class="status-hero-label">Application Status</div>
+                <div class="status-hero-value">{{ result.status | titlecase }}</div>
+                <div class="status-hero-desc" *ngIf="result.status.toLowerCase() === 'pending'">
+                    Your application is under review. We'll update you once a decision is made.
+                </div>
+                <div class="status-hero-desc" *ngIf="result.status.toLowerCase() === 'approved'">
+                    Congratulations! Your merchant application has been approved.
+                </div>
+                <div class="status-hero-desc" *ngIf="result.status.toLowerCase() === 'rejected'">
+                    Unfortunately your application was not approved. Please contact support for more details.
+                </div>
+            </div>
+        </div>
+
+        <!-- Details grid -->
+        <div class="result-details">
+            <div class="result-item">
+                <label>Reference ID</label>
+                <span>{{ result.referenceId }}</span>
+            </div>
+            <div class="result-item">
+                <label>Submission Date</label>
+                <span>{{ result.submissionDate | date:'dd MMM yyyy, HH:mm' }}</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div *ngIf="errorMsg" class="alert alert-danger mt-4">
+        {{ errorMsg }}
+    </div>
+
+</div>

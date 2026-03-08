@@ -1,0 +1,24 @@
+/* Align Bootstrap card with the global design tokens */
+.card {
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.card-header {
+  background: var(--clr-bg);
+  border-bottom: 1px solid var(--clr-border);
+  padding: 1rem 1.5rem;
+}
+
+.card-header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--clr-text);
+}
+
+.card-body {
+  padding: 1.5rem;
+}

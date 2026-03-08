@@ -1,0 +1,55 @@
+<div class="container">
+
+    <div class="top-bar">
+        <h1>Hello Reviewer!</h1>
+        <button class="back-btn" routerLink="/officer/dashboard">Back to Dashboard</button>
+    </div>
+
+    <div class="controls">
+        <button class="add-btn" routerLink="/officer/register-admins">Add new admin</button>
+
+        <div class="search-box">
+            <input type="text" placeholder="Search by username" [(ngModel)]="searchTerm" (input)="filterAdmins()">
+        </div>
+    </div>
+
+    <div *ngIf="isLoading" style="text-align: center; margin-top: 20px;">Loading users...</div>
+    <div *ngIf="errorMsg" style="color: red; text-align: center; margin-top: 20px;">{{ errorMsg }}</div>
+
+    <table *ngIf="!isLoading">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email Address</th>
+                <th>Current State</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            <tr *ngFor="let admin of filteredAdmins">
+                <td>{{ admin.username }}</td>
+                <td>{{ admin.email }}</td>
+                
+                <td [ngClass]="{'text-success': admin.status === 'Granted', 'text-danger': admin.status !== 'Granted'}">
+                    {{ admin.status || 'Revoked' }}
+                </td>
+                
+                <td>
+                    <button *ngIf="admin.status === 'Granted'" class="action-btn revoke" (click)="revokeAccess(admin.id)">
+                        Revoke
+                    </button>
+                    
+                    <button *ngIf="admin.status !== 'Granted'" class="action-btn grant" (click)="grantAccess(admin.id)">
+                        Grant
+                    </button>
+                </td>
+            </tr>
+
+            <tr *ngIf="filteredAdmins.length === 0">
+                <td colspan="4" style="text-align: center; color: #777;">No users found.</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

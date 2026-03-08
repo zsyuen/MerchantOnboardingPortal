@@ -1,0 +1,101 @@
+<div class="container mt-4">
+    <div class="form-card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3>Application Details</h3>
+            <a routerLink="/officer/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+
+        <div *ngIf="isLoading" class="card-body text-center">Loading...</div>
+        <div *ngIf="errorMsg" class="card-body alert alert-danger">{{ errorMsg }}</div>
+
+        <div *ngIf="application" class="card-body">
+            <div class="row detail-row">
+                <div class="col-md-4"><label>Reference ID</label><span>{{ application.referenceId }}</span></div>
+                <div class="col-md-4"><label>Submission Date</label><span>{{ application.submissionDate | date:'full'
+                        }}</span></div>
+                <div class="col-md-4"><label>Status</label><span class="status-badge"
+                        [ngClass]="'status-' + application.status.toLowerCase()">{{ application.status }}</span></div>
+            </div>
+
+            <h5 class="section-header">Merchant Information</h5>
+            <div class="row detail-row">
+                <div class="col-md-6"><label>Company Name</label><span>{{ application.companyName }}</span></div>
+                <div class="col-md-6"><label>Business Registration No</label><span>{{ application.businessRegNo
+                        }}</span></div>
+                <div class="col-md-6"><label>Date of Incorporation</label><span>{{ application.incorporationDate |
+                        date:'longDate' }}</span></div>
+                <div class="col-md-6"><label>Country of Corporation</label><span>{{ application.countryOfCorporation
+                        }}</span></div>
+                <div class="col-md-6"><label>Name of Merchant (English)</label><span>{{ application.merchantNameEn
+                        }}</span></div>
+                <div class="col-md-6"><label>Name of Merchant (Local)</label><span>{{ application.merchantNameLocal
+                        }}</span></div>
+                <div class="col-md-6"><label>Tax ID</label><span>{{ application.taxId }}</span></div>
+                <div class="col-md-6"><label>Classification of Entity</label><span>{{ application.classificationOfEntity
+                        }}</span></div>
+            </div>
+
+            <h5 class="section-header">Merchant Address</h5>
+            <div class="row detail-row">
+                <div class="col-md-12"><label>Address</label><span>{{ application.addressLine1 }}, {{
+                        application.addressLine2 }}</span></div>
+                <div class="col-md-4"><label>City</label><span>{{ application.city }}</span></div>
+                <div class="col-md-4"><label>State</label><span>{{ application.state }}</span></div>
+                <div class="col-md-4"><label>Postal Code</label><span>{{ application.postal }}</span></div>
+                <div class="col-md-4"><label>Country</label><span>{{ application.country }}</span></div>
+                <div class="col-md-4"><label>Telephone 1</label><span>{{ application.telephone1 }}</span></div>
+                <div class="col-md-4"><label>Telephone 2</label><span>{{ application.telephone2 }}</span></div>
+            </div>
+
+            <h5 class="section-header">Owner Profile</h5>
+            <div class="row detail-row">
+                <div class="col-md-6"><label>Full Name</label><span>{{ application.firstName }} {{ application.lastName
+                        }}</span></div>
+                <div class="col-md-6"><label>Email</label><span>{{ application.email }}</span></div>
+                <div class="col-md-6"><label>Date of Birth</label><span>{{ application.dateOfBirth | date:'longDate'
+                        }}</span></div>
+                <div class="col-md-6"><label>IC / Passport No</label><span>{{ application.icPassport }}</span></div>
+                <div class="col-md-6"><label>Nationality</label><span>{{ application.nationality }}</span></div>
+            </div>
+
+            <h5 class="section-header">Merchant Business</h5>
+            <div class="row detail-row">
+                <div class="col-md-6"><label>Industry</label><span>{{ application.industry }}</span></div>
+                <div class="col-md-6"><label>Business Type</label><span>{{ application.businessType }}</span></div>
+                <div class="col-md-6"><label>Number of Employees</label><span>{{ application.numberOfEmployees }}</span>
+                </div>
+                <div class="col-md-6"><label>Scheme Required</label><span>{{ application.schemeRequired }}</span></div>
+                <div class="col-md-6"><label>Facility Required</label><span>{{ application.facilityRequired }}</span>
+                </div>
+            </div>
+
+            <h5 class="section-header">Uploaded Documents</h5>
+            <div class="row detail-row">
+                <div class="col-md-4">
+                    <label>ID Upload (Front)</label>
+                    <a [href]="uploadsUrl + application.idUploadFront" target="_blank" rel="noopener noreferrer">{{
+                        application.idUploadFront }}</a>
+                </div>
+                <div class="col-md-4">
+                    <label>ID Upload (Back)</label>
+                    <a [href]="uploadsUrl + application.idUploadBack" target="_blank" rel="noopener noreferrer">{{
+                        application.idUploadBack }}</a>
+                </div>
+                <div class="col-md-4">
+                    <label>Proof of Business</label>
+                    <a [href]="uploadsUrl + application.proofOfBusiness" target="_blank" rel="noopener noreferrer">{{
+                        application.proofOfBusiness }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="application" class="card-body">
+        <div *ngIf="application.status.toLowerCase() === 'pending'">
+            <h5 class="section-header">Actions</h5>
+            <div class="d-flex gap-2">
+                <button class="btn btn-success" (click)="updateStatus('Approved')">Approve</button>
+                <button class="btn btn-danger" (click)="updateStatus('Rejected')">Reject</button>
+            </div>
+        </div>
+    </div>
+</div>

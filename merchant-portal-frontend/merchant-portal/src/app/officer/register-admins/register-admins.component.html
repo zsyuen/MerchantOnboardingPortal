@@ -1,0 +1,60 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h3>Admin Registration</h3>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" formControlName="username">
+              <div class="text-danger"
+                *ngIf="form.get('username')?.touched && form.get('username')?.errors?.['required']">
+                Username is required
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" formControlName="email">
+              <div class="text-danger" *ngIf="form.get('email')?.touched && form.get('email')?.errors?.['required']">
+                Email is required
+              </div>
+              <div class="text-danger" *ngIf="form.get('email')?.touched && form.get('email')?.errors?.['email']">
+                Please enter a valid email
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" formControlName="password">
+              <div class="text-danger"
+                *ngIf="form.get('password')?.touched && form.get('password')?.errors?.['required']">
+                Password is required
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword">
+              <div class="text-danger"
+                *ngIf="form.get('confirmPassword')?.touched && form.get('confirmPassword')?.errors?.['required']">
+                Please confirm your password
+              </div>
+              <div class="text-danger" *ngIf="form.errors?.['mismatch']">
+                Passwords do not match
+              </div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Register</button>
+              <a routerLink="/officer/dashboard" class="btn btn-outline-secondary">Back to Dashboard</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

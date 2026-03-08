@@ -1,0 +1,345 @@
+/* register-merchants.component.css */
+
+/* ===== Already Applied bar ===== */
+.already-applied-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+  font-size: 0.9rem;
+  color: var(--clr-text-muted);
+}
+
+.already-applied-link {
+  font-weight: 600;
+  color: var(--clr-primary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.already-applied-link:hover {
+  color: var(--clr-primary-hover);
+  text-decoration: underline;
+}
+
+/* ===== Step Progress Indicator ===== */
+.step-progress {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0.5rem 0 1rem;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.step-circle {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  border: 2px solid var(--clr-border);
+  background: #f1f5f9;
+  color: var(--clr-text-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.step-item.active .step-circle {
+  background: var(--clr-primary);
+  border-color: var(--clr-primary);
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(98, 188, 230, 0.2);
+}
+
+.step-item.done .step-circle {
+  background: var(--clr-success);
+  border-color: var(--clr-success);
+  color: #fff;
+}
+
+.step-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--clr-text-muted);
+  white-space: nowrap;
+}
+
+.step-item.active .step-label,
+.step-item.done .step-label {
+  color: var(--clr-text);
+}
+
+.step-connector {
+  flex: 1;
+  height: 2px;
+  background: var(--clr-border);
+  margin: 0 0.6rem;
+  margin-bottom: 1.2rem;
+  transition: background 0.2s;
+}
+
+.step-connector.done {
+  background: var(--clr-success);
+}
+
+/* ===== Page wrapper spacing ===== */
+.container {
+  padding-bottom: 2rem;
+}
+
+/* ===== Form Card header row ===== */
+.form-card .d-flex {
+  padding-bottom: 0.75rem;
+}
+
+.form-card h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  margin-bottom: 0;
+}
+
+/* ===== Back / nav link button ===== */
+.btn-outline-secondary {
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.4rem 1.1rem;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--clr-border);
+  color: var(--clr-text-muted);
+  background: #f1f5f9;
+  transition: background 0.15s, color 0.15s, transform 0.12s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-outline-secondary:hover {
+  background: #e2e8f0;
+  color: var(--clr-text);
+  transform: translateY(-1px);
+}
+
+/* ===== Section headings ===== */
+h5.fw-bold {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--clr-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--clr-primary-light);
+  margin-top: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+/* ===== Labels ===== */
+.form-card label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+/* ===== Inputs & Selects ===== */
+.form-control,
+.form-select {
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--clr-text);
+  background: #fff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px rgba(98, 188, 230, 0.15);
+  outline: none;
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: var(--clr-danger);
+}
+
+/* ===== File inputs ===== */
+input[type='file'].form-control {
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+}
+
+/* ===== Submit button bar ===== */
+.border-top {
+  border-top: 1px solid var(--clr-border) !important;
+}
+
+.btn-primary.btn-lg {
+  padding: 0.65rem 2.2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  background: var(--clr-primary);
+  border-color: var(--clr-primary);
+  transition: background 0.18s, transform 0.12s, box-shadow 0.15s;
+  box-shadow: var(--shadow);
+}
+
+.btn-primary.btn-lg:hover:not(:disabled) {
+  background: var(--clr-primary-hover);
+  border-color: var(--clr-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary.btn-lg:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ===== Identity Verification card ===== */
+.card.bg-light {
+  background: var(--clr-bg) !important;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.card.bg-light .fw-bold {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--clr-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: none;
+  margin-top: 0;
+  padding-bottom: 0;
+}
+
+/* camera viewport border */
+.card.bg-light .position-relative {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 2px solid var(--clr-border);
+  box-shadow: var(--shadow);
+}
+
+/* camera action buttons */
+.card.bg-light .btn-warning {
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  transition: opacity 0.15s, transform 0.12s;
+}
+
+.card.bg-light .btn-success {
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  transition: opacity 0.15s, transform 0.12s;
+}
+
+.card.bg-light .btn-warning:hover,
+.card.bg-light .btn-success:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+/* ===== Selfie Instructions Steps ===== */
+.selfie-instructions-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--clr-text-muted);
+  margin-bottom: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.selfie-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.selfie-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  background: #fff;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.8rem;
+  transition: box-shadow 0.15s;
+}
+
+.selfie-step:hover {
+  box-shadow: var(--shadow);
+}
+
+.selfie-step--highlight {
+  border-color: var(--clr-success);
+  background: var(--clr-success-light);
+}
+
+.step-badge {
+  flex-shrink: 0;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 50%;
+  background: var(--clr-primary);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.05rem;
+}
+
+.step-badge--green {
+  background: var(--clr-success);
+}
+
+.step-icon {
+  font-size: 1rem;
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+
+.step-text {
+  font-size: 0.83rem;
+  color: var(--clr-text);
+  line-height: 1.5;
+}
+
+/* feedback alert inside camera card */
+.card.bg-light .alert {
+  font-size: 0.82rem;
+  border-radius: var(--radius-sm);
+}
+
+/* ===== Divider ===== */
+hr.my-4 {
+  border-color: var(--clr-border);
+  opacity: 1;
+}
