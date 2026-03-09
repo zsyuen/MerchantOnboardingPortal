@@ -105,11 +105,15 @@
 
 .open-btn,
 .delete-btn {
-  padding: 0.35rem 0.9rem;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
   border: none;
   border-radius: var(--radius-sm);
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   transition: opacity 0.15s, transform 0.1s;
 }
@@ -120,8 +124,8 @@
   transform: translateY(-1px);
 }
 
-.open-btn   { background: var(--clr-primary); color: #fff; }
-.delete-btn { background: var(--clr-danger);  color: #fff; }
+.open-btn,
+.delete-btn { background: transparent; color: #94a3b8; }
 
 /* ===== Manage Admin Access button in top bar ===== */
 .admin-btn:not(.btn-logout) {

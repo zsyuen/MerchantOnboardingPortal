@@ -4,6 +4,9 @@
   border-bottom: 1px solid var(--clr-border);
   padding: 1rem 1.5rem;
   border-radius: var(--radius) var(--radius) 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .card-header h3 {
@@ -13,9 +16,34 @@
   color: var(--clr-text);
 }
 
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 1rem;
+  background: #f1f5f9;
+  color: var(--clr-text);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.btn-back:hover { background: #e2e8f0; }
+
+/* ===== Card Body ===== */
+.card-body {
+  padding: 1.5rem;
+}
+
 /* ===== Detail Rows ===== */
 .detail-row {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.detail-row .field {
+  margin-bottom: 1.25rem;
 }
 
 .detail-row label {
@@ -25,10 +53,10 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   display: block;
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.25rem;
 }
 
-.detail-row span {
+.detail-row span:not(.status-badge) {
   font-size: 0.95rem;
   color: var(--clr-text);
   font-weight: 500;
@@ -39,8 +67,77 @@
   color: var(--clr-primary);
   word-break: break-all;
   text-decoration: underline;
+  display: block;
 }
 
 .detail-row a:hover {
   color: var(--clr-primary-hover);
 }
+
+/* ===== Sticky Action Bar ===== */
+.sticky-action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--clr-card);
+  border-top: 2px solid var(--clr-border);
+  box-shadow: 0 -4px 20px rgba(30, 41, 59, 0.12);
+  padding: 0.9rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
+  gap: 1rem;
+}
+
+.action-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.action-buttons-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* Add bottom padding to container so content isn't hidden behind the bar */
+.has-action-bar {
+  padding-bottom: 5rem;
+}
+
+.btn-approve {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 1.5rem;
+  background: var(--clr-success);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.btn-approve:hover { opacity: 0.88; transform: translateY(-1px); }
+
+.btn-reject {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 1.5rem;
+  background: #fff;
+  color: var(--clr-danger);
+  border: 1.5px solid var(--clr-danger);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.1s;
+}
+.btn-reject:hover { background: var(--clr-danger); color: #fff; transform: translateY(-1px); }

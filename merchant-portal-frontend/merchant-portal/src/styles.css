@@ -158,6 +158,7 @@ tbody td {
   border-radius: 2rem;
   text-align: center;
   letter-spacing: 0.02em;
+  min-width: 4.5rem;
 }
 
 .status-pending  { background: var(--clr-warning-light); color: var(--clr-warning); }
@@ -182,7 +183,16 @@ tbody td {
   box-sizing: border-box;
 }
 
-.form-card .col-12 {
+.form-card .col-md-4 {
+  flex: 0 0 33.333%;
+  max-width: 33.333%;
+  padding-right: 0.75rem;
+  padding-left: 0.75rem;
+  box-sizing: border-box;
+}
+
+.form-card .col-12,
+.form-card .col-md-12 {
   flex: 0 0 100%;
   max-width: 100%;
   padding-right: 0.75rem;
