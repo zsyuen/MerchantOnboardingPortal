@@ -31,6 +31,28 @@ export class MerchantRegisterComponent implements OnInit {
   feedbackMessage: string = '';
   feedbackClass: string = ''; // 'success', 'warning', 'danger'
 
+  // Scheme & Facility checkbox options
+  schemeOptions = ['Visa', 'MasterCard', 'JCB', 'UPI', 'Wechat', 'Alipay', 'Amex'];
+  facilityOptions = ['Full Payment', 'Instalment', 'Redemption', 'DCC', 'MCC', 'Recurring', 'e-Commerce', 'MOTO', 'WeChat/ Alipay', 'K+shop'];
+  selectedSchemes: string[] = [];
+  selectedFacilities: string[] = [];
+
+  toggleScheme(value: string): void {
+    const idx = this.selectedSchemes.indexOf(value);
+    if (idx > -1) this.selectedSchemes.splice(idx, 1);
+    else this.selectedSchemes.push(value);
+    this.form.get('schemeRequired')?.setValue(this.selectedSchemes.length ? this.selectedSchemes.join(',') : '');
+    this.form.get('schemeRequired')?.markAsTouched();
+  }
+
+  toggleFacility(value: string): void {
+    const idx = this.selectedFacilities.indexOf(value);
+    if (idx > -1) this.selectedFacilities.splice(idx, 1);
+    else this.selectedFacilities.push(value);
+    this.form.get('facilityRequired')?.setValue(this.selectedFacilities.length ? this.selectedFacilities.join(',') : '');
+    this.form.get('facilityRequired')?.markAsTouched();
+  }
+
   constructor(private fb: FormBuilder, private portal: PortalService) { }
 
   async ngOnInit(): Promise<void> {

@@ -6,19 +6,16 @@
             <div *ngIf="revokedMsg" class="alert alert-warning d-flex align-items-center" role="alert">
             </div>
             <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-                <div class="mb-3">
+                <div class="login-field mb-4">
                     <label for="username" class="form-label">Username</label>
                     <input type="text" id="username" class="form-control" formControlName="username">
                 </div>
-                <div class="mb-3">
+                <div class="login-field mb-4">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" id="password" class="form-control" formControlName="password">
                 </div>
-                <div *ngIf="errorMsg" class="alert alert-danger">
-                    {{ errorMsg }}
-                </div>
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid || submitting">
+                <div class="login-btn-wrap mt-4">
+                    <button type="submit" class="btn btn-primary login-btn" [disabled]="loginForm.invalid || submitting">
                         <span *ngIf="!submitting">Login</span>
                         <span *ngIf="submitting">Logging in...</span>
                     </button>
@@ -28,34 +25,30 @@
 
         <div *ngSwitchCase="'TOTP_SETUP'" class="text-center">
             <h3 class="mb-3">Setup 2FA</h3>
-            <p class="text-muted small">
+            <p class="text-muted small text-center">
                 Scan this QR code with your Google Authenticator app.
             </p>
             
-            <div class="my-3 d-flex justify-content-center">
+            <div class="totp-qr-wrap">
                 <canvas #qrCanvas class="border rounded"></canvas>
             </div>
 
-            <div class="alert alert-info py-2 small mb-3">
+            <div class="totp-secret-box">
                 <strong>Secret:</strong> {{ secretKey }}
             </div>
 
             <form [formGroup]="totpForm" (ngSubmit)="onVerifyTotp()">
-                <div class="mb-3">
-                    <label class="form-label">Enter the 6-digit code generated</label>
+                <div class="totp-code-field">
+                    <label class="form-label totp-code-label">Enter the 6-digit code generated</label>
                     <input 
                         type="text" 
-                        class="form-control text-center totp-input mx-auto" 
-                        style="max-width: 200px;"
+                        class="form-control text-center totp-input" 
                         formControlName="totpCode"
                         maxlength="6"
                         placeholder="000 000">
                 </div>
-                <div *ngIf="errorMsg" class="alert alert-danger">
-                    {{ errorMsg }}
-                </div>
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-success" [disabled]="totpForm.invalid || submitting">
+                <div class="totp-btn-wrap">
+                    <button type="submit" class="btn btn-primary totp-activate-btn" [disabled]="totpForm.invalid || submitting">
                         Activate Account
                     </button>
                 </div>
@@ -63,35 +56,35 @@
         </div>
 
         <div *ngSwitchCase="'TOTP_VERIFY'">
-            <h3 class="mb-4 text-center">Security Check</h3>
+            <h3 class="mb-4 text-center">Two-Factor Authentication</h3>
             <p class="text-center text-muted mb-4">
                 Enter the 6-digit code from your app
             </p>
             <form [formGroup]="totpForm" (ngSubmit)="onVerifyTotp()">
                 <div class="mb-3">
-                    <label for="totpCode" class="form-label">Verification Code</label>
                     <input 
                         type="text" 
                         id="totpCode" 
                         class="form-control text-center totp-input" 
+                        [ngClass]="{'is-invalid': totpForm.get('totpCode')?.invalid && totpForm.get('totpCode')?.touched}"
                         formControlName="totpCode"
                         placeholder="000000"
                         maxlength="6"
                         autocomplete="off">
                     <div *ngIf="totpForm.get('totpCode')?.invalid && totpForm.get('totpCode')?.touched" 
-                         class="text-danger small mt-1">
-                        Please enter a 6-digit code
+                         class="invalid-feedback">
+                        Please enter a 6-digit verification code.
                     </div>
                 </div>
                 <div *ngIf="errorMsg" class="alert alert-danger">
                     {{ errorMsg }}
                 </div>
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary" [disabled]="totpForm.invalid || submitting">
+                <div class="verify-btn-row">
+                    <button type="submit" class="btn btn-primary verify-btn" [disabled]="totpForm.invalid || submitting">
                         <span *ngIf="!submitting">Verify</span>
                         <span *ngIf="submitting">Verifying...</span>
                     </button>
-                    <button type="button" class="btn btn-outline-secondary" (click)="goBack()" [disabled]="submitting">
+                    <button type="button" class="btn btn-outline-secondary verify-btn" (click)="goBack()" [disabled]="submitting">
                         Back to Login
                     </button>
                 </div>

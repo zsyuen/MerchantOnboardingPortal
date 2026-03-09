@@ -23,7 +23,7 @@ export class MerchantStatusComponent {
     this.errorMsg = '';
 
     if (!this.refId || this.refId.trim() === '') {
-      this.errorMsg = 'Please enter a Reference ID to search.';
+      alert('Please enter a Reference ID to search.');
       return;
     }
 

@@ -1,60 +1,67 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <h3>Admin Registration</h3>
-        </div>
-        <div class="card-body">
-          <form [formGroup]="form" (ngSubmit)="onSubmit()">
-            <div class="mb-3">
-              <label for="username" class="form-label">Username</label>
-              <input type="text" class="form-control" id="username" formControlName="username">
-              <div class="text-danger"
-                *ngIf="form.get('username')?.touched && form.get('username')?.errors?.['required']">
-                Username is required
-              </div>
-            </div>
+<div class="reg-container">
+  <div class="reg-back-row">
+    <a routerLink="/officer/dashboard" class="btn btn-outline-secondary reg-back-btn">← Back to Dashboard</a>
+  </div>
 
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" formControlName="email">
-              <div class="text-danger" *ngIf="form.get('email')?.touched && form.get('email')?.errors?.['required']">
-                Email is required
-              </div>
-              <div class="text-danger" *ngIf="form.get('email')?.touched && form.get('email')?.errors?.['email']">
-                Please enter a valid email
-              </div>
-            </div>
+  <div class="form-card">
+    <h3 class="mb-4">Admin Registration</h3>
 
-            <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password" formControlName="password">
-              <div class="text-danger"
-                *ngIf="form.get('password')?.touched && form.get('password')?.errors?.['required']">
-                Password is required
-              </div>
-            </div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-            <div class="mb-3">
-              <label for="confirmPassword" class="form-label">Confirm Password</label>
-              <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword">
-              <div class="text-danger"
-                *ngIf="form.get('confirmPassword')?.touched && form.get('confirmPassword')?.errors?.['required']">
-                Please confirm your password
-              </div>
-              <div class="text-danger" *ngIf="form.errors?.['mismatch']">
-                Passwords do not match
-              </div>
-            </div>
-
-            <div class="d-flex gap-2">
-              <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Register</button>
-              <a routerLink="/officer/dashboard" class="btn btn-outline-secondary">Back to Dashboard</a>
-            </div>
-          </form>
+      <div class="reg-field">
+        <label for="username" class="form-label">Username</label>
+        <div class="reg-input-wrap">
+          <input type="text" class="form-control" id="username" formControlName="username"
+            [ngClass]="{'is-invalid': form.get('username')?.touched && form.get('username')?.errors?.['required']}">
+          <div *ngIf="form.get('username')?.touched && form.get('username')?.errors?.['required']" class="invalid-feedback">
+            Please fill out this field.
+          </div>
         </div>
       </div>
-    </div>
+
+      <div class="reg-field">
+        <label for="email" class="form-label">Email</label>
+        <div class="reg-input-wrap">
+          <input type="email" class="form-control" id="email" formControlName="email"
+            [ngClass]="{'is-invalid': form.get('email')?.touched && (form.get('email')?.errors?.['required'] || form.get('email')?.errors?.['email'])}">
+          <div *ngIf="form.get('email')?.touched && form.get('email')?.errors?.['required']" class="invalid-feedback">
+            Please fill out this field.
+          </div>
+          <div *ngIf="form.get('email')?.touched && form.get('email')?.errors?.['email']" class="invalid-feedback">
+            Please enter a valid email.
+          </div>
+        </div>
+      </div>
+
+      <div class="reg-field">
+        <label for="password" class="form-label">Password</label>
+        <div class="reg-input-wrap">
+          <input type="password" class="form-control" id="password" formControlName="password"
+            [ngClass]="{'is-invalid': form.get('password')?.touched && form.get('password')?.errors?.['required']}">
+          <div *ngIf="form.get('password')?.touched && form.get('password')?.errors?.['required']" class="invalid-feedback">
+            Please fill out this field.
+          </div>
+        </div>
+      </div>
+
+      <div class="reg-field">
+        <label for="confirmPassword" class="form-label">Confirm Password</label>
+        <div class="reg-input-wrap">
+          <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword"
+            [ngClass]="{'is-invalid': (form.get('confirmPassword')?.touched && form.get('confirmPassword')?.errors?.['required']) || (form.get('confirmPassword')?.touched && form.errors?.['mismatch'])}">
+          <div *ngIf="form.get('confirmPassword')?.touched && form.get('confirmPassword')?.errors?.['required']" class="invalid-feedback">
+            Please fill out this field.
+          </div>
+          <div *ngIf="form.get('confirmPassword')?.touched && !form.get('confirmPassword')?.errors?.['required'] && form.errors?.['mismatch']" class="invalid-feedback">
+            Passwords do not match.
+          </div>
+        </div>
+      </div>
+
+      <div class="reg-btn-row">
+        <button type="submit" class="btn btn-primary reg-btn" [disabled]="form.invalid">Register</button>
+      </div>
+
+    </form>
   </div>
 </div>

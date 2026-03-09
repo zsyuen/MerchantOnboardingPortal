@@ -7,12 +7,14 @@
     </div>
 
     <div class="form-card mb-4">
-        <h3 class="page-title">Check Application Status</h3>
-        <p class="page-subtitle">Enter the Reference ID from your application confirmation to see your current status.</p>
-        <input type="text" class="form-control search-input mt-3" placeholder="Enter your Reference ID"
-            [(ngModel)]="refId">
-        <div class="search-action">
-            <button class="btn btn-primary btn-check-status" (click)="checkStatus()">Check Status</button>
+        <div class="search-card-inner">
+            <h3 class="page-title">Check Application Status</h3>
+            <p class="page-subtitle">Enter the Reference ID from your application confirmation to  current status.</p>
+            <div class="search-row">
+                <input type="text" class="form-control search-input" placeholder="Enter your Reference ID"
+                    [(ngModel)]="refId">
+                <button class="btn btn-primary btn-check-status" (click)="checkStatus()">Check Status</button>
+            </div>
         </div>
     </div>
 

@@ -1,5 +1,3 @@
-/* register-merchants.component.css */
-
 /* ===== Already Applied bar ===== */
 .already-applied-bar {
   display: flex;
@@ -99,6 +97,15 @@
   padding-bottom: 2rem;
 }
 
+/* ===== Row & field spacing ===== */
+.form-card .row {
+  margin-bottom: 0.5rem;
+}
+
+.form-card .mb-3 {
+  margin-bottom: 1.1rem !important;
+}
+
 /* ===== Form Card header row ===== */
 .form-card .d-flex {
   padding-bottom: 0.75rem;
@@ -134,11 +141,11 @@
 
 /* ===== Section headings ===== */
 h5.fw-bold {
-  font-size: 0.78rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: var(--clr-primary);
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.05em;
   padding-bottom: 0.5rem;
   border-bottom: 2px solid var(--clr-primary-light);
   margin-top: 1.75rem;
@@ -150,7 +157,6 @@ h5.fw-bold {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--clr-text-muted);
-  text-transform: uppercase;
   letter-spacing: 0.04em;
   margin-bottom: 0.3rem;
   display: block;
@@ -159,12 +165,31 @@ h5.fw-bold {
 /* ===== Inputs & Selects ===== */
 .form-control,
 .form-select {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
   border: 1.5px solid var(--clr-border);
   border-radius: var(--radius-sm);
   font-size: 0.9rem;
+  font-family: 'Inter', Arial, sans-serif;
   color: var(--clr-text);
   background: #fff;
+  height: 2.6rem;
+  min-height: 2.6rem;
+  padding: 0.45rem 0.75rem;
   transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+/* ===== Date input placeholder text font ===== */
+input[type='date']::-webkit-datetime-edit,
+input[type='date']::-webkit-datetime-edit-fields-wrapper,
+input[type='date']::-webkit-datetime-edit-text,
+input[type='date']::-webkit-datetime-edit-month-field,
+input[type='date']::-webkit-datetime-edit-day-field,
+input[type='date']::-webkit-datetime-edit-year-field {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 0.9rem;
+  color: var(--clr-text);
 }
 
 .form-control:focus,
@@ -179,15 +204,67 @@ h5.fw-bold {
   border-color: var(--clr-danger);
 }
 
-/* ===== File inputs ===== */
+/* ===== Checkbox grid for multi-select fields ===== */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.6rem 1rem;
+  padding: 0.85rem 1rem;
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.checkbox-grid.is-invalid-group {
+  border-color: var(--clr-danger);
+}
+
+.checkbox-grid .form-check {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+}
+
+.checkbox-grid .form-check-input {
+  margin: 0;
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  accent-color: var(--clr-primary);
+}
+
+.checkbox-grid .form-check-label {
+  font-size: 0.875rem;
+  color: var(--clr-text);
+  cursor: pointer;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* ===== File inputs =====
 input[type='file'].form-control {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
   padding: 0.35rem 0.75rem;
+  height: 2.6rem;
+  min-height: 2.6rem;
   cursor: pointer;
 }
 
 /* ===== Submit button bar ===== */
-.border-top {
-  border-top: 1px solid var(--clr-border) !important;
+.form-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--clr-border);
 }
 
 .btn-primary.btn-lg {
@@ -197,6 +274,7 @@ input[type='file'].form-control {
   border-radius: var(--radius-sm);
   background: var(--clr-primary);
   border-color: var(--clr-primary);
+  color: #fff;
   transition: background 0.18s, transform 0.12s, box-shadow 0.15s;
   box-shadow: var(--shadow);
 }
@@ -204,6 +282,7 @@ input[type='file'].form-control {
 .btn-primary.btn-lg:hover:not(:disabled) {
   background: var(--clr-primary-hover);
   border-color: var(--clr-primary-hover);
+  color: #fff;
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }

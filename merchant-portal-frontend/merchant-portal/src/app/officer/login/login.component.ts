@@ -95,7 +95,7 @@ export class LoginComponent {
           this.tempUsername = this.loginForm.value.username;
           this.loginStep = 'TOTP_VERIFY';
         } else {
-          this.errorMsg = err.error?.error || err.error?.message || 'Invalid username or password.';
+          alert(err.error?.error || err.error?.message || 'Invalid username or password.');
         }
         this.submitting = false;
       }
@@ -162,7 +162,7 @@ export class LoginComponent {
         },
         error: (err) => {
           console.error('Verification error:', err);
-          this.errorMsg = err.error?.error || err.error?.message || "Invalid code.";
+          alert(err.error?.error || err.error?.message || 'Invalid code.');
           this.submitting = false;
         }
       });
@@ -183,7 +183,7 @@ export class LoginComponent {
       },
       error: (err) => {
         console.error('Login error:', err);
-        this.errorMsg = err.error?.error || err.error?.message || "Invalid 2FA Code.";
+        alert(err.error?.error || err.error?.message || 'Invalid 2FA Code.');
         this.submitting = false;
         this.totpForm.reset();
       }

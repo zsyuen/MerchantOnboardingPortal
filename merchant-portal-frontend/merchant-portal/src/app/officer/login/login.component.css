@@ -18,16 +18,16 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--clr-text);
+  text-align: center;
 }
 
 /* ===== Accent divider under heading ===== */
 .login-container .form-card h3::after {
   content: '';
   display: block;
-  width: 2.5rem;
-  height: 3px;
+  height: 1px;
   background: var(--clr-primary);
-  border-radius: 2px;
+  border-radius: 5px;
   margin: 0.5rem auto 0;
 }
 
@@ -40,19 +40,51 @@
 /* ===== Form Labels ===== */
 .login-container .form-label {
   font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-weight: 300;
   color: var(--clr-text-muted);
-  margin-bottom: 0.3rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* ===== Inline label + input row ===== */
+.login-field {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.login-field .form-label {
+  white-space: nowrap;
+  min-width: 90px;
+  margin-bottom: 0;
+  text-align: right;
+}
+
+.login-field .form-control {
+  flex: 1;
+}
+
+/* ===== Centred login button ===== */
+.login-btn-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.login-btn {
+  width: 60%;
+  padding: 0.65rem 0;
 }
 
 /* ===== Inputs ===== */
 .login-container .form-control {
   border: 1.5px solid var(--clr-border);
   border-radius: var(--radius-sm);
-  font-size: 0.95rem;
-  padding: 0.6rem 0.9rem;
+  font-size: 0.9rem;
+  padding: 0.35rem 0.9rem;
+  height: 1.5rem;
+  min-height: 1.5rem;
   color: var(--clr-text);
   transition: border-color 0.15s, box-shadow 0.15s;
 }
@@ -150,8 +182,97 @@
   border: 2px solid var(--clr-border) !important;
   border-radius: var(--radius-sm);
   padding: 0.5rem;
-  background: #fff;
+}
+
+/* ===== Setup 2FA layout ===== */
+.totp-qr-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 1.25rem 0;
+}
+
+.totp-secret-box {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--clr-text);
+  background: var(--clr-primary-light, #e8f6fd);
+  border: 1px solid var(--clr-primary);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 1rem;
+  margin-bottom: 1.75rem;
+  word-break: break-all;
+}
+
+.totp-code-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.totp-code-label {
+  font-size: 0.9rem !important;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  text-align: center;
+}
+
+.totp-input {
+  width: 100%;
+  max-width: 340px;
+  font-size: 1.4rem !important;
+  letter-spacing: 0.25em;
+  padding: 0.6rem 0.75rem !important;
+  height: auto !important;
+  min-height: auto !important;
+}
+
+.totp-btn-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.75rem;
+}
+
+/* ===== TOTP Verify button row ===== */
+.verify-btn-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.verify-btn {
+  flex: 1;
+  max-width: 45%;
+  padding: 0.65rem 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.totp-activate-btn {
+  width: 60%;
+  padding: 0.65rem 0;
+  font-size: 1rem;
+  font-weight: 700;
+  background: var(--clr-primary);
+  border-color: var(--clr-primary);
+  color: #fff;
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow);
+  transition: background 0.18s, transform 0.12s, box-shadow 0.15s;
+}
+
+.totp-activate-btn:hover:not(:disabled) {
+  background: var(--clr-primary-hover);
+  border-color: var(--clr-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.totp-activate-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 /* ===== TOTP digit input ===== */
@@ -163,7 +284,7 @@
   border: 1.5px solid var(--clr-border);
   border-radius: var(--radius-sm);
   padding: 0.6rem 1rem;
-  max-width: 300px;
+  max-width: 340px;
   margin: 0 auto;
   display: block;
   transition: border-color 0.15s, box-shadow 0.15s;

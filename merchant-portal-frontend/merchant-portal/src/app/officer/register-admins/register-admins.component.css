@@ -1,24 +1,144 @@
-/* Align Bootstrap card with the global design tokens */
-.card {
-  border: 1px solid var(--clr-border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  overflow: hidden;
+/* ===== Page Layout ===== */
+.reg-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
 }
 
-.card-header {
-  background: var(--clr-bg);
-  border-bottom: 1px solid var(--clr-border);
-  padding: 1rem 1.5rem;
+/* ===== Card ===== */
+.reg-container .form-card {
+  width: 100%;
+  max-width: 480px;
+  padding: 2.5rem;
 }
 
-.card-header h3 {
-  font-size: 1.1rem;
+/* ===== Heading ===== */
+.reg-container .form-card h3 {
+  font-size: 1.5rem;
   font-weight: 700;
-  margin: 0;
   color: var(--clr-text);
+  text-align: center;
 }
 
-.card-body {
-  padding: 1.5rem;
+.reg-container .form-card h3::after {
+  content: '';
+  display: block;
+  height: 1px;
+  background: var(--clr-primary);
+  border-radius: 5px;
+  margin: 0.5rem auto 0;
+}
+
+/* ===== Inline label + input row ===== */
+.reg-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.reg-field .form-label {
+  white-space: nowrap;
+  min-width: 130px;
+  margin-bottom: 0;
+  padding-top: 0.35rem;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 300;
+  color: var(--clr-text-muted);
+}
+
+.reg-input-wrap {
+  flex: 1;
+}
+
+/* ===== Inputs ===== */
+.reg-container .form-control {
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  padding: 0.35rem 0.9rem;
+  height: 1.5rem;
+  min-height: 1.5rem;
+  color: var(--clr-text);
+  width: 100%;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.reg-container .form-control:focus {
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px rgba(98, 188, 230, 0.15);
+  outline: none;
+}
+
+/* ===== Buttons row ===== */
+.reg-btn-row {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.reg-btn {
+  width: 60%;
+  padding: 0.65rem 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+}
+
+/* ===== Primary button ===== */
+.reg-container .btn-primary {
+  background: var(--clr-primary);
+  border-color: var(--clr-primary);
+  color: #fff;
+  box-shadow: var(--shadow);
+  transition: background 0.18s, transform 0.12s, box-shadow 0.15s;
+}
+
+.reg-container .btn-primary:hover:not(:disabled) {
+  background: var(--clr-primary-hover);
+  border-color: var(--clr-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.reg-container .btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ===== Outline secondary button ===== */
+.reg-container .btn-outline-secondary {
+  font-weight: 600;
+  border: 1.5px solid var(--clr-border);
+  color: var(--clr-text-muted);
+  background: #f1f5f9;
+  transition: background 0.15s, color 0.15s, transform 0.12s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reg-container .btn-outline-secondary:hover {
+  background: #e2e8f0;
+  color: var(--clr-text);
+  transform: translateY(-1px);
+}
+
+/* ===== Back to Dashboard link (outside card) ===== */
+.reg-back-row {
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 0.75rem;
+}
+
+.reg-back-btn {
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.45rem 1.25rem;
+  border-radius: var(--radius-sm);
 }

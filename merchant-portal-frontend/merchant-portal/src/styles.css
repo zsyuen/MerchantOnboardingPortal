@@ -107,9 +107,9 @@ body {
 .btn-logout:hover { background-color: #e2e8f0; }
 
 /* ===== Bootstrap Primary Colour Override ===== */
-.btn-primary             { background-color: var(--clr-primary); border-color: var(--clr-primary); }
+.btn-primary             { background-color: var(--clr-primary); border-color: var(--clr-primary); color: #fff !important; }
 .btn-primary:hover,
-.btn-primary:focus       { background-color: var(--clr-primary-hover); border-color: var(--clr-primary-hover); }
+.btn-primary:focus       { background-color: var(--clr-primary-hover); border-color: var(--clr-primary-hover); color: #fff !important; }
 
 /* ===== Tables ===== */
 table {
@@ -167,3 +167,31 @@ tbody td {
 /* ===== Form Validation ===== */
 .is-invalid      { border-color: var(--clr-danger) !important; }
 .invalid-feedback { color: var(--clr-danger); display: block; font-size: 0.82rem; margin-top: 0.25rem; }
+
+/* ===== Fix Bootstrap form-control stretching beyond col width ===== */
+.form-card .row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.form-card .col-md-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding-right: 0.75rem;
+  padding-left: 0.75rem;
+  box-sizing: border-box;
+}
+
+.form-card .col-12 {
+  flex: 0 0 100%;
+  max-width: 100%;
+  padding-right: 0.75rem;
+  padding-left: 0.75rem;
+  box-sizing: border-box;
+}
+
+.form-card .col-md-6 .form-control,
+.form-card .col-md-6 .form-select {
+  width: 100%;
+  max-width: 100%;
+}
