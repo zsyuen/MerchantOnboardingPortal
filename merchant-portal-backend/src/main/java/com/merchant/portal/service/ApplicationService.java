@@ -64,7 +64,7 @@ public class ApplicationService {
     //Specific Status Update
     public Application updateStatus(Long id, String newStatus) {
         Application existing = findById(id);
-        existing.setStatus(newStatus.toUpperCase());
+        existing.setStatus(newStatus);
         return repository.save(existing);
     }
 

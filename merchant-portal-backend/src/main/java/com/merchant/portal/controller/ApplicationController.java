@@ -84,8 +84,8 @@ public class ApplicationController {
             // Get Confidence level (High/ Medium/ Low) for admin reviewing
             String confidence = faceVerificationService.getConfidenceLevel(score);
 
-            // Set initial status to PENDING for admin review
-            String initialStatus = "PENDING";
+            // Set initial status to Pending for admin review
+            String initialStatus = "Pending";
 
             // Manually build the Application object
             Application app = new Application();
