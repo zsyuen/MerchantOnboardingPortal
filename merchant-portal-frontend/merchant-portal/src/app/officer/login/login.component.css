@@ -9,7 +9,7 @@
 /* ===== Login Card ===== */
 .login-container .form-card {
   width: 100%;
-  max-width: 440px;
+  max-width: 500px;
   padding: 2.5rem;
 }
 
@@ -192,46 +192,18 @@
 }
 
 .totp-secret-box {
-  text-align: center;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--clr-text);
   background: var(--clr-primary-light, #e8f6fd);
   border: 1px solid var(--clr-primary);
   border-radius: var(--radius-sm);
-  padding: 0.65rem 1rem;
-  margin-bottom: 1.75rem;
+  padding: 0.6rem 0.9rem;
+  margin-top: 0.75rem;
   word-break: break-all;
-}
-
-.totp-code-field {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.totp-code-label {
-  font-size: 0.9rem !important;
-  font-weight: 700;
-  margin-bottom: 0.6rem;
-  text-align: center;
-}
-
-.totp-input {
-  width: 100%;
-  max-width: 340px;
-  font-size: 1.4rem !important;
-  letter-spacing: 0.25em;
-  padding: 0.6rem 0.75rem !important;
-  height: auto !important;
-  min-height: auto !important;
 }
 
 .totp-btn-wrap {
   display: flex;
   justify-content: center;
-  margin-top: 1.75rem;
+  margin-top: 1.25rem;
 }
 
 /* ===== TOTP Verify button row ===== */
@@ -275,28 +247,90 @@
   cursor: not-allowed;
 }
 
+/* ===== TOTP Setup — numbered steps ===== */
+.setup-step {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  align-items: flex-start;
+}
+
+.setup-step-num {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--clr-primary);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.1rem;
+  box-shadow: 0 0 0 3px rgba(98,188,230,0.18);
+}
+
+.setup-step-body {
+  flex: 1;
+}
+
+.setup-step-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  margin-bottom: 0.2rem;
+  margin-top: 0.5rem;
+}
+
+.setup-step-desc {
+  font-size: 0.82rem;
+  color: var(--clr-text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.totp-secret-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--clr-text-muted);
+  margin-bottom: 0.3rem;
+  font-weight: 500;
+}
+
+.totp-secret-key {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  letter-spacing: 0.08em;
+  word-break: break-all;
+}
+
 /* ===== TOTP digit input ===== */
-.totp-input {
-  font-size: 1.6rem;
+.login-container .totp-input {
+  font-size: 1.8rem;
   letter-spacing: 0.6rem;
   font-weight: 700;
   text-align: center;
   border: 1.5px solid var(--clr-border);
   border-radius: var(--radius-sm);
-  padding: 0.6rem 1rem;
-  max-width: 340px;
+  padding: 0.9rem 1.2rem;
+  width: 100%;
+  max-width: 420px;
+  height: auto !important;
+  min-height: 3.2rem !important;
   margin: 0 auto;
   display: block;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-.totp-input:focus {
+.login-container .totp-input:focus {
   border-color: var(--clr-primary);
   box-shadow: 0 0 0 3px rgba(98, 188, 230, 0.15);
   outline: none;
 }
 
-.totp-input::placeholder {
+.login-container .totp-input::placeholder {
   letter-spacing: 0.35rem;
   color: var(--clr-text-muted);
   font-weight: 400;

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { PortalService } from '../../services/portal.service';
 import * as faceapi from 'face-api.js';
 
@@ -53,7 +53,7 @@ export class MerchantRegisterComponent implements OnInit {
     this.form.get('facilityRequired')?.markAsTouched();
   }
 
-  constructor(private fb: FormBuilder, private portal: PortalService) { }
+  constructor(private fb: FormBuilder, private portal: PortalService, private router: Router) { }
 
   async ngOnInit(): Promise<void> {
     this.form = this.fb.group({
@@ -77,7 +77,7 @@ export class MerchantRegisterComponent implements OnInit {
       phone2: ['', Validators.pattern('^[0-9]+$')],
       ownerFirstName: ['', Validators.required],
       ownerLastName: ['', Validators.required],
-      ownerEmail: ['', [Validators.required, Validators.email]],
+      ownerEmail: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$')]],
       ownerDob: ['', Validators.required],
       ownerIdNo: ['', Validators.required],
       ownerNationality: ['', Validators.required],
@@ -284,6 +284,8 @@ export class MerchantRegisterComponent implements OnInit {
         this.isImageCaptured = false;
         this.capturedImageBlob = null;
         this.capturedImagePreview = null;
+        this.currentStep = 1;
+        this.router.navigate(['/merchant/register']);
       },
       error: (err) => {
         this.submitting = false;
@@ -297,6 +299,12 @@ export class MerchantRegisterComponent implements OnInit {
     const control = this.form.get(controlName);
     if (!control) return false;
     return control.invalid && (control.dirty || control.touched);
+  }
+
+  showEmailError(): boolean {
+    const control = this.form.get('ownerEmail');
+    if (!control) return false;
+    return control.invalid && control.touched;
   }
 
   onFileChange(event: Event, controlName: string): void {

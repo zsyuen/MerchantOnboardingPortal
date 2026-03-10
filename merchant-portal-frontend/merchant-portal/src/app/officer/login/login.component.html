@@ -23,36 +23,61 @@
             </form>
         </div>
 
-        <div *ngSwitchCase="'TOTP_SETUP'" class="text-center">
-            <h3 class="mb-3">Setup 2FA</h3>
-            <p class="text-muted small text-center">
-                Scan this QR code with your Google Authenticator app.
-            </p>
-            
-            <div class="totp-qr-wrap">
-                <canvas #qrCanvas class="border rounded"></canvas>
+        <div *ngSwitchCase="'TOTP_SETUP'">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <button type="button" class="btn btn-outline-secondary" (click)="goBack()" [disabled]="submitting">← Back to Login</button>
+                <h3 class="mb-0">Setup Two-Factor Authentication</h3>
+            </div>
+            <p class="text-center text-muted mb-4" style="font-size:0.85rem">Secure your account by linking an authenticator app</p>
+
+            <!-- Step 1 -->
+            <div class="setup-step">
+                <div class="setup-step-num">1</div>
+                <div class="setup-step-body">
+                    <p class="setup-step-title">Install an authenticator app</p>
+                    <p class="setup-step-desc">Download <strong>Google Authenticator</strong> or <strong>Authy</strong> on your mobile device.</p>
+                </div>
             </div>
 
-            <div class="totp-secret-box">
-                <strong>Secret:</strong> {{ secretKey }}
+            <!-- Step 2 -->
+            <div class="setup-step">
+                <div class="setup-step-num">2</div>
+                <div class="setup-step-body">
+                    <p class="setup-step-title">Scan this QR code</p>
+                    <p class="setup-step-desc">Open the app, tap <strong>Add account</strong>, then scan the code below.</p>
+                    <div class="totp-qr-wrap">
+                        <canvas #qrCanvas class="border rounded"></canvas>
+                    </div>
+                    <div class="totp-secret-box">
+                        <span class="totp-secret-label">Can't scan? Enter this key manually:</span>
+                        <span class="totp-secret-key">{{ secretKey }}</span>
+                    </div>
+                </div>
             </div>
 
-            <form [formGroup]="totpForm" (ngSubmit)="onVerifyTotp()">
-                <div class="totp-code-field">
-                    <label class="form-label totp-code-label">Enter the 6-digit code generated</label>
-                    <input 
-                        type="text" 
-                        class="form-control text-center totp-input" 
-                        formControlName="totpCode"
-                        maxlength="6"
-                        placeholder="000 000">
+            <!-- Step 3 -->
+            <div class="setup-step">
+                <div class="setup-step-num">3</div>
+                <div class="setup-step-body">
+                    <p class="setup-step-title">Enter the 6-digit code</p>
+                    <p class="setup-step-desc">Type the code shown in your authenticator app to verify and activate your account.</p>
+                    <form [formGroup]="totpForm" (ngSubmit)="onVerifyTotp()">
+                        <input 
+                            type="text" 
+                            class="form-control text-center totp-input" 
+                            formControlName="totpCode"
+                            maxlength="6"
+                            placeholder="000000">
+                        <div class="totp-btn-wrap">
+                            <button type="submit" class="btn btn-primary totp-activate-btn" [disabled]="totpForm.invalid || submitting">
+                                <span *ngIf="!submitting">Activate Account</span>
+                                <span *ngIf="submitting">Activating...</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div class="totp-btn-wrap">
-                    <button type="submit" class="btn btn-primary totp-activate-btn" [disabled]="totpForm.invalid || submitting">
-                        Activate Account
-                    </button>
-                </div>
-            </form>
+            </div>
+
         </div>
 
         <div *ngSwitchCase="'TOTP_VERIFY'">

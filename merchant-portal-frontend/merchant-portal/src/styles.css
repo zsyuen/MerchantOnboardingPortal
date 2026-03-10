@@ -70,7 +70,7 @@ body {
 
 /* ===== Section Headers ===== */
 .section-header {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: var(--clr-primary);
   margin-top: 1.75rem;

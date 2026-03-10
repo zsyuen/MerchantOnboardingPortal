@@ -484,8 +484,9 @@
         <div class="col-md-6 mb-3">
           <label>Email *</label>
           <input type="email" formControlName="ownerEmail" class="form-control"
-            [ngClass]="{'is-invalid': showError('ownerEmail')}">
-          <div *ngIf="showError('ownerEmail')" class="invalid-feedback">Enter a valid email address.</div>
+            [ngClass]="{'is-invalid': showEmailError()}"
+            (blur)="form.get('ownerEmail')?.markAsTouched()">
+          <div *ngIf="showEmailError()" class="invalid-feedback">Enter a valid email address.</div>
         </div>
         <div class="col-md-6 mb-3">
           <label>Date of Birth *</label>
@@ -705,9 +706,12 @@
           <label>Business Type *</label>
           <select formControlName="businessType" class="form-select"
             [ngClass]="{'is-invalid': showError('businessType')}">
-            <option value="">Select</option>
-            <option>Online</option>
+            <option value="">Select an option</option>
+            <option>Online (e-Commerce)</option>
             <option>Physical</option>
+            <option>Hybrid (Online &amp; Physical)</option>
+            <option>Mobile / Pop-up</option>
+            <option>Mail Order / Telephone Order</option>
           </select>
           <div *ngIf="showError('businessType')" class="invalid-feedback">Please fill out this field.</div>
         </div>
@@ -770,63 +774,61 @@
 
       <h5 class="fw-bold mt-4">Live Selfie Capture</h5>
 <div class="card p-3 mb-4 bg-light">
-  <div class="row">
-    <div class="col-md-6 d-flex flex-column align-items-center">
-      <label class="mb-2 fw-bold">Live Selfie Capture</label>
-      
-      <div class="position-relative" style="width: 320px; height: 240px; background: #000;">
-        <video #videoElement autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;" [hidden]="isImageCaptured"></video>
-        <canvas #canvasElement style="position: absolute; top: 0; left: 0;" [hidden]="isImageCaptured"></canvas>
-        <img *ngIf="isImageCaptured" [src]="capturedImagePreview" style="width: 100%; height: 100%; object-fit: cover;">
-      </div>
 
-      <div class="mt-2">
-        <button type="button" class="btn btn-warning btn-sm me-2" (click)="startCamera()" *ngIf="isImageCaptured || !isCameraActive">
-          Retake / Start Camera
+  <!-- Camera: full width -->
+  <div class="d-flex flex-column align-items-center mb-3">
+    <div class="camera-viewport">
+      <video #videoElement autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;" [hidden]="isImageCaptured"></video>
+      <canvas #canvasElement style="position: absolute; top: 0; left: 0;" [hidden]="isImageCaptured"></canvas>
+      <img *ngIf="isImageCaptured" [src]="capturedImagePreview" style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="camera-overlay-btns">
+        <button type="button" class="btn camera-icon-btn" (click)="startCamera()" *ngIf="isImageCaptured || !isCameraActive" title="Start / Retake Camera">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4z"/>
+            <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5m0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0"/>
+          </svg>
         </button>
-        <button type="button" class="btn btn-success btn-sm" (click)="capturePhoto()" *ngIf="isCameraActive && !isImageCaptured" [disabled]="!isFaceDetected">
-          Capture Photo
+        <button type="button" class="btn camera-capture-btn" (click)="capturePhoto()" *ngIf="isCameraActive && !isImageCaptured" [disabled]="!isFaceDetected" title="Capture Photo">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+            <circle cx="8" cy="8" r="3"/>
+          </svg>
         </button>
-      </div>
-      
-      <div class="mt-2 w-100" *ngIf="feedbackMessage">
-        <div class="alert alert-{{feedbackClass}} py-2 px-3 mb-0 text-center" role="alert">
-          <strong>{{ feedbackMessage }}</strong>
-        </div>
       </div>
     </div>
-    
-    <div class="col-md-6">
-      <p class="selfie-instructions-title">Before you capture</p>
-      <ul class="selfie-steps">
-        <li class="selfie-step">
-          <span class="step-badge">1</span>
-          <span class="step-icon">💡</span>
-          <span class="step-text">Ensure good lighting on your face.</span>
-        </li>
-        <li class="selfie-step">
-          <span class="step-badge">2</span>
-          <span class="step-icon">🕶️</span>
-          <span class="step-text">Remove glasses or face masks.</span>
-        </li>
-        <li class="selfie-step">
-          <span class="step-badge">3</span>
-          <span class="step-icon">👁️</span>
-          <span class="step-text">Look straight at the camera.</span>
-        </li>
-        <li class="selfie-step">
-          <span class="step-badge">4</span>
-          <span class="step-icon">🎯</span>
-          <span class="step-text">Centre your face within the frame.</span>
-        </li>
-        <li class="selfie-step selfie-step--highlight">
-          <span class="step-badge step-badge--green">5</span>
-          <span class="step-icon">✅</span>
-          <span class="step-text">Wait for the green <strong>"Ready to capture"</strong> message before clicking.</span>
-        </li>
-      </ul>
+    <div class="mt-2 w-100 camera-feedback" *ngIf="feedbackMessage">
+      <div class="alert alert-{{feedbackClass}} py-2 px-3 mb-0 text-center" role="alert">
+        <strong>{{ feedbackMessage }}</strong>
+      </div>
     </div>
   </div>
+
+  <!-- Instructions: horizontal strip below camera -->
+  <div class="selfie-instructions-wrap">
+  <p class="selfie-instructions-title">Before you capture</p>
+  <div class="selfie-steps-grid">
+    <div class="selfie-tip">
+      <span class="selfie-tip-icon">💡</span>
+      <span class="selfie-tip-text">Good lighting</span>
+    </div>
+    <div class="selfie-tip">
+      <span class="selfie-tip-icon">🕶️</span>
+      <span class="selfie-tip-text">No glasses or masks</span>
+    </div>
+    <div class="selfie-tip">
+      <span class="selfie-tip-icon">👁️</span>
+      <span class="selfie-tip-text">Face the camera</span>
+    </div>
+    <div class="selfie-tip">
+      <span class="selfie-tip-icon">🎯</span>
+      <span class="selfie-tip-text">Centre your face</span>
+    </div>
+    <div class="selfie-tip selfie-tip--highlight">
+      <span class="selfie-tip-icon">✅</span>
+      <span class="selfie-tip-text">Wait for green <strong>"Ready"</strong> message</span>
+    </div>
+  </div>
+  </div><!-- end selfie-instructions-wrap -->
+
 </div>
 
       <div class="form-footer">

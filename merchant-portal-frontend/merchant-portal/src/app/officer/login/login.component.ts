@@ -222,6 +222,15 @@ export class LoginComponent {
   }
 
   goBack(): void {
+    if (this.loginStep === 'TOTP_SETUP') {
+      // Clear temp token and any stale auth, then reset to login screen
+      this.authService.clearTempToken();
+      localStorage.removeItem('auth-token');
+      localStorage.removeItem('auth-role');
+      localStorage.removeItem('auth-permissions');
+      this.resetToLogin();
+      return;
+    }
     this.resetToLogin();
   }
 }
