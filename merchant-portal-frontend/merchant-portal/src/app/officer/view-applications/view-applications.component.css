@@ -56,7 +56,7 @@
   margin-bottom: 0.25rem;
 }
 
-.detail-row span:not(.status-badge) {
+.detail-row span:not(.status-badge):not(.confidence-badge) {
   font-size: 0.95rem;
   color: var(--clr-text);
   font-weight: 500;
@@ -141,3 +141,30 @@
   transition: background 0.15s, color 0.15s, transform 0.1s;
 }
 .btn-reject:hover { background: var(--clr-danger); color: #fff; transform: translateY(-1px); }
+/* ===== Confidence Badge ===== */
+.confidence-badge {
+  display: inline-block;
+  padding: 0.28em 0.8em;
+  font-size: 0.78em;
+  font-weight: 700;
+  border-radius: 2rem;
+  text-align: center;
+  letter-spacing: 0.02em;
+  min-width: 4.5rem;
+  text-transform: uppercase;
+}
+
+.confidence-badge.confidence-low {
+  background: var(--clr-warning-light);
+  color: var(--clr-warning);
+}
+
+.confidence-badge.confidence-medium {
+  background: var(--clr-warning-light);
+  color: var(--clr-warning);
+}
+
+.confidence-badge.confidence-high {
+  background: var(--clr-success-light);
+  color: var(--clr-success);
+}

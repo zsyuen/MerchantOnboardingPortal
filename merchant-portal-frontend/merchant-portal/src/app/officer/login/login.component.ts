@@ -198,7 +198,7 @@ export class LoginComponent {
     this.authService.fetchAndStorePermissions().subscribe({
       next: () => {
         const username = this.tempUsername || this.loginForm.value.username;
-        alert(`Login successful, welcome ${username}!`);
+        alert(`Login successful, Welcome ${username}!`);
         this.cleanupModal();
         this.router.navigate(['/officer/dashboard']);
       },

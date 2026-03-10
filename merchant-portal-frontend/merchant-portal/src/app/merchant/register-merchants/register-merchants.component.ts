@@ -279,7 +279,7 @@ export class MerchantRegisterComponent implements OnInit {
       next: (res) => {
         this.submitting = false;
         console.log('Submission successful!', res);
-        alert(`Application submitted successfully!\nYour Reference ID is: ${res.referenceId}`);
+        alert(`Application submitted successfully!\n\nA confirmation email has been sent to ${formValues.ownerEmail}`);
         this.form.reset();
         this.isImageCaptured = false;
         this.capturedImageBlob = null;

@@ -27,6 +27,9 @@ export class ViewApplicationComponent implements OnInit {
       this.svc.getApplicationById(appId).subscribe({
         next: (data) => {
           this.application = data;
+          console.log('Application data:', data);
+          console.log('Confidence Level:', data.confidenceLevel);
+          console.log('Face Match Score:', data.faceMatchScore);
           this.isLoading = false;
         },
         error: (err) => {
