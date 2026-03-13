@@ -103,8 +103,26 @@
 <div *ngIf="application && application.status.toLowerCase() === 'pending'" class="sticky-action-bar">
     <span class="action-label"><i class="bi bi-hourglass-split"></i> This application is awaiting your decision</span>
     <div class="action-buttons-row">
-        <button class="btn-reject" (click)="updateStatus('Rejected')"><i class="bi bi-x-lg"></i> Reject</button>
-        <button class="btn-approve" (click)="updateStatus('Approved')"><i class="bi bi-check-lg"></i> Approve</button>
+        <button class="btn-reject" (click)="promptConfirm('Rejected')"><i class="bi bi-x-lg"></i> Reject</button>
+        <button class="btn-approve" (click)="promptConfirm('Approved')"><i class="bi bi-check-lg"></i> Approve</button>
     </div>
 </div>
 
+<!-- Confirmation Modal -->
+<div class="confirm-backdrop" *ngIf="confirmPending">
+  <div class="confirm-modal">
+    <div class="confirm-icon" [ngClass]="confirmPending === 'Approved' ? 'icon-approve' : 'icon-reject'">
+      <i class="bi" [ngClass]="confirmPending === 'Approved' ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+    </div>
+    <h4>{{ confirmPending === 'Approved' ? 'Approve Application?' : 'Reject Application?' }}</h4>
+    <p>Are you sure you want to <strong>{{ confirmPending === 'Approved' ? 'approve' : 'reject' }}</strong> this application? This action cannot be undone.</p>
+    <div class="confirm-actions">
+      <button class="btn-cancel" (click)="cancelConfirm()">Cancel</button>
+      <button
+        [class]="confirmPending === 'Approved' ? 'btn-approve' : 'btn-reject-solid'"
+        (click)="confirmAction()">
+        {{ confirmPending === 'Approved' ? 'Yes, Approve' : 'Yes, Reject' }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -336,8 +336,11 @@ input[type='file'].form-control {
 
 .camera-feedback {
   max-width: 640px;
+  width: 100%;
+  margin-top: 0.6rem;
   margin-left: auto;
   margin-right: auto;
+  text-align: center;
 }
 
 /* ===== Overlay icon buttons on camera ===== */

@@ -15,6 +15,7 @@ export class ViewApplicationComponent implements OnInit {
   isLoading = true;
   errorMsg = '';
   uploadsUrl = 'http://localhost:8080/uploads/';
+  confirmPending: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -56,6 +57,20 @@ export class ViewApplicationComponent implements OnInit {
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const yyyy = date.getFullYear();
     return `${dd}-${mm}-${yyyy}`;
+  }
+
+  promptConfirm(newStatus: string): void {
+    this.confirmPending = newStatus;
+  }
+
+  cancelConfirm(): void {
+    this.confirmPending = null;
+  }
+
+  confirmAction(): void {
+    if (!this.confirmPending) return;
+    this.updateStatus(this.confirmPending);
+    this.confirmPending = null;
   }
 
   updateStatus(newStatus: string): void {

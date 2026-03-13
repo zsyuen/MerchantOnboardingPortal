@@ -29,814 +29,824 @@
       <!-- ===== STEP 1: Application Details ===== -->
       <div *ngIf="currentStep === 1">
 
-      <div class="d-flex justify-content-center align-items-center">
-        <h3 class="mb-3">Merchant Application Form</h3>
-      </div>
+        <div class="d-flex justify-content-center align-items-center">
+          <h3 class="mb-3">Merchant Application Form</h3>
+        </div>
 
-      <hr class="my-4">
+        <hr class="my-4">
 
-      <h5 class="fw-bold mt-3">Merchant Information</h5>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label>Business Registration No. *</label>
-          <input formControlName="businessRegNo" class="form-control"
-            [ngClass]="{'is-invalid': showError('businessRegNo')}" placeholder="Enter registration number">
-          <div *ngIf="showError('businessRegNo')" class="invalid-feedback">Please fill out this field.</div>
+        <h5 class="fw-bold mt-3">Merchant Information</h5>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label>Business Registration No. *</label>
+            <input formControlName="businessRegNo" class="form-control"
+              [ngClass]="{'is-invalid': showError('businessRegNo')}" placeholder="Enter registration number">
+            <div *ngIf="showError('businessRegNo')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Registered Company Name *</label>
+            <input formControlName="companyName" class="form-control"
+              [ngClass]="{'is-invalid': showError('companyName')}" placeholder="Enter company name">
+            <div *ngIf="showError('companyName')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Date of Incorporation *</label>
+            <input type="date" formControlName="incorporationDate" class="form-control"
+              [ngClass]="{'is-invalid': showError('incorporationDate')}">
+            <div *ngIf="showError('incorporationDate')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Country of Corporation *</label>
+            <select formControlName="countryOfCorp" class="form-select"
+              [ngClass]="{'is-invalid': showError('countryOfCorp')}">
+              <option value="">Select an option</option>
+              <option>Afghanistan</option>
+              <option>Albania</option>
+              <option>Algeria</option>
+              <option>Andorra</option>
+              <option>Angola</option>
+              <option>Argentina</option>
+              <option>Armenia</option>
+              <option>Australia</option>
+              <option>Austria</option>
+              <option>Azerbaijan</option>
+              <option>Bahamas</option>
+              <option>Bahrain</option>
+              <option>Bangladesh</option>
+              <option>Belarus</option>
+              <option>Belgium</option>
+              <option>Belize</option>
+              <option>Benin</option>
+              <option>Bhutan</option>
+              <option>Bolivia</option>
+              <option>Bosnia and Herzegovina</option>
+              <option>Botswana</option>
+              <option>Brazil</option>
+              <option>Brunei</option>
+              <option>Bulgaria</option>
+              <option>Burkina Faso</option>
+              <option>Burundi</option>
+              <option>Cambodia</option>
+              <option>Cameroon</option>
+              <option>Canada</option>
+              <option>Chad</option>
+              <option>Chile</option>
+              <option>China</option>
+              <option>Colombia</option>
+              <option>Congo</option>
+              <option>Costa Rica</option>
+              <option>Croatia</option>
+              <option>Cuba</option>
+              <option>Cyprus</option>
+              <option>Czech Republic</option>
+              <option>Denmark</option>
+              <option>Djibouti</option>
+              <option>Dominican Republic</option>
+              <option>Ecuador</option>
+              <option>Egypt</option>
+              <option>El Salvador</option>
+              <option>Estonia</option>
+              <option>Ethiopia</option>
+              <option>Fiji</option>
+              <option>Finland</option>
+              <option>France</option>
+              <option>Gabon</option>
+              <option>Georgia</option>
+              <option>Germany</option>
+              <option>Ghana</option>
+              <option>Greece</option>
+              <option>Guatemala</option>
+              <option>Guinea</option>
+              <option>Honduras</option>
+              <option>Hungary</option>
+              <option>Iceland</option>
+              <option>India</option>
+              <option>Indonesia</option>
+              <option>Iran</option>
+              <option>Iraq</option>
+              <option>Ireland</option>
+              <option>Israel</option>
+              <option>Italy</option>
+              <option>Jamaica</option>
+              <option>Japan</option>
+              <option>Jordan</option>
+              <option>Kazakhstan</option>
+              <option>Kenya</option>
+              <option>Kuwait</option>
+              <option>Kyrgyzstan</option>
+              <option>Laos</option>
+              <option>Latvia</option>
+              <option>Lebanon</option>
+              <option>Libya</option>
+              <option>Lithuania</option>
+              <option>Luxembourg</option>
+              <option>Madagascar</option>
+              <option>Malawi</option>
+              <option>Malaysia</option>
+              <option>Maldives</option>
+              <option>Mali</option>
+              <option>Malta</option>
+              <option>Mexico</option>
+              <option>Moldova</option>
+              <option>Mongolia</option>
+              <option>Montenegro</option>
+              <option>Morocco</option>
+              <option>Mozambique</option>
+              <option>Myanmar</option>
+              <option>Namibia</option>
+              <option>Nepal</option>
+              <option>Netherlands</option>
+              <option>New Zealand</option>
+              <option>Nicaragua</option>
+              <option>Niger</option>
+              <option>Nigeria</option>
+              <option>North Korea</option>
+              <option>North Macedonia</option>
+              <option>Norway</option>
+              <option>Oman</option>
+              <option>Pakistan</option>
+              <option>Panama</option>
+              <option>Papua New Guinea</option>
+              <option>Paraguay</option>
+              <option>Peru</option>
+              <option>Philippines</option>
+              <option>Poland</option>
+              <option>Portugal</option>
+              <option>Qatar</option>
+              <option>Romania</option>
+              <option>Russia</option>
+              <option>Rwanda</option>
+              <option>Saudi Arabia</option>
+              <option>Senegal</option>
+              <option>Serbia</option>
+              <option>Sierra Leone</option>
+              <option>Singapore</option>
+              <option>Slovakia</option>
+              <option>Slovenia</option>
+              <option>Somalia</option>
+              <option>South Africa</option>
+              <option>South Korea</option>
+              <option>South Sudan</option>
+              <option>Spain</option>
+              <option>Sri Lanka</option>
+              <option>Sudan</option>
+              <option>Sweden</option>
+              <option>Switzerland</option>
+              <option>Syria</option>
+              <option>Taiwan</option>
+              <option>Tajikistan</option>
+              <option>Tanzania</option>
+              <option>Thailand</option>
+              <option>Timor-Leste</option>
+              <option>Togo</option>
+              <option>Trinidad and Tobago</option>
+              <option>Tunisia</option>
+              <option>Turkey</option>
+              <option>Turkmenistan</option>
+              <option>Uganda</option>
+              <option>Ukraine</option>
+              <option>United Arab Emirates</option>
+              <option>United Kingdom</option>
+              <option>United States</option>
+              <option>Uruguay</option>
+              <option>Uzbekistan</option>
+              <option>Venezuela</option>
+              <option>Vietnam</option>
+              <option>Yemen</option>
+              <option>Zambia</option>
+              <option>Zimbabwe</option>
+            </select>
+            <div *ngIf="showError('countryOfCorp')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Name of Merchant (English) *</label>
+            <input formControlName="merchantNameEn" class="form-control"
+              [ngClass]="{'is-invalid': showError('merchantNameEn')}">
+            <div *ngIf="showError('merchantNameEn')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Name of Merchant (Local) *</label>
+            <input formControlName="merchantNameLocal" class="form-control"
+              [ngClass]="{'is-invalid': showError('merchantNameLocal')}">
+            <div *ngIf="showError('merchantNameLocal')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Tax ID *</label>
+            <input formControlName="taxId" class="form-control" [ngClass]="{'is-invalid': showError('taxId')}">
+            <div *ngIf="showError('taxId')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Classification of Entity *</label>
+            <select formControlName="entityType" class="form-select"
+              [ngClass]="{'is-invalid': showError('entityType')}">
+              <option value="">Select an option</option>
+              <option>Sole Proprietor</option>
+              <option>Partnership</option>
+              <option>Private Limited</option>
+              <option>Public Limited</option>
+              <option>Limited Liability Partnership (LLP)</option>
+              <option>Co-operative Society</option>
+              <option>Non-Governmental Organisation (NGO)</option>
+              <option>Association</option>
+              <option>Trust</option>
+              <option>Foundation</option>
+            </select>
+            <div *ngIf="showError('entityType')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
         </div>
-        <div class="col-md-6 mb-3">
-          <label>Registered Company Name *</label>
-          <input formControlName="companyName" class="form-control" [ngClass]="{'is-invalid': showError('companyName')}"
-            placeholder="Enter company name">
-          <div *ngIf="showError('companyName')" class="invalid-feedback">Please fill out this field.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>Date of Incorporation *</label>
-          <input type="date" formControlName="incorporationDate" class="form-control"
-            [ngClass]="{'is-invalid': showError('incorporationDate')}">
-          <div *ngIf="showError('incorporationDate')" class="invalid-feedback">Please fill out this field.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>Country of Corporation *</label>
-          <select formControlName="countryOfCorp" class="form-select"
-            [ngClass]="{'is-invalid': showError('countryOfCorp')}">
-            <option value="">Select an option</option>
-            <option>Afghanistan</option>
-            <option>Albania</option>
-            <option>Algeria</option>
-            <option>Andorra</option>
-            <option>Angola</option>
-            <option>Argentina</option>
-            <option>Armenia</option>
-            <option>Australia</option>
-            <option>Austria</option>
-            <option>Azerbaijan</option>
-            <option>Bahamas</option>
-            <option>Bahrain</option>
-            <option>Bangladesh</option>
-            <option>Belarus</option>
-            <option>Belgium</option>
-            <option>Belize</option>
-            <option>Benin</option>
-            <option>Bhutan</option>
-            <option>Bolivia</option>
-            <option>Bosnia and Herzegovina</option>
-            <option>Botswana</option>
-            <option>Brazil</option>
-            <option>Brunei</option>
-            <option>Bulgaria</option>
-            <option>Burkina Faso</option>
-            <option>Burundi</option>
-            <option>Cambodia</option>
-            <option>Cameroon</option>
-            <option>Canada</option>
-            <option>Chad</option>
-            <option>Chile</option>
-            <option>China</option>
-            <option>Colombia</option>
-            <option>Congo</option>
-            <option>Costa Rica</option>
-            <option>Croatia</option>
-            <option>Cuba</option>
-            <option>Cyprus</option>
-            <option>Czech Republic</option>
-            <option>Denmark</option>
-            <option>Djibouti</option>
-            <option>Dominican Republic</option>
-            <option>Ecuador</option>
-            <option>Egypt</option>
-            <option>El Salvador</option>
-            <option>Estonia</option>
-            <option>Ethiopia</option>
-            <option>Fiji</option>
-            <option>Finland</option>
-            <option>France</option>
-            <option>Gabon</option>
-            <option>Georgia</option>
-            <option>Germany</option>
-            <option>Ghana</option>
-            <option>Greece</option>
-            <option>Guatemala</option>
-            <option>Guinea</option>
-            <option>Honduras</option>
-            <option>Hungary</option>
-            <option>Iceland</option>
-            <option>India</option>
-            <option>Indonesia</option>
-            <option>Iran</option>
-            <option>Iraq</option>
-            <option>Ireland</option>
-            <option>Israel</option>
-            <option>Italy</option>
-            <option>Jamaica</option>
-            <option>Japan</option>
-            <option>Jordan</option>
-            <option>Kazakhstan</option>
-            <option>Kenya</option>
-            <option>Kuwait</option>
-            <option>Kyrgyzstan</option>
-            <option>Laos</option>
-            <option>Latvia</option>
-            <option>Lebanon</option>
-            <option>Libya</option>
-            <option>Lithuania</option>
-            <option>Luxembourg</option>
-            <option>Madagascar</option>
-            <option>Malawi</option>
-            <option>Malaysia</option>
-            <option>Maldives</option>
-            <option>Mali</option>
-            <option>Malta</option>
-            <option>Mexico</option>
-            <option>Moldova</option>
-            <option>Mongolia</option>
-            <option>Montenegro</option>
-            <option>Morocco</option>
-            <option>Mozambique</option>
-            <option>Myanmar</option>
-            <option>Namibia</option>
-            <option>Nepal</option>
-            <option>Netherlands</option>
-            <option>New Zealand</option>
-            <option>Nicaragua</option>
-            <option>Niger</option>
-            <option>Nigeria</option>
-            <option>North Korea</option>
-            <option>North Macedonia</option>
-            <option>Norway</option>
-            <option>Oman</option>
-            <option>Pakistan</option>
-            <option>Panama</option>
-            <option>Papua New Guinea</option>
-            <option>Paraguay</option>
-            <option>Peru</option>
-            <option>Philippines</option>
-            <option>Poland</option>
-            <option>Portugal</option>
-            <option>Qatar</option>
-            <option>Romania</option>
-            <option>Russia</option>
-            <option>Rwanda</option>
-            <option>Saudi Arabia</option>
-            <option>Senegal</option>
-            <option>Serbia</option>
-            <option>Sierra Leone</option>
-            <option>Singapore</option>
-            <option>Slovakia</option>
-            <option>Slovenia</option>
-            <option>Somalia</option>
-            <option>South Africa</option>
-            <option>South Korea</option>
-            <option>South Sudan</option>
-            <option>Spain</option>
-            <option>Sri Lanka</option>
-            <option>Sudan</option>
-            <option>Sweden</option>
-            <option>Switzerland</option>
-            <option>Syria</option>
-            <option>Taiwan</option>
-            <option>Tajikistan</option>
-            <option>Tanzania</option>
-            <option>Thailand</option>
-            <option>Timor-Leste</option>
-            <option>Togo</option>
-            <option>Trinidad and Tobago</option>
-            <option>Tunisia</option>
-            <option>Turkey</option>
-            <option>Turkmenistan</option>
-            <option>Uganda</option>
-            <option>Ukraine</option>
-            <option>United Arab Emirates</option>
-            <option>United Kingdom</option>
-            <option>United States</option>
-            <option>Uruguay</option>
-            <option>Uzbekistan</option>
-            <option>Venezuela</option>
-            <option>Vietnam</option>
-            <option>Yemen</option>
-            <option>Zambia</option>
-            <option>Zimbabwe</option>
-          </select>
-          <div *ngIf="showError('countryOfCorp')" class="invalid-feedback">Please fill out this field.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>Name of Merchant (English) *</label>
-          <input formControlName="merchantNameEn" class="form-control"
-            [ngClass]="{'is-invalid': showError('merchantNameEn')}">
-          <div *ngIf="showError('merchantNameEn')" class="invalid-feedback">Please fill out this field.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>Name of Merchant (Local) *</label>
-          <input formControlName="merchantNameLocal" class="form-control"
-            [ngClass]="{'is-invalid': showError('merchantNameLocal')}">
-          <div *ngIf="showError('merchantNameLocal')" class="invalid-feedback">Please fill out this field.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>Tax ID *</label>
-          <input formControlName="taxId" class="form-control" [ngClass]="{'is-invalid': showError('taxId')}">
-          <div *ngIf="showError('taxId')" class="invalid-feedback">Please fill out this field.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>Classification of Entity *</label>
-          <select formControlName="entityType" class="form-select" [ngClass]="{'is-invalid': showError('entityType')}">
-            <option value="">Select an option</option>
-            <option>Sole Proprietor</option>
-            <option>Partnership</option>
-            <option>Private Limited</option>
-            <option>Public Limited</option>
-            <option>Limited Liability Partnership (LLP)</option>
-            <option>Co-operative Society</option>
-            <option>Non-Governmental Organisation (NGO)</option>
-            <option>Association</option>
-            <option>Trust</option>
-            <option>Foundation</option>
-          </select>
-          <div *ngIf="showError('entityType')" class="invalid-feedback">Please fill out this field.</div>
-        </div>
-      </div>
 
-      <h5 class="fw-bold mt-4">Merchant Address</h5>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label>Address Line 1 *</label>
-          <input formControlName="address1" class="form-control" [ngClass]="{'is-invalid': showError('address1')}">
-          <div *ngIf="showError('address1')" class="invalid-feedback">Please fill out this field.</div>
+        <h5 class="fw-bold mt-4">Merchant Address</h5>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label>Address Line 1 *</label>
+            <input formControlName="address1" class="form-control" [ngClass]="{'is-invalid': showError('address1')}">
+            <div *ngIf="showError('address1')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Address Line 2</label>
+            <input formControlName="address2" class="form-control">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Address Line 3</label>
+            <input formControlName="address3" class="form-control">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Address Line 4</label>
+            <input formControlName="address4" class="form-control">
+          </div>
         </div>
-        <div class="col-md-6 mb-3">
-          <label>Address Line 2</label>
-          <input formControlName="address2" class="form-control">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label>City *</label>
+            <input formControlName="city" class="form-control" [ngClass]="{'is-invalid': showError('city')}">
+            <div *ngIf="showError('city')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>State *</label>
+            <input formControlName="state" class="form-control" [ngClass]="{'is-invalid': showError('state')}">
+            <div *ngIf="showError('state')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Postal *</label>
+            <input type="tel" formControlName="postal" class="form-control"
+              [ngClass]="{'is-invalid': showError('postal')}" (keydown)="blockNonNumericChars($event)">
+            <div *ngIf="showError('postal')" class="invalid-feedback">Please enter 4 to 10 numbers.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Country *</label>
+            <select formControlName="country" class="form-select" [ngClass]="{'is-invalid': showError('country')}">
+              <option value="">Select an option</option>
+              <option>Afghanistan</option>
+              <option>Albania</option>
+              <option>Algeria</option>
+              <option>Andorra</option>
+              <option>Angola</option>
+              <option>Argentina</option>
+              <option>Armenia</option>
+              <option>Australia</option>
+              <option>Austria</option>
+              <option>Azerbaijan</option>
+              <option>Bahamas</option>
+              <option>Bahrain</option>
+              <option>Bangladesh</option>
+              <option>Belarus</option>
+              <option>Belgium</option>
+              <option>Belize</option>
+              <option>Benin</option>
+              <option>Bhutan</option>
+              <option>Bolivia</option>
+              <option>Bosnia and Herzegovina</option>
+              <option>Botswana</option>
+              <option>Brazil</option>
+              <option>Brunei</option>
+              <option>Bulgaria</option>
+              <option>Burkina Faso</option>
+              <option>Burundi</option>
+              <option>Cambodia</option>
+              <option>Cameroon</option>
+              <option>Canada</option>
+              <option>Chad</option>
+              <option>Chile</option>
+              <option>China</option>
+              <option>Colombia</option>
+              <option>Congo</option>
+              <option>Costa Rica</option>
+              <option>Croatia</option>
+              <option>Cuba</option>
+              <option>Cyprus</option>
+              <option>Czech Republic</option>
+              <option>Denmark</option>
+              <option>Djibouti</option>
+              <option>Dominican Republic</option>
+              <option>Ecuador</option>
+              <option>Egypt</option>
+              <option>El Salvador</option>
+              <option>Estonia</option>
+              <option>Ethiopia</option>
+              <option>Fiji</option>
+              <option>Finland</option>
+              <option>France</option>
+              <option>Gabon</option>
+              <option>Georgia</option>
+              <option>Germany</option>
+              <option>Ghana</option>
+              <option>Greece</option>
+              <option>Guatemala</option>
+              <option>Guinea</option>
+              <option>Honduras</option>
+              <option>Hungary</option>
+              <option>Iceland</option>
+              <option>India</option>
+              <option>Indonesia</option>
+              <option>Iran</option>
+              <option>Iraq</option>
+              <option>Ireland</option>
+              <option>Israel</option>
+              <option>Italy</option>
+              <option>Jamaica</option>
+              <option>Japan</option>
+              <option>Jordan</option>
+              <option>Kazakhstan</option>
+              <option>Kenya</option>
+              <option>Kuwait</option>
+              <option>Kyrgyzstan</option>
+              <option>Laos</option>
+              <option>Latvia</option>
+              <option>Lebanon</option>
+              <option>Libya</option>
+              <option>Lithuania</option>
+              <option>Luxembourg</option>
+              <option>Madagascar</option>
+              <option>Malawi</option>
+              <option>Malaysia</option>
+              <option>Maldives</option>
+              <option>Mali</option>
+              <option>Malta</option>
+              <option>Mexico</option>
+              <option>Moldova</option>
+              <option>Mongolia</option>
+              <option>Montenegro</option>
+              <option>Morocco</option>
+              <option>Mozambique</option>
+              <option>Myanmar</option>
+              <option>Namibia</option>
+              <option>Nepal</option>
+              <option>Netherlands</option>
+              <option>New Zealand</option>
+              <option>Nicaragua</option>
+              <option>Niger</option>
+              <option>Nigeria</option>
+              <option>North Korea</option>
+              <option>North Macedonia</option>
+              <option>Norway</option>
+              <option>Oman</option>
+              <option>Pakistan</option>
+              <option>Panama</option>
+              <option>Papua New Guinea</option>
+              <option>Paraguay</option>
+              <option>Peru</option>
+              <option>Philippines</option>
+              <option>Poland</option>
+              <option>Portugal</option>
+              <option>Qatar</option>
+              <option>Romania</option>
+              <option>Russia</option>
+              <option>Rwanda</option>
+              <option>Saudi Arabia</option>
+              <option>Senegal</option>
+              <option>Serbia</option>
+              <option>Sierra Leone</option>
+              <option>Singapore</option>
+              <option>Slovakia</option>
+              <option>Slovenia</option>
+              <option>Somalia</option>
+              <option>South Africa</option>
+              <option>South Korea</option>
+              <option>South Sudan</option>
+              <option>Spain</option>
+              <option>Sri Lanka</option>
+              <option>Sudan</option>
+              <option>Sweden</option>
+              <option>Switzerland</option>
+              <option>Syria</option>
+              <option>Taiwan</option>
+              <option>Tajikistan</option>
+              <option>Tanzania</option>
+              <option>Thailand</option>
+              <option>Timor-Leste</option>
+              <option>Togo</option>
+              <option>Trinidad and Tobago</option>
+              <option>Tunisia</option>
+              <option>Turkey</option>
+              <option>Turkmenistan</option>
+              <option>Uganda</option>
+              <option>Ukraine</option>
+              <option>United Arab Emirates</option>
+              <option>United Kingdom</option>
+              <option>United States</option>
+              <option>Uruguay</option>
+              <option>Uzbekistan</option>
+              <option>Venezuela</option>
+              <option>Vietnam</option>
+              <option>Yemen</option>
+              <option>Zambia</option>
+              <option>Zimbabwe</option>
+            </select>
+            <div *ngIf="showError('country')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Telephone Number 1 *</label>
+            <input type="tel" formControlName="phone1" class="form-control"
+              [ngClass]="{'is-invalid': showError('phone1')}" (keydown)="blockNonNumericChars($event)">
+            <div *ngIf="showError('phone1')" class="invalid-feedback">Numbers only.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Telephone Number 2</label>
+            <input type="tel" formControlName="phone2" class="form-control"
+              [ngClass]="{'is-invalid': showError('phone2')}" (keydown)="blockNonNumericChars($event)">
+            <div *ngIf="showError('phone2')" class="invalid-feedback">Numbers only.</div>
+          </div>
         </div>
-        <div class="col-md-6 mb-3">
-          <label>Address Line 3</label>
-          <input formControlName="address3" class="form-control">
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>Address Line 4</label>
-          <input formControlName="address4" class="form-control">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label>City *</label>
-          <input formControlName="city" class="form-control" [ngClass]="{'is-invalid': showError('city')}">
-          <div *ngIf="showError('city')" class="invalid-feedback">Please fill out this field.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>State *</label>
-          <input formControlName="state" class="form-control" [ngClass]="{'is-invalid': showError('state')}">
-          <div *ngIf="showError('state')" class="invalid-feedback">Please fill out this field.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>Postal *</label>
-          <input type="tel" formControlName="postal" class="form-control"
-            [ngClass]="{'is-invalid': showError('postal')}" (keydown)="blockNonNumericChars($event)">
-          <div *ngIf="showError('postal')" class="invalid-feedback">Please enter 4 to 10 numbers.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>Country *</label>
-          <select formControlName="country" class="form-select" [ngClass]="{'is-invalid': showError('country')}">
-            <option value="">Select an option</option>
-            <option>Afghanistan</option>
-            <option>Albania</option>
-            <option>Algeria</option>
-            <option>Andorra</option>
-            <option>Angola</option>
-            <option>Argentina</option>
-            <option>Armenia</option>
-            <option>Australia</option>
-            <option>Austria</option>
-            <option>Azerbaijan</option>
-            <option>Bahamas</option>
-            <option>Bahrain</option>
-            <option>Bangladesh</option>
-            <option>Belarus</option>
-            <option>Belgium</option>
-            <option>Belize</option>
-            <option>Benin</option>
-            <option>Bhutan</option>
-            <option>Bolivia</option>
-            <option>Bosnia and Herzegovina</option>
-            <option>Botswana</option>
-            <option>Brazil</option>
-            <option>Brunei</option>
-            <option>Bulgaria</option>
-            <option>Burkina Faso</option>
-            <option>Burundi</option>
-            <option>Cambodia</option>
-            <option>Cameroon</option>
-            <option>Canada</option>
-            <option>Chad</option>
-            <option>Chile</option>
-            <option>China</option>
-            <option>Colombia</option>
-            <option>Congo</option>
-            <option>Costa Rica</option>
-            <option>Croatia</option>
-            <option>Cuba</option>
-            <option>Cyprus</option>
-            <option>Czech Republic</option>
-            <option>Denmark</option>
-            <option>Djibouti</option>
-            <option>Dominican Republic</option>
-            <option>Ecuador</option>
-            <option>Egypt</option>
-            <option>El Salvador</option>
-            <option>Estonia</option>
-            <option>Ethiopia</option>
-            <option>Fiji</option>
-            <option>Finland</option>
-            <option>France</option>
-            <option>Gabon</option>
-            <option>Georgia</option>
-            <option>Germany</option>
-            <option>Ghana</option>
-            <option>Greece</option>
-            <option>Guatemala</option>
-            <option>Guinea</option>
-            <option>Honduras</option>
-            <option>Hungary</option>
-            <option>Iceland</option>
-            <option>India</option>
-            <option>Indonesia</option>
-            <option>Iran</option>
-            <option>Iraq</option>
-            <option>Ireland</option>
-            <option>Israel</option>
-            <option>Italy</option>
-            <option>Jamaica</option>
-            <option>Japan</option>
-            <option>Jordan</option>
-            <option>Kazakhstan</option>
-            <option>Kenya</option>
-            <option>Kuwait</option>
-            <option>Kyrgyzstan</option>
-            <option>Laos</option>
-            <option>Latvia</option>
-            <option>Lebanon</option>
-            <option>Libya</option>
-            <option>Lithuania</option>
-            <option>Luxembourg</option>
-            <option>Madagascar</option>
-            <option>Malawi</option>
-            <option>Malaysia</option>
-            <option>Maldives</option>
-            <option>Mali</option>
-            <option>Malta</option>
-            <option>Mexico</option>
-            <option>Moldova</option>
-            <option>Mongolia</option>
-            <option>Montenegro</option>
-            <option>Morocco</option>
-            <option>Mozambique</option>
-            <option>Myanmar</option>
-            <option>Namibia</option>
-            <option>Nepal</option>
-            <option>Netherlands</option>
-            <option>New Zealand</option>
-            <option>Nicaragua</option>
-            <option>Niger</option>
-            <option>Nigeria</option>
-            <option>North Korea</option>
-            <option>North Macedonia</option>
-            <option>Norway</option>
-            <option>Oman</option>
-            <option>Pakistan</option>
-            <option>Panama</option>
-            <option>Papua New Guinea</option>
-            <option>Paraguay</option>
-            <option>Peru</option>
-            <option>Philippines</option>
-            <option>Poland</option>
-            <option>Portugal</option>
-            <option>Qatar</option>
-            <option>Romania</option>
-            <option>Russia</option>
-            <option>Rwanda</option>
-            <option>Saudi Arabia</option>
-            <option>Senegal</option>
-            <option>Serbia</option>
-            <option>Sierra Leone</option>
-            <option>Singapore</option>
-            <option>Slovakia</option>
-            <option>Slovenia</option>
-            <option>Somalia</option>
-            <option>South Africa</option>
-            <option>South Korea</option>
-            <option>South Sudan</option>
-            <option>Spain</option>
-            <option>Sri Lanka</option>
-            <option>Sudan</option>
-            <option>Sweden</option>
-            <option>Switzerland</option>
-            <option>Syria</option>
-            <option>Taiwan</option>
-            <option>Tajikistan</option>
-            <option>Tanzania</option>
-            <option>Thailand</option>
-            <option>Timor-Leste</option>
-            <option>Togo</option>
-            <option>Trinidad and Tobago</option>
-            <option>Tunisia</option>
-            <option>Turkey</option>
-            <option>Turkmenistan</option>
-            <option>Uganda</option>
-            <option>Ukraine</option>
-            <option>United Arab Emirates</option>
-            <option>United Kingdom</option>
-            <option>United States</option>
-            <option>Uruguay</option>
-            <option>Uzbekistan</option>
-            <option>Venezuela</option>
-            <option>Vietnam</option>
-            <option>Yemen</option>
-            <option>Zambia</option>
-            <option>Zimbabwe</option>
-          </select>
-          <div *ngIf="showError('country')" class="invalid-feedback">Please fill out this field.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>Telephone Number 1 *</label>
-          <input type="tel" formControlName="phone1" class="form-control"
-            [ngClass]="{'is-invalid': showError('phone1')}" (keydown)="blockNonNumericChars($event)">
-          <div *ngIf="showError('phone1')" class="invalid-feedback">Numbers only.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>Telephone Number 2</label>
-          <input type="tel" formControlName="phone2" class="form-control"
-            [ngClass]="{'is-invalid': showError('phone2')}" (keydown)="blockNonNumericChars($event)">
-          <div *ngIf="showError('phone2')" class="invalid-feedback">Numbers only.</div>
-        </div>
-      </div>
 
-      <h5 class="fw-bold mt-4">Owner Profile</h5>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label>First Name *</label>
-          <input formControlName="ownerFirstName" class="form-control"
-            [ngClass]="{'is-invalid': showError('ownerFirstName')}">
-          <div *ngIf="showError('ownerFirstName')" class="invalid-feedback">Please fill out this field.</div>
+        <h5 class="fw-bold mt-4">Owner Profile</h5>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label>First Name *</label>
+            <input formControlName="ownerFirstName" class="form-control"
+              [ngClass]="{'is-invalid': showError('ownerFirstName')}">
+            <div *ngIf="showError('ownerFirstName')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Last Name *</label>
+            <input formControlName="ownerLastName" class="form-control"
+              [ngClass]="{'is-invalid': showError('ownerLastName')}">
+            <div *ngIf="showError('ownerLastName')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Email *</label>
+            <input type="email" formControlName="ownerEmail" class="form-control"
+              [ngClass]="{'is-invalid': showEmailError()}" (blur)="form.get('ownerEmail')?.markAsTouched()">
+            <div *ngIf="showEmailError()" class="invalid-feedback">Enter a valid email address.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Date of Birth *</label>
+            <input type="date" formControlName="ownerDob" class="form-control"
+              [ngClass]="{'is-invalid': showError('ownerDob')}">
+            <div *ngIf="showError('ownerDob')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>IC / Passport No *</label>
+            <input formControlName="ownerIdNo" class="form-control" [ngClass]="{'is-invalid': showError('ownerIdNo')}">
+            <div *ngIf="showError('ownerIdNo')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Nationality *</label>
+            <select formControlName="ownerNationality" class="form-select"
+              [ngClass]="{'is-invalid': showError('ownerNationality')}">
+              <option value="">Select an option</option>
+              <option>Afghan</option>
+              <option>Albanian</option>
+              <option>Algerian</option>
+              <option>Andorran</option>
+              <option>Angolan</option>
+              <option>Argentine</option>
+              <option>Armenian</option>
+              <option>Australian</option>
+              <option>Austrian</option>
+              <option>Azerbaijani</option>
+              <option>Bahamian</option>
+              <option>Bahraini</option>
+              <option>Bangladeshi</option>
+              <option>Belarusian</option>
+              <option>Belgian</option>
+              <option>Belizean</option>
+              <option>Beninese</option>
+              <option>Bhutanese</option>
+              <option>Bolivian</option>
+              <option>Bosnian</option>
+              <option>Botswanan</option>
+              <option>Brazilian</option>
+              <option>Bruneian</option>
+              <option>Bulgarian</option>
+              <option>Burkinabe</option>
+              <option>Burundian</option>
+              <option>Cambodian</option>
+              <option>Cameroonian</option>
+              <option>Canadian</option>
+              <option>Chadian</option>
+              <option>Chilean</option>
+              <option>Chinese</option>
+              <option>Colombian</option>
+              <option>Congolese</option>
+              <option>Costa Rican</option>
+              <option>Croatian</option>
+              <option>Cuban</option>
+              <option>Cypriot</option>
+              <option>Czech</option>
+              <option>Danish</option>
+              <option>Djiboutian</option>
+              <option>Dominican</option>
+              <option>Ecuadorian</option>
+              <option>Egyptian</option>
+              <option>Salvadoran</option>
+              <option>Estonian</option>
+              <option>Ethiopian</option>
+              <option>Fijian</option>
+              <option>Finnish</option>
+              <option>French</option>
+              <option>Gabonese</option>
+              <option>Georgian</option>
+              <option>German</option>
+              <option>Ghanaian</option>
+              <option>Greek</option>
+              <option>Guatemalan</option>
+              <option>Guinean</option>
+              <option>Honduran</option>
+              <option>Hungarian</option>
+              <option>Icelandic</option>
+              <option>Indian</option>
+              <option>Indonesian</option>
+              <option>Iranian</option>
+              <option>Iraqi</option>
+              <option>Irish</option>
+              <option>Israeli</option>
+              <option>Italian</option>
+              <option>Jamaican</option>
+              <option>Japanese</option>
+              <option>Jordanian</option>
+              <option>Kazakhstani</option>
+              <option>Kenyan</option>
+              <option>Kuwaiti</option>
+              <option>Kyrgyz</option>
+              <option>Laotian</option>
+              <option>Latvian</option>
+              <option>Lebanese</option>
+              <option>Libyan</option>
+              <option>Lithuanian</option>
+              <option>Luxembourgish</option>
+              <option>Malagasy</option>
+              <option>Malawian</option>
+              <option>Malaysian</option>
+              <option>Maldivian</option>
+              <option>Malian</option>
+              <option>Maltese</option>
+              <option>Mexican</option>
+              <option>Moldovan</option>
+              <option>Mongolian</option>
+              <option>Montenegrin</option>
+              <option>Moroccan</option>
+              <option>Mozambican</option>
+              <option>Myanmar</option>
+              <option>Namibian</option>
+              <option>Nepali</option>
+              <option>Dutch</option>
+              <option>New Zealander</option>
+              <option>Nicaraguan</option>
+              <option>Nigerien</option>
+              <option>Nigerian</option>
+              <option>North Korean</option>
+              <option>Macedonian</option>
+              <option>Norwegian</option>
+              <option>Omani</option>
+              <option>Pakistani</option>
+              <option>Panamanian</option>
+              <option>Papua New Guinean</option>
+              <option>Paraguayan</option>
+              <option>Peruvian</option>
+              <option>Filipino</option>
+              <option>Polish</option>
+              <option>Portuguese</option>
+              <option>Qatari</option>
+              <option>Romanian</option>
+              <option>Russian</option>
+              <option>Rwandan</option>
+              <option>Saudi Arabian</option>
+              <option>Senegalese</option>
+              <option>Serbian</option>
+              <option>Sierra Leonean</option>
+              <option>Singaporean</option>
+              <option>Slovak</option>
+              <option>Slovenian</option>
+              <option>Somali</option>
+              <option>South African</option>
+              <option>South Korean</option>
+              <option>South Sudanese</option>
+              <option>Spanish</option>
+              <option>Sri Lankan</option>
+              <option>Sudanese</option>
+              <option>Swedish</option>
+              <option>Swiss</option>
+              <option>Syrian</option>
+              <option>Taiwanese</option>
+              <option>Tajik</option>
+              <option>Tanzanian</option>
+              <option>Thai</option>
+              <option>Timorese</option>
+              <option>Togolese</option>
+              <option>Trinidadian</option>
+              <option>Tunisian</option>
+              <option>Turkish</option>
+              <option>Turkmen</option>
+              <option>Ugandan</option>
+              <option>Ukrainian</option>
+              <option>Emirati</option>
+              <option>British</option>
+              <option>American</option>
+              <option>Uruguayan</option>
+              <option>Uzbekistani</option>
+              <option>Venezuelan</option>
+              <option>Vietnamese</option>
+              <option>Yemeni</option>
+              <option>Zambian</option>
+              <option>Zimbabwean</option>
+            </select>
+            <div *ngIf="showError('ownerNationality')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>ID Upload (Front) *</label>
+            <input type="file" class="form-control" (change)="onFileChange($event, 'ownerIdFront')"
+              [ngClass]="{'is-invalid': showError('ownerIdFront')}">
+            <div *ngIf="showError('ownerIdFront')" class="invalid-feedback">Upload required.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>ID Upload (Back) *</label>
+            <input type="file" class="form-control" (change)="onFileChange($event, 'ownerIdBack')"
+              [ngClass]="{'is-invalid': showError('ownerIdBack')}">
+            <div *ngIf="showError('ownerIdBack')" class="invalid-feedback">Upload required.</div>
+          </div>
         </div>
-        <div class="col-md-6 mb-3">
-          <label>Last Name *</label>
-          <input formControlName="ownerLastName" class="form-control"
-            [ngClass]="{'is-invalid': showError('ownerLastName')}">
-          <div *ngIf="showError('ownerLastName')" class="invalid-feedback">Please fill out this field.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>Email *</label>
-          <input type="email" formControlName="ownerEmail" class="form-control"
-            [ngClass]="{'is-invalid': showEmailError()}"
-            (blur)="form.get('ownerEmail')?.markAsTouched()">
-          <div *ngIf="showEmailError()" class="invalid-feedback">Enter a valid email address.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>Date of Birth *</label>
-          <input type="date" formControlName="ownerDob" class="form-control"
-            [ngClass]="{'is-invalid': showError('ownerDob')}">
-          <div *ngIf="showError('ownerDob')" class="invalid-feedback">Please fill out this field.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>IC / Passport No *</label>
-          <input formControlName="ownerIdNo" class="form-control" [ngClass]="{'is-invalid': showError('ownerIdNo')}">
-          <div *ngIf="showError('ownerIdNo')" class="invalid-feedback">Please fill out this field.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>Nationality *</label>
-          <select formControlName="ownerNationality" class="form-select"
-            [ngClass]="{'is-invalid': showError('ownerNationality')}">
-            <option value="">Select an option</option>
-            <option>Afghan</option>
-            <option>Albanian</option>
-            <option>Algerian</option>
-            <option>Andorran</option>
-            <option>Angolan</option>
-            <option>Argentine</option>
-            <option>Armenian</option>
-            <option>Australian</option>
-            <option>Austrian</option>
-            <option>Azerbaijani</option>
-            <option>Bahamian</option>
-            <option>Bahraini</option>
-            <option>Bangladeshi</option>
-            <option>Belarusian</option>
-            <option>Belgian</option>
-            <option>Belizean</option>
-            <option>Beninese</option>
-            <option>Bhutanese</option>
-            <option>Bolivian</option>
-            <option>Bosnian</option>
-            <option>Botswanan</option>
-            <option>Brazilian</option>
-            <option>Bruneian</option>
-            <option>Bulgarian</option>
-            <option>Burkinabe</option>
-            <option>Burundian</option>
-            <option>Cambodian</option>
-            <option>Cameroonian</option>
-            <option>Canadian</option>
-            <option>Chadian</option>
-            <option>Chilean</option>
-            <option>Chinese</option>
-            <option>Colombian</option>
-            <option>Congolese</option>
-            <option>Costa Rican</option>
-            <option>Croatian</option>
-            <option>Cuban</option>
-            <option>Cypriot</option>
-            <option>Czech</option>
-            <option>Danish</option>
-            <option>Djiboutian</option>
-            <option>Dominican</option>
-            <option>Ecuadorian</option>
-            <option>Egyptian</option>
-            <option>Salvadoran</option>
-            <option>Estonian</option>
-            <option>Ethiopian</option>
-            <option>Fijian</option>
-            <option>Finnish</option>
-            <option>French</option>
-            <option>Gabonese</option>
-            <option>Georgian</option>
-            <option>German</option>
-            <option>Ghanaian</option>
-            <option>Greek</option>
-            <option>Guatemalan</option>
-            <option>Guinean</option>
-            <option>Honduran</option>
-            <option>Hungarian</option>
-            <option>Icelandic</option>
-            <option>Indian</option>
-            <option>Indonesian</option>
-            <option>Iranian</option>
-            <option>Iraqi</option>
-            <option>Irish</option>
-            <option>Israeli</option>
-            <option>Italian</option>
-            <option>Jamaican</option>
-            <option>Japanese</option>
-            <option>Jordanian</option>
-            <option>Kazakhstani</option>
-            <option>Kenyan</option>
-            <option>Kuwaiti</option>
-            <option>Kyrgyz</option>
-            <option>Laotian</option>
-            <option>Latvian</option>
-            <option>Lebanese</option>
-            <option>Libyan</option>
-            <option>Lithuanian</option>
-            <option>Luxembourgish</option>
-            <option>Malagasy</option>
-            <option>Malawian</option>
-            <option>Malaysian</option>
-            <option>Maldivian</option>
-            <option>Malian</option>
-            <option>Maltese</option>
-            <option>Mexican</option>
-            <option>Moldovan</option>
-            <option>Mongolian</option>
-            <option>Montenegrin</option>
-            <option>Moroccan</option>
-            <option>Mozambican</option>
-            <option>Myanmar</option>
-            <option>Namibian</option>
-            <option>Nepali</option>
-            <option>Dutch</option>
-            <option>New Zealander</option>
-            <option>Nicaraguan</option>
-            <option>Nigerien</option>
-            <option>Nigerian</option>
-            <option>North Korean</option>
-            <option>Macedonian</option>
-            <option>Norwegian</option>
-            <option>Omani</option>
-            <option>Pakistani</option>
-            <option>Panamanian</option>
-            <option>Papua New Guinean</option>
-            <option>Paraguayan</option>
-            <option>Peruvian</option>
-            <option>Filipino</option>
-            <option>Polish</option>
-            <option>Portuguese</option>
-            <option>Qatari</option>
-            <option>Romanian</option>
-            <option>Russian</option>
-            <option>Rwandan</option>
-            <option>Saudi Arabian</option>
-            <option>Senegalese</option>
-            <option>Serbian</option>
-            <option>Sierra Leonean</option>
-            <option>Singaporean</option>
-            <option>Slovak</option>
-            <option>Slovenian</option>
-            <option>Somali</option>
-            <option>South African</option>
-            <option>South Korean</option>
-            <option>South Sudanese</option>
-            <option>Spanish</option>
-            <option>Sri Lankan</option>
-            <option>Sudanese</option>
-            <option>Swedish</option>
-            <option>Swiss</option>
-            <option>Syrian</option>
-            <option>Taiwanese</option>
-            <option>Tajik</option>
-            <option>Tanzanian</option>
-            <option>Thai</option>
-            <option>Timorese</option>
-            <option>Togolese</option>
-            <option>Trinidadian</option>
-            <option>Tunisian</option>
-            <option>Turkish</option>
-            <option>Turkmen</option>
-            <option>Ugandan</option>
-            <option>Ukrainian</option>
-            <option>Emirati</option>
-            <option>British</option>
-            <option>American</option>
-            <option>Uruguayan</option>
-            <option>Uzbekistani</option>
-            <option>Venezuelan</option>
-            <option>Vietnamese</option>
-            <option>Yemeni</option>
-            <option>Zambian</option>
-            <option>Zimbabwean</option>
-          </select>
-          <div *ngIf="showError('ownerNationality')" class="invalid-feedback">Please fill out this field.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>ID Upload (Front) *</label>
-          <input type="file" class="form-control" (change)="onFileChange($event, 'ownerIdFront')"
-            [ngClass]="{'is-invalid': showError('ownerIdFront')}">
-          <div *ngIf="showError('ownerIdFront')" class="invalid-feedback">Upload required.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>ID Upload (Back) *</label>
-          <input type="file" class="form-control" (change)="onFileChange($event, 'ownerIdBack')"
-            [ngClass]="{'is-invalid': showError('ownerIdBack')}">
-          <div *ngIf="showError('ownerIdBack')" class="invalid-feedback">Upload required.</div>
-        </div>
-      </div>
 
-      <h5 class="fw-bold mt-4">Merchant Business</h5>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label>Industry *</label>
-          <select formControlName="industry" class="form-select" [ngClass]="{'is-invalid': showError('industry')}">
-            <option value="">Select an option</option>
-            <option>Retail</option>
-            <option>Food &amp; Beverage (F&amp;B)</option>
-            <option>Healthcare &amp; Pharmacy</option>
-            <option>Education</option>
-            <option>Travel &amp; Tourism</option>
-            <option>Entertainment &amp; Recreation</option>
-            <option>Professional Services</option>
-            <option>IT &amp; Technology</option>
-            <option>Automotive</option>
-            <option>Beauty &amp; Wellness</option>
-            <option>Construction &amp; Real Estate</option>
-            <option>Logistics &amp; Transportation</option>
-            <option>Manufacturing</option>
-            <option>Agriculture</option>
-            <option>Finance &amp; Insurance</option>
-            <option>Non-Profit / Charity</option>
-            <option>Others</option>
-          </select>
-          <div *ngIf="showError('industry')" class="invalid-feedback">Please fill out this field.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>Business Type *</label>
-          <select formControlName="businessType" class="form-select"
-            [ngClass]="{'is-invalid': showError('businessType')}">
-            <option value="">Select an option</option>
-            <option>Online (e-Commerce)</option>
-            <option>Physical</option>
-            <option>Hybrid (Online &amp; Physical)</option>
-            <option>Mobile / Pop-up</option>
-            <option>Mail Order / Telephone Order</option>
-          </select>
-          <div *ngIf="showError('businessType')" class="invalid-feedback">Please fill out this field.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>Number of Employees *</label>
-          <input type="number" formControlName="numEmployees" class="form-control"
-            [ngClass]="{'is-invalid': showError('numEmployees')}"
-            (keydown)="blockNonNumericChars($event)">
-          <div *ngIf="showError('numEmployees')" class="invalid-feedback">Enter digits only.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label>Proof of Business *</label>
-          <input type="file" class="form-control" (change)="onFileChange($event, 'proofOfBusiness')"
-            [ngClass]="{'is-invalid': showError('proofOfBusiness')}">
-          <div *ngIf="showError('proofOfBusiness')" class="invalid-feedback">Upload required.</div>
-        </div>
-        <div class="col-12 mb-3">
-          <label class="d-block">Scheme Required *</label>
-          <div class="checkbox-grid" [class.is-invalid-group]="showError('schemeRequired')">
-            <div class="form-check" *ngFor="let s of schemeOptions">
-              <input class="form-check-input" type="checkbox" [id]="'scheme_' + s"
-                [checked]="selectedSchemes.includes(s)"
-                (change)="toggleScheme(s)">
-              <label class="form-check-label" [for]="'scheme_' + s">{{ s }}</label>
+        <h5 class="fw-bold mt-4">Merchant Business</h5>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label>Industry *</label>
+            <select formControlName="industry" class="form-select" [ngClass]="{'is-invalid': showError('industry')}">
+              <option value="">Select an option</option>
+              <option>Retail</option>
+              <option>Food &amp; Beverage (F&amp;B)</option>
+              <option>Healthcare &amp; Pharmacy</option>
+              <option>Education</option>
+              <option>Travel &amp; Tourism</option>
+              <option>Entertainment &amp; Recreation</option>
+              <option>Professional Services</option>
+              <option>IT &amp; Technology</option>
+              <option>Automotive</option>
+              <option>Beauty &amp; Wellness</option>
+              <option>Construction &amp; Real Estate</option>
+              <option>Logistics &amp; Transportation</option>
+              <option>Manufacturing</option>
+              <option>Agriculture</option>
+              <option>Finance &amp; Insurance</option>
+              <option>Non-Profit / Charity</option>
+              <option>Others</option>
+            </select>
+            <div *ngIf="showError('industry')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Business Type *</label>
+            <select formControlName="businessType" class="form-select"
+              [ngClass]="{'is-invalid': showError('businessType')}">
+              <option value="">Select an option</option>
+              <option>Online (e-Commerce)</option>
+              <option>Physical</option>
+              <option>Hybrid (Online &amp; Physical)</option>
+              <option>Mobile / Pop-up</option>
+              <option>Mail Order / Telephone Order</option>
+            </select>
+            <div *ngIf="showError('businessType')" class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Number of Employees *</label>
+            <input type="number" formControlName="numEmployees" class="form-control"
+              [ngClass]="{'is-invalid': showError('numEmployees')}" (keydown)="blockNonNumericChars($event)">
+            <div *ngIf="showError('numEmployees')" class="invalid-feedback">Enter digits only.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Proof of Business *</label>
+            <input type="file" class="form-control" (change)="onFileChange($event, 'proofOfBusiness')"
+              [ngClass]="{'is-invalid': showError('proofOfBusiness')}">
+            <div *ngIf="showError('proofOfBusiness')" class="invalid-feedback">Upload required.</div>
+          </div>
+          <div class="col-12 mb-3">
+            <label class="d-block">Scheme Required *</label>
+            <div class="checkbox-grid" [class.is-invalid-group]="showError('schemeRequired')">
+              <div class="form-check" *ngFor="let s of schemeOptions">
+                <input class="form-check-input" type="checkbox" [id]="'scheme_' + s"
+                  [checked]="selectedSchemes.includes(s)" (change)="toggleScheme(s)">
+                <label class="form-check-label" [for]="'scheme_' + s">{{ s }}</label>
+              </div>
+            </div>
+            <div *ngIf="showError('schemeRequired')" class="invalid-feedback d-block">Please select at least one option.
             </div>
           </div>
-          <div *ngIf="showError('schemeRequired')" class="invalid-feedback d-block">Please select at least one option.</div>
-        </div>
-        <div class="col-12 mb-3">
-          <label class="d-block">Facility Required *</label>
-          <div class="checkbox-grid" [class.is-invalid-group]="showError('facilityRequired')">
-            <div class="form-check" *ngFor="let f of facilityOptions">
-              <input class="form-check-input" type="checkbox" [id]="'facility_' + f"
-                [checked]="selectedFacilities.includes(f)"
-                (change)="toggleFacility(f)">
-              <label class="form-check-label" [for]="'facility_' + f">{{ f }}</label>
+          <div class="col-12 mb-3">
+            <label class="d-block">Facility Required *</label>
+            <div class="checkbox-grid" [class.is-invalid-group]="showError('facilityRequired')">
+              <div class="form-check" *ngFor="let f of facilityOptions">
+                <input class="form-check-input" type="checkbox" [id]="'facility_' + f"
+                  [checked]="selectedFacilities.includes(f)" (change)="toggleFacility(f)">
+                <label class="form-check-label" [for]="'facility_' + f">{{ f }}</label>
+              </div>
             </div>
+            <div *ngIf="showError('facilityRequired')" class="invalid-feedback d-block">Please select at least one
+              option.</div>
           </div>
-          <div *ngIf="showError('facilityRequired')" class="invalid-feedback d-block">Please select at least one option.</div>
         </div>
-      </div>
 
-      <!-- Step 1 footer: Continue button -->
-      <div class="form-footer">
-        <button type="button" class="btn btn-primary btn-lg" (click)="goToVerification()">
-          Continue to Verification →
-        </button>
-      </div>
+        <!-- Step 1 footer: Continue button -->
+        <div class="form-footer">
+          <button type="button" class="btn btn-primary btn-lg" (click)="goToVerification()">
+            Continue to Verification →
+          </button>
+        </div>
 
       </div><!-- end *ngIf step 1 -->
 
       <!-- ===== STEP 2: Identity Verification ===== -->
       <div *ngIf="currentStep === 2">
 
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <button type="button" class="btn btn-outline-secondary" (click)="goBack()">← Back</button>
-        <h3 class="mb-0">Identity Verification</h3>
-      </div>
-      <hr class="my-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <button type="button" class="btn btn-outline-secondary" (click)="goBack()">← Back</button>
+          <h3 class="mb-0">Identity Verification</h3>
+        </div>
+        <hr class="my-4">
 
-      <h5 class="fw-bold mt-4">Live Selfie Capture</h5>
-<div class="card p-3 mb-4 bg-light">
+        <h5 class="fw-bold mt-4">Live Selfie Capture</h5>
+        <div class="card p-3 mb-4 bg-light">
 
-  <!-- Camera: full width -->
-  <div class="d-flex flex-column align-items-center mb-3">
-    <div class="camera-viewport">
-      <video #videoElement autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;" [hidden]="isImageCaptured"></video>
-      <canvas #canvasElement style="position: absolute; top: 0; left: 0;" [hidden]="isImageCaptured"></canvas>
-      <img *ngIf="isImageCaptured" [src]="capturedImagePreview" style="width: 100%; height: 100%; object-fit: cover;">
-      <div class="camera-overlay-btns">
-        <button type="button" class="btn camera-icon-btn" (click)="startCamera()" *ngIf="isImageCaptured || !isCameraActive" title="Start / Retake Camera">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4z"/>
-            <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5m0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0"/>
-          </svg>
-        </button>
-        <button type="button" class="btn camera-capture-btn" (click)="capturePhoto()" *ngIf="isCameraActive && !isImageCaptured" [disabled]="!isFaceDetected" title="Capture Photo">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-            <circle cx="8" cy="8" r="3"/>
-          </svg>
-        </button>
-      </div>
-    </div>
-    <div class="mt-2 w-100 camera-feedback" *ngIf="feedbackMessage">
-      <div class="alert alert-{{feedbackClass}} py-2 px-3 mb-0 text-center" role="alert">
-        <strong>{{ feedbackMessage }}</strong>
-      </div>
-    </div>
-  </div>
+          <div class="selfie-instructions-wrap">
+            <p class="selfie-instructions-title">Before you capture</p>
+            <div class="selfie-steps-grid">
+              <div class="selfie-tip">
+                <span class="selfie-tip-icon">💡</span>
+                <span class="selfie-tip-text">Good lighting</span>
+              </div>
+              <div class="selfie-tip">
+                <span class="selfie-tip-icon">🕶️</span>
+                <span class="selfie-tip-text">No glasses or masks</span>
+              </div>
+              <div class="selfie-tip">
+                <span class="selfie-tip-icon">👁️</span>
+                <span class="selfie-tip-text">Face the camera</span>
+              </div>
+              <div class="selfie-tip">
+                <span class="selfie-tip-icon">🎯</span>
+                <span class="selfie-tip-text">Centre your face</span>
+              </div>
+              <div class="selfie-tip selfie-tip--highlight">
+                <span class="selfie-tip-icon">✅</span>
+                <span class="selfie-tip-text">Wait for <strong>"Ready"</strong> message</span>
+              </div>
+            </div>
+          </div>
+          <!-- end selfie-instructions-wrap -->
 
-  <!-- Instructions: horizontal strip below camera -->
-  <div class="selfie-instructions-wrap">
-  <p class="selfie-instructions-title">Before you capture</p>
-  <div class="selfie-steps-grid">
-    <div class="selfie-tip">
-      <span class="selfie-tip-icon">💡</span>
-      <span class="selfie-tip-text">Good lighting</span>
-    </div>
-    <div class="selfie-tip">
-      <span class="selfie-tip-icon">🕶️</span>
-      <span class="selfie-tip-text">No glasses or masks</span>
-    </div>
-    <div class="selfie-tip">
-      <span class="selfie-tip-icon">👁️</span>
-      <span class="selfie-tip-text">Face the camera</span>
-    </div>
-    <div class="selfie-tip">
-      <span class="selfie-tip-icon">🎯</span>
-      <span class="selfie-tip-text">Centre your face</span>
-    </div>
-    <div class="selfie-tip selfie-tip--highlight">
-      <span class="selfie-tip-icon">✅</span>
-      <span class="selfie-tip-text">Wait for green <strong>"Ready"</strong> message</span>
-    </div>
-  </div>
-  </div><!-- end selfie-instructions-wrap -->
+          <!-- Camera: full width -->
+          <div class="d-flex flex-column align-items-center mb-3">
+            <div class="camera-viewport">
+              <video #videoElement autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"
+                [hidden]="isImageCaptured"></video>
+              <canvas #canvasElement style="position: absolute; top: 0; left: 0;" [hidden]="isImageCaptured"></canvas>
+              <img *ngIf="isImageCaptured" [src]="capturedImagePreview"
+                style="width: 100%; height: 100%; object-fit: cover;">
+              <div class="camera-overlay-btns">
+                <button type="button" class="btn camera-icon-btn" (click)="startCamera()"
+                  *ngIf="isImageCaptured || !isCameraActive" title="Start / Retake Camera">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                    viewBox="0 0 16 16">
+                    <path
+                      d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4z" />
+                    <path
+                      d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5m0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0" />
+                  </svg>
+                </button>
+                <button type="button" class="btn camera-capture-btn" (click)="capturePhoto()"
+                  *ngIf="isCameraActive && !isImageCaptured" [disabled]="!isFaceDetected" title="Capture Photo">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                    viewBox="0 0 16 16">
+                    <circle cx="8" cy="8" r="3" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="camera-feedback" *ngIf="feedbackMessage">
+              <div class="alert alert-{{feedbackClass}} py-2 px-3 mb-0 text-center" role="alert">
+                <strong>{{ feedbackMessage }}</strong>
+              </div>
+            </div>
+          </div>
 
-</div>
+          <!-- Instructions: horizontal strip below camera -->
 
-      <div class="form-footer">
-        <button type="submit" class="btn btn-primary btn-lg" [disabled]="submitting || !capturedImageBlob">
-          <span *ngIf="!submitting">Submit Application</span>
-          <span *ngIf="submitting">Submitting...</span>
-        </button>
-      </div>
+
+        </div>
+
+        <div class="form-footer">
+          <button type="submit" class="btn btn-primary btn-lg" [disabled]="submitting || !capturedImageBlob">
+            <span *ngIf="!submitting">Submit Application</span>
+            <span *ngIf="submitting">Submitting...</span>
+          </button>
+        </div>
 
       </div><!-- end *ngIf step 2 -->
 
