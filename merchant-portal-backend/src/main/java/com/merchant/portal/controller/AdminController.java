@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -31,7 +32,8 @@ public class AdminController {
     public ResponseEntity<?> createAdmin(@RequestBody User user) {
         // Check if username already exists
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("message", "Username \"" + user.getUsername() + "\" is already taken. Please use a different username."));
         }
 
         // Role is set
@@ -54,6 +56,15 @@ public class AdminController {
         userRoleService.assignRoleToUser(savedUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+    }
+
+    // 1b. Check if a username is already taken (GET /api/admins/check-username?username=xxx)
+    //     Returns { "exists": true } or { "exists": false }
+    //     The frontend can call this on blur / before submit to give instant feedback.
+    @GetMapping("/check-username")
+    public ResponseEntity<Map<String, Boolean>> checkUsername(@RequestParam String username) {
+        boolean exists = userRepository.findByUsername(username).isPresent();
+        return ResponseEntity.ok(Map.of("exists", exists));
     }
 
     // 2. Get all Admins (GET /api/admins) - Used by ManageAdminsComponent
