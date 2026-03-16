@@ -68,6 +68,7 @@ public class Application {
     private String nationality;
     private String idUploadFront;
     private String idUploadBack;
+    private String passportPhoto;
 
     // ================================
     // Merchant Business

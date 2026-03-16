@@ -66,6 +66,7 @@ public class ApplicationController {
             @RequestParam("facilityRequired") String facilityRequired,
             @RequestPart("ownerIdFront") MultipartFile ownerIdFront,
             @RequestPart("ownerIdBack") MultipartFile ownerIdBack,
+            @RequestPart("passportPhoto") MultipartFile passportPhoto,
             @RequestPart("proofOfBusiness") MultipartFile proofOfBusiness,
             @RequestPart("liveSelfie") MultipartFile liveSelfie
     ) {
@@ -73,12 +74,13 @@ public class ApplicationController {
             // Save files and get their stored filenames
             String ownerIdFrontPath = fileStorageService.save(ownerIdFront);
             String ownerIdBackPath = fileStorageService.save(ownerIdBack);
+            String passportPhotoPath = fileStorageService.save(passportPhoto);
             String proofOfBusinessPath = fileStorageService.save(proofOfBusiness);
             String liveSelfiePath = fileStorageService.save(liveSelfie);
 
-            // Calculate Score & Confidence level
+            // Compare passport photo against live selfie for best face-match accuracy
             double score = faceVerificationService.compareFaces(
-                    Paths.get("uploads/" + ownerIdFrontPath),
+                    Paths.get("uploads/" + passportPhotoPath),
                     Paths.get("uploads/" + liveSelfiePath)
             );
             // Get Confidence level (High/ Medium/ Low) for admin reviewing
@@ -126,6 +128,7 @@ public class ApplicationController {
             // Set the saved file paths
             app.setIdUploadFront(ownerIdFrontPath);
             app.setIdUploadBack(ownerIdBackPath);
+            app.setPassportPhoto(passportPhotoPath);
             app.setProofOfBusiness(proofOfBusinessPath);
 
             Application saved = applicationService.save(app);
