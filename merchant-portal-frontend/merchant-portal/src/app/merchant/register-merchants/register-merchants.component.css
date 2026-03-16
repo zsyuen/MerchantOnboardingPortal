@@ -472,3 +472,263 @@ hr.my-4 {
   border-color: var(--clr-border);
   opacity: 1;
 }
+
+/* ===== Info icon ===== */
+.info-icon-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--clr-primary);
+  flex-shrink: 0;
+  outline: none;
+}
+
+.info-icon-wrap:focus-visible {
+  outline: 2px solid var(--clr-primary);
+  border-radius: 50%;
+}
+
+.info-icon {
+  display: block;
+  opacity: 0.75;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.info-icon-wrap:hover .info-icon,
+.info-icon-wrap:focus .info-icon {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+/* ===== Proof of Business tooltip ===== */
+.proof-tooltip {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 1050;
+  background: #fff;
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  padding: 0.75rem 1rem;
+  min-width: 300px;
+  max-width: 340px;
+  font-size: 0.78rem;
+  color: var(--clr-text);
+  font-weight: 400;
+  line-height: 1.55;
+  white-space: normal;
+  pointer-events: auto;
+  animation: tooltipFadeIn 0.15s ease;
+}
+
+.proof-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: 10px;
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-left: 1.5px solid var(--clr-border);
+  border-top: 1.5px solid var(--clr-border);
+  transform: rotate(45deg);
+}
+
+.proof-tooltip strong {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--clr-text);
+  margin-bottom: 0.45rem;
+}
+
+.proof-tooltip ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  list-style: none;
+}
+
+.proof-tooltip ul li {
+  padding: 0.18rem 0;
+  position: relative;
+}
+
+.proof-tooltip ul li::before {
+  content: '•';
+  position: absolute;
+  left: -1rem;
+  color: var(--clr-primary);
+  font-weight: 700;
+}
+
+@keyframes tooltipFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Passport Photo Good/Bad Modal ===== */
+.passport-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: backdropFadeIn 0.18s ease;
+}
+
+@keyframes backdropFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.passport-modal {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 1.5rem 1.75rem 1.75rem;
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+  animation: modalSlideIn 0.2s ease;
+}
+
+@keyframes modalSlideIn {
+  from { opacity: 0; transform: translateY(-16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.passport-modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.9rem;
+  background: none;
+  border: none;
+  font-size: 1.15rem;
+  color: var(--clr-text-muted);
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.passport-modal-close:hover {
+  color: var(--clr-danger);
+  background: #fff0f0;
+}
+
+.passport-modal-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  margin-bottom: 0.25rem;
+}
+
+.passport-modal-subtitle {
+  font-size: 0.78rem;
+  color: var(--clr-text-muted);
+  margin-bottom: 1.1rem;
+}
+
+.passport-modal-examples {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.passport-example {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.passport-example--good {
+  border-color: #52b788;
+}
+
+.passport-example--bad {
+  border-color: #e63946;
+}
+
+.passport-example-img {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.face-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+}
+
+.face-placeholder--good {
+  background: #d8f3dc;
+}
+
+.face-placeholder--bad {
+  background: #fde8e8;
+  filter: blur(1.5px) brightness(0.85);
+}
+
+.passport-example-badge {
+  width: 100%;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.35rem 0;
+  letter-spacing: 0.03em;
+}
+
+.passport-example-badge--good {
+  background: #52b788;
+  color: #fff;
+}
+
+.passport-example-badge--bad {
+  background: #e63946;
+  color: #fff;
+}
+
+.passport-example-tips {
+  list-style: none;
+  padding: 0.6rem 0.75rem;
+  margin: 0;
+  width: 100%;
+  background: #fafafa;
+}
+
+.passport-example-tips li {
+  font-size: 0.74rem;
+  color: var(--clr-text);
+  padding: 0.15rem 0;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.passport-example--good .passport-example-tips li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #52b788;
+  font-weight: 700;
+}
+
+.passport-example--bad .passport-example-tips li::before {
+  content: '✗';
+  position: absolute;
+  left: 0;
+  color: #e63946;
+  font-weight: 700;
+}

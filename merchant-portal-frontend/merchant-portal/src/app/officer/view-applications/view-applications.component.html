@@ -72,6 +72,11 @@
                     <span *ngIf="!application.idUploadBack">-</span>
                 </div>
                 <div class="col-md-4 field">
+                    <label>Passport Photo</label>
+                    <a *ngIf="application.passportPhoto" [href]="uploadsUrl + application.passportPhoto" target="_blank" rel="noopener noreferrer">{{ application.passportPhoto }}</a>
+                    <span *ngIf="!application.passportPhoto">-</span>
+                </div>
+                <div class="col-md-4 field">
                     <label>Proof of Business</label>
                     <a *ngIf="application.proofOfBusiness" [href]="uploadsUrl + application.proofOfBusiness" target="_blank" rel="noopener noreferrer">{{ application.proofOfBusiness }}</a>
                     <span *ngIf="!application.proofOfBusiness">-</span>
@@ -88,7 +93,7 @@
                     <span *ngIf="!application.confidenceLevel">-</span>
                 </div>
                 <div class="col-md-6 field">
-                    <label>Similarity Score</label>
+                    <label>Similarity Score <small class="text-muted">(Passport Photo vs Live Selfie)</small></label>
                     <span *ngIf="application.facialSimilarityScore !== null && application.facialSimilarityScore !== undefined">
                         {{ (application.facialSimilarityScore * 100) | number:'1.2-2' }}%
                     </span>

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
@@ -26,10 +26,14 @@ export class MerchantRegisterComponent implements OnInit {
   capturedImagePreview: string | null = null;
   capturedImageBlob: Blob | null = null;
   modelsLoaded = false;
-  
+
   // Live feedback message
   feedbackMessage: string = '';
   feedbackClass: string = ''; // 'success', 'warning', 'danger'
+
+  // Tooltip / modal state
+  proofTooltipOpen = false;
+  passportModalOpen = false;
 
   // Scheme & Facility checkbox options
   schemeOptions = ['Visa', 'MasterCard', 'JCB', 'UPI', 'Wechat', 'Alipay', 'Amex'];
@@ -83,6 +87,7 @@ export class MerchantRegisterComponent implements OnInit {
       ownerNationality: ['', Validators.required],
       ownerIdFront: [null, Validators.required],
       ownerIdBack: [null, Validators.required],
+      passportPhoto: [null, Validators.required],
       industry: ['', Validators.required],
       businessType: ['', Validators.required],
       numEmployees: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
@@ -94,18 +99,18 @@ export class MerchantRegisterComponent implements OnInit {
 
   async loadModels() {
     if (this.modelsLoaded) return;
-    
+
     try {
       this.feedbackMessage = 'Loading face detection models...';
       this.feedbackClass = 'warning';
-      
+
       const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model';
-      
+
       await Promise.all([
         faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
         faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
       ]);
-      
+
       this.modelsLoaded = true;
       this.feedbackMessage = 'Models loaded. Starting camera...';
       this.feedbackClass = 'success';
@@ -147,13 +152,13 @@ export class MerchantRegisterComponent implements OnInit {
     if (!this.isCameraActive || this.isImageCaptured) return;
 
     const video = this.videoElement.nativeElement;
-    
+
     if(video.readyState === 4) {
       const detections = await faceapi.detectAllFaces(
-        video, 
+        video,
         new faceapi.SsdMobilenetv1Options({ minConfidence: 0.5 })
       ).withFaceLandmarks();
-      
+
       if (detections.length === 0) {
         this.isFaceDetected = false;
         this.feedbackMessage = 'No face detected. Please look at the camera.';
@@ -167,14 +172,14 @@ export class MerchantRegisterComponent implements OnInit {
         const box = detection.detection.box;
         const videoWidth = video.videoWidth;
         const videoHeight = video.videoHeight;
-        
+
         // Calculate face size relative to frame
         const faceWidth = box.width;
         const faceHeight = box.height;
         const faceArea = faceWidth * faceHeight;
         const frameArea = videoWidth * videoHeight;
         const faceRatio = faceArea / frameArea;
-        
+
         // Check if face is centered
         const faceCenterX = box.x + box.width / 2;
         const faceCenterY = box.y + box.height / 2;
@@ -182,7 +187,7 @@ export class MerchantRegisterComponent implements OnInit {
         const frameCenterY = videoHeight / 2;
         const offsetX = Math.abs(faceCenterX - frameCenterX);
         const offsetY = Math.abs(faceCenterY - frameCenterY);
-        
+
         if (faceRatio < 0.08) {
           this.isFaceDetected = false;
           this.feedbackMessage = 'Move closer to the camera';
@@ -270,9 +275,17 @@ export class MerchantRegisterComponent implements OnInit {
     const formValues = this.form.getRawValue();
 
     Object.keys(formValues).forEach(key => {
-      formData.append(key, formValues[key]);
+      // File fields are handled separately below — skip them here
+      if (!['ownerIdFront', 'ownerIdBack', 'passportPhoto', 'proofOfBusiness'].includes(key)) {
+        formData.append(key, formValues[key]);
+      }
     });
 
+    // Append file fields explicitly with their backend-expected names
+    formData.append('ownerIdFront',   this.form.get('ownerIdFront')!.value);
+    formData.append('ownerIdBack',    this.form.get('ownerIdBack')!.value);
+    formData.append('passportPhoto',  this.form.get('passportPhoto')!.value);
+    formData.append('proofOfBusiness', this.form.get('proofOfBusiness')!.value);
     formData.append('liveSelfie', this.capturedImageBlob, 'selfie.jpg');
 
     this.portal.submitApplication(formData).subscribe({
@@ -316,6 +329,33 @@ export class MerchantRegisterComponent implements OnInit {
       control?.markAsDirty();
       control?.updateValueAndValidity();
     }
+  }
+
+  toggleProofTooltip(event: Event): void {
+    event.stopPropagation();
+    this.proofTooltipOpen = !this.proofTooltipOpen;
+    this.passportModalOpen = false;
+  }
+
+  openPassportModal(event: Event): void {
+    event.stopPropagation();
+    this.passportModalOpen = true;
+    this.proofTooltipOpen = false;
+  }
+
+  closePassportModal(): void {
+    this.passportModalOpen = false;
+  }
+
+  @HostListener('document:click')
+  onDocumentClick(): void {
+    this.proofTooltipOpen = false;
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    this.proofTooltipOpen = false;
+    this.passportModalOpen = false;
   }
 
   blockNonNumericChars(event: KeyboardEvent): void {
