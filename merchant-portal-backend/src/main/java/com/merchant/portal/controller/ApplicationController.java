@@ -13,8 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.List;
+import java.util.UUID;
+import java.time.LocalDateTime;
 import com.merchant.portal.service.FaceVerificationService;
-import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/api/applications")
@@ -71,18 +72,20 @@ public class ApplicationController {
             @RequestPart("liveSelfie") MultipartFile liveSelfie
     ) {
         try {
-            // Save files and get their stored filenames
-            String ownerIdFrontPath = fileStorageService.save(ownerIdFront);
-            String ownerIdBackPath = fileStorageService.save(ownerIdBack);
-            String passportPhotoPath = fileStorageService.save(passportPhoto);
-            String proofOfBusinessPath = fileStorageService.save(proofOfBusiness);
-            String liveSelfiePath = fileStorageService.save(liveSelfie);
+            // Save files to DB and get their generated UUIDs
+            UUID ownerIdFrontId    = fileStorageService.save(ownerIdFront);
+            UUID ownerIdBackId     = fileStorageService.save(ownerIdBack);
+            UUID passportPhotoId   = fileStorageService.save(passportPhoto);
+            UUID proofOfBusinessId = fileStorageService.save(proofOfBusiness);
+            // Selfie is saved with a 5-day retention window — scheduler will purge it after expiry
+            UUID liveSelfieId      = fileStorageService.save(liveSelfie, "SELFIE", LocalDateTime.now().plusDays(5));
+
+            // Retrieve raw bytes from DB for face comparison (no disk I/O)
+            byte[] passportBytes = fileStorageService.getFile(passportPhotoId).getData();
+            byte[] selfieBytes   = fileStorageService.getFile(liveSelfieId).getData();
 
             // Compare passport photo against live selfie for best face-match accuracy
-            double score = faceVerificationService.compareFaces(
-                    Paths.get("uploads/" + passportPhotoPath),
-                    Paths.get("uploads/" + liveSelfiePath)
-            );
+            double score = faceVerificationService.compareFaces(passportBytes, selfieBytes);
             // Get Confidence level (High/ Medium/ Low) for admin reviewing
             String confidence = faceVerificationService.getConfidenceLevel(score);
 
@@ -120,16 +123,16 @@ public class ApplicationController {
             app.setNumberOfEmployees(numEmployees);
             app.setSchemeRequired(schemeRequired);
             app.setFacilityRequired(facilityRequired);
-            app.setSelfieImage(liveSelfiePath);
+            app.setSelfieImage(liveSelfieId.toString());
             app.setFacialSimilarityScore(score);
             app.setConfidenceLevel(confidence); //Admin sees High/ Medium/ Low
             app.setVerificationStatus(initialStatus);
 
-            // Set the saved file paths
-            app.setIdUploadFront(ownerIdFrontPath);
-            app.setIdUploadBack(ownerIdBackPath);
-            app.setPassportPhoto(passportPhotoPath);
-            app.setProofOfBusiness(proofOfBusinessPath);
+            // Store document UUIDs as references in the Application record
+            app.setIdUploadFront(ownerIdFrontId.toString());
+            app.setIdUploadBack(ownerIdBackId.toString());
+            app.setPassportPhoto(passportPhotoId.toString());
+            app.setProofOfBusiness(proofOfBusinessId.toString());
 
             Application saved = applicationService.save(app);
             return ResponseEntity.status(HttpStatus.CREATED).body(saved);

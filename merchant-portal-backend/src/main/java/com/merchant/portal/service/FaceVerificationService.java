@@ -18,8 +18,8 @@ import ai.djl.translate.TranslateException;
 import ai.djl.training.util.ProgressBar;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 
 @Service
 public class FaceVerificationService {
@@ -27,10 +27,10 @@ public class FaceVerificationService {
     private static final double THRESHOLD_HIGH = 0.60;
     private static final double THRESHOLD_MEDIUM = 0.40;
 
-    public double compareFaces(Path idCardPath, Path selfiePath) throws IOException, ModelNotFoundException, MalformedModelException, TranslateException {
+    public double compareFaces(byte[] idCardBytes, byte[] selfieBytes) throws IOException, ModelNotFoundException, MalformedModelException, TranslateException {
 
-        Image img1 = ImageFactory.getInstance().fromFile(idCardPath);
-        Image img2 = ImageFactory.getInstance().fromFile(selfiePath);
+        Image img1 = ImageFactory.getInstance().fromInputStream(new ByteArrayInputStream(idCardBytes));
+        Image img2 = ImageFactory.getInstance().fromInputStream(new ByteArrayInputStream(selfieBytes));
 
         // 1. Define Preprocessing Pipeline
         // The FaceNet model we generated expects 160x160 pixels
