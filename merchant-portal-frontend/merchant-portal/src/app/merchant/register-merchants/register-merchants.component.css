@@ -588,9 +588,9 @@ hr.my-4 {
   background: #fff;
   border-radius: var(--radius);
   box-shadow: var(--shadow-md);
-  padding: 1.5rem 1.75rem 1.75rem;
-  max-width: 500px;
-  width: 90%;
+  padding: 1.85rem 2rem 2rem;
+  max-width: 760px;
+  width: min(92vw, 760px);
   position: relative;
   animation: modalSlideIn 0.2s ease;
 }
@@ -602,15 +602,15 @@ hr.my-4 {
 
 .passport-modal-close {
   position: absolute;
-  top: 0.75rem;
-  right: 0.9rem;
+  top: 0.95rem;
+  right: 1rem;
   background: none;
   border: none;
-  font-size: 1.15rem;
+  font-size: 1.35rem;
   color: var(--clr-text-muted);
   cursor: pointer;
   line-height: 1;
-  padding: 0.2rem 0.4rem;
+  padding: 0.3rem 0.45rem;
   border-radius: 4px;
   transition: color 0.15s, background 0.15s;
 }
@@ -621,22 +621,22 @@ hr.my-4 {
 }
 
 .passport-modal-title {
-  font-size: 0.95rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--clr-text);
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.35rem;
 }
 
 .passport-modal-subtitle {
-  font-size: 0.78rem;
+  font-size: 0.95rem;
   color: var(--clr-text-muted);
-  margin-bottom: 1.1rem;
+  margin-bottom: 1.4rem;
 }
 
 .passport-modal-examples {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 1.35rem;
 }
 
 .passport-example {
@@ -646,6 +646,7 @@ hr.my-4 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: #fff;
 }
 
 .passport-example--good {
@@ -662,32 +663,22 @@ hr.my-4 {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0.85rem;
+  background: #f8fafc;
 }
 
-.face-placeholder {
+.passport-example-photo {
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0;
-}
-
-.face-placeholder--good {
-  background: #d8f3dc;
-}
-
-.face-placeholder--bad {
-  background: #fde8e8;
-  filter: blur(1.5px) brightness(0.85);
+  object-fit: cover;
 }
 
 .passport-example-badge {
   width: 100%;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 700;
-  padding: 0.35rem 0;
+  padding: 0.7rem 0;
   letter-spacing: 0.03em;
 }
 
@@ -699,36 +690,4 @@ hr.my-4 {
 .passport-example-badge--bad {
   background: #e63946;
   color: #fff;
-}
-
-.passport-example-tips {
-  list-style: none;
-  padding: 0.6rem 0.75rem;
-  margin: 0;
-  width: 100%;
-  background: #fafafa;
-}
-
-.passport-example-tips li {
-  font-size: 0.74rem;
-  color: var(--clr-text);
-  padding: 0.15rem 0;
-  position: relative;
-  padding-left: 1rem;
-}
-
-.passport-example--good .passport-example-tips li::before {
-  content: '✓';
-  position: absolute;
-  left: 0;
-  color: #52b788;
-  font-weight: 700;
-}
-
-.passport-example--bad .passport-example-tips li::before {
-  content: '✗';
-  position: absolute;
-  left: 0;
-  color: #e63946;
-  font-weight: 700;
 }
