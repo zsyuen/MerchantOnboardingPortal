@@ -2,8 +2,10 @@
 
   <!-- Already applied? Pre-entry contextual link -->
   <div class="already-applied-bar">
-    <span>Already applied?</span>
-    <a routerLink="/merchant/status" class="already-applied-link">Check your application status →</a>
+    <span>🔍 Already submitted an application?</span>
+    <a routerLink="/merchant/status" class="already-applied-link">
+      Check Application Status &nbsp;→
+    </a>
   </div>
 
   <div class="form-card">
@@ -52,8 +54,10 @@
           <div class="col-md-6 mb-3">
             <label>Date of Incorporation *</label>
             <input type="date" formControlName="incorporationDate" class="form-control"
+              [max]="todayStr"
               [ngClass]="{'is-invalid': showError('incorporationDate')}">
-            <div *ngIf="showError('incorporationDate')" class="invalid-feedback">Please fill out this field.</div>
+            <div *ngIf="form.get('incorporationDate')?.errors?.['required'] && form.get('incorporationDate')?.touched" class="invalid-feedback">Please fill out this field.</div>
+            <div *ngIf="form.get('incorporationDate')?.errors?.['futureDate'] && form.get('incorporationDate')?.touched" class="invalid-feedback">Date of Incorporation cannot be in the future.</div>
           </div>
           <div class="col-md-6 mb-3">
             <label>Country of Corporation *</label>
@@ -492,7 +496,8 @@
             <label>Date of Birth *</label>
             <input type="date" formControlName="ownerDob" class="form-control"
               [ngClass]="{'is-invalid': showError('ownerDob')}">
-            <div *ngIf="showError('ownerDob')" class="invalid-feedback">Please fill out this field.</div>
+            <div *ngIf="form.get('ownerDob')?.errors?.['required'] && form.get('ownerDob')?.touched" class="invalid-feedback">Please fill out this field.</div>
+            <div *ngIf="form.get('ownerDob')?.errors?.['minAge'] && form.get('ownerDob')?.touched" class="invalid-feedback">Owner must be at least 18 years old.</div>
           </div>
           <div class="col-md-6 mb-3">
             <label>IC / Passport No *</label>

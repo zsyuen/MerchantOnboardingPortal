@@ -57,7 +57,7 @@ export class PortalService {
   }
 
   createAdmin(data: any): Observable<any> {
-    return this.http.post(`${this.apiBase}/admins`, data, { headers: this.getAuthHeaders() });  
+    return this.http.post(`${this.apiBase}/admins`, data, { headers: this.getAuthHeaders() });
   }
 
   getAdmins(): Observable<any[]> {
@@ -70,5 +70,19 @@ export class PortalService {
 
   revokeAdmin(adminId: number): Observable<any> {
     return this.http.post(`${this.apiBase}/admins/${adminId}/revoke`, {}, { headers: this.getAuthHeaders() });
+  }
+
+  /**
+   * Fetches a document by its UUID from the backend as a binary Blob.
+   * responseType: 'blob' tells Angular to treat the response as raw binary data
+   * instead of trying to parse it as JSON.
+   * The Authorization header is included so the secured /api/documents endpoint
+   * accepts the request.
+   */
+  getDocumentBlob(documentId: string): Observable<Blob> {
+    return this.http.get(`${this.apiBase}/documents/${documentId}`, {
+      headers: this.getAuthHeaders(),
+      responseType: 'blob'
+    });
   }
 }

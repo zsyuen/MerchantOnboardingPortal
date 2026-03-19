@@ -14,7 +14,6 @@ export class ViewApplicationComponent implements OnInit {
   application: any;
   isLoading = true;
   errorMsg = '';
-  uploadsUrl = 'http://localhost:8080/uploads/';
   confirmPending: string | null = null;
 
   constructor(
@@ -84,6 +83,32 @@ export class ViewApplicationComponent implements OnInit {
       error: (err) => {
         console.error('Failed to update status:', err);
         alert('Failed to update status. Please try again.');
+      }
+    });
+  }
+
+  /**
+   * Fetches a document from the backend with the JWT token attached,
+   * converts it to a temporary blob URL, and opens it in a new browser tab.
+   * This is needed because /api/documents/** is a secured endpoint —
+   * a plain <a href> cannot attach the Authorization header.
+   *
+   * @param documentId the UUID string stored in the application field (e.g. idUploadFront)
+   */
+  openDocument(documentId: string): void {
+    if (!documentId) return;
+    this.svc.getDocumentBlob(documentId).subscribe({
+      next: (blob) => {
+        // Create a temporary in-memory URL pointing to the blob data
+        const blobUrl = URL.createObjectURL(blob);
+        // Open the file in a new tab — browser renders images and PDFs inline
+        window.open(blobUrl, '_blank');
+        // Revoke the temporary URL after a short delay to free memory
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+      },
+      error: (err) => {
+        console.error('Failed to load document:', err);
+        alert('Could not load document. It may have been deleted or expired.');
       }
     });
   }

@@ -63,28 +63,43 @@
             <div class="row detail-row">
                 <div class="col-md-4 field">
                     <label>ID Upload (Front)</label>
-                    <a *ngIf="application.idUploadFront" [href]="uploadsUrl + application.idUploadFront" target="_blank" rel="noopener noreferrer">{{ application.idUploadFront }}</a>
+                    <button *ngIf="application.idUploadFront" class="btn btn-sm btn-outline-primary" (click)="openDocument(application.idUploadFront)">
+                        <i class="bi bi-file-earmark-image"></i> View
+                    </button>
                     <span *ngIf="!application.idUploadFront">-</span>
                 </div>
                 <div class="col-md-4 field">
                     <label>ID Upload (Back)</label>
-                    <a *ngIf="application.idUploadBack" [href]="uploadsUrl + application.idUploadBack" target="_blank" rel="noopener noreferrer">{{ application.idUploadBack }}</a>
+                    <button *ngIf="application.idUploadBack" class="btn btn-sm btn-outline-primary" (click)="openDocument(application.idUploadBack)">
+                        <i class="bi bi-file-earmark-image"></i> View
+                    </button>
                     <span *ngIf="!application.idUploadBack">-</span>
                 </div>
                 <div class="col-md-4 field">
                     <label>Passport Photo</label>
-                    <a *ngIf="application.passportPhoto" [href]="uploadsUrl + application.passportPhoto" target="_blank" rel="noopener noreferrer">{{ application.passportPhoto }}</a>
+                    <button *ngIf="application.passportPhoto" class="btn btn-sm btn-outline-primary" (click)="openDocument(application.passportPhoto)">
+                        <i class="bi bi-file-earmark-image"></i> View
+                    </button>
                     <span *ngIf="!application.passportPhoto">-</span>
                 </div>
                 <div class="col-md-4 field">
                     <label>Proof of Business</label>
-                    <a *ngIf="application.proofOfBusiness" [href]="uploadsUrl + application.proofOfBusiness" target="_blank" rel="noopener noreferrer">{{ application.proofOfBusiness }}</a>
+                    <button *ngIf="application.proofOfBusiness" class="btn btn-sm btn-outline-primary" (click)="openDocument(application.proofOfBusiness)">
+                        <i class="bi bi-file-earmark-pdf"></i> View
+                    </button>
                     <span *ngIf="!application.proofOfBusiness">-</span>
                 </div>
             </div>
 
             <h5 class="section-header">Identity Verification</h5>
             <div class="row detail-row">
+                <div class="col-md-6 field">
+                    <label>Live Selfie</label>
+                    <button *ngIf="application.selfieImage" class="btn btn-sm btn-outline-primary" (click)="openDocument(application.selfieImage)">
+                        <i class="bi bi-camera"></i> View
+                    </button>
+                    <span *ngIf="!application.selfieImage" class="text-muted fst-italic">Deleted after 5-day retention</span>
+                </div>
                 <div class="col-md-6 field">
                     <label>Match Confidence</label>
                     <span *ngIf="application.confidenceLevel" class="confidence-badge" [ngClass]="'confidence-' + application.confidenceLevel.toLowerCase()">

@@ -1,9 +1,30 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { PortalService } from '../../services/portal.service';
 import * as faceapi from 'face-api.js';
+
+function minAgeValidator(minAge: number) {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) return null;
+    const dob = new Date(control.value);
+    const today = new Date();
+    const age = today.getFullYear() - dob.getFullYear() -
+      (today < new Date(today.getFullYear(), dob.getMonth(), dob.getDate()) ? 1 : 0);
+    return age >= minAge ? null : { minAge: { required: minAge, actual: age } };
+  };
+}
+
+function notFutureDate(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) return null;
+  // Parse the date string as local date (split to avoid UTC offset issues)
+  const [year, month, day] = (control.value as string).split('-').map(Number);
+  const selected = new Date(year, month - 1, day);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return selected <= today ? null : { futureDate: true };
+}
 
 @Component({
   selector: 'app-merchant-register',
@@ -35,6 +56,9 @@ export class MerchantRegisterComponent implements OnInit {
   proofTooltipOpen = false;
   passportModalOpen = false;
 
+  // Today's date string for date input max attributes (YYYY-MM-DD)
+  todayStr = new Date().toISOString().split('T')[0];
+
   // Scheme & Facility checkbox options
   schemeOptions = ['Visa', 'MasterCard', 'JCB', 'UPI', 'Wechat', 'Alipay', 'Amex'];
   facilityOptions = ['Full Payment', 'Instalment', 'Redemption', 'DCC', 'MCC', 'Recurring', 'e-Commerce', 'MOTO', 'WeChat/ Alipay', 'K+shop'];
@@ -63,7 +87,7 @@ export class MerchantRegisterComponent implements OnInit {
     this.form = this.fb.group({
       businessRegNo: ['', Validators.required],
       companyName: ['', Validators.required],
-      incorporationDate: ['', Validators.required],
+      incorporationDate: ['', [Validators.required, notFutureDate]],
       countryOfCorp: ['', Validators.required],
       merchantNameEn: ['', Validators.required],
       merchantNameLocal: ['', Validators.required],
@@ -82,7 +106,7 @@ export class MerchantRegisterComponent implements OnInit {
       ownerFirstName: ['', Validators.required],
       ownerLastName: ['', Validators.required],
       ownerEmail: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$')]],
-      ownerDob: ['', Validators.required],
+      ownerDob: ['', [Validators.required, minAgeValidator(18)]],
       ownerIdNo: ['', Validators.required],
       ownerNationality: ['', Validators.required],
       ownerIdFront: [null, Validators.required],

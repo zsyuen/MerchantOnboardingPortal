@@ -1,24 +1,46 @@
-/* ===== Already Applied bar ===== */
+/* ===== Already Applied CTA banner ===== */
 .already-applied-bar {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-bottom: 0.85rem;
-  font-size: 0.9rem;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+  padding: 0.85rem 1.25rem;
+  background: var(--clr-primary-light, #e8f6fd);
+  border: 1.5px solid var(--clr-primary);
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  color: var(--clr-text);
+}
+
+.already-applied-bar span {
+  font-weight: 500;
   color: var(--clr-text-muted);
 }
 
 .already-applied-link {
-  font-weight: 600;
-  color: var(--clr-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.42rem 1.1rem;
+  background: var(--clr-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.82rem;
+  border-radius: 2rem;
   text-decoration: none;
-  transition: color 0.15s;
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+  transition: background 0.18s, transform 0.12s, box-shadow 0.15s;
+  letter-spacing: 0.02em;
 }
 
 .already-applied-link:hover {
-  color: var(--clr-primary-hover);
-  text-decoration: underline;
+  background: var(--clr-primary-hover);
+  color: #fff;
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 /* ===== Step Progress Indicator ===== */

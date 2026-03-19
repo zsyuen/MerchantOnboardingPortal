@@ -60,6 +60,8 @@
   font-size: 0.95rem;
   color: var(--clr-text);
   font-weight: 500;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .detail-row a {
