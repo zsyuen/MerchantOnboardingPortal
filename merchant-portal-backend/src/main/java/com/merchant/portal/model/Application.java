@@ -1,7 +1,6 @@
 package com.merchant.portal.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,21 +18,14 @@ public class Application {
 
     @Column(name = "reference_id", unique = true, nullable = false, length = 30)
     private String referenceId;
-
-    @NotBlank(message = "Status is required")
     private String status;
-
     private LocalDateTime submissionDate;
 
     // ================================
     // Merchant Information
     // ================================
-    @NotBlank(message = "Business Registration Number is required")
     private String businessRegNo;
-
-    @NotBlank(message = "Company name is required")
     private String companyName;
-
     private String dateOfIncorporation;
     private String countryOfCorporation;
     private String merchantNameEn;
@@ -58,9 +50,7 @@ public class Application {
     // ================================
     // Owner Profile
     // ================================
-    @Email
     private String email;
-
     private String firstName;
     private String lastName;
     private String dateOfBirth;
@@ -85,6 +75,6 @@ public class Application {
     // ================================
     private String selfieImage;
     private Double facialSimilarityScore;
-    private String confidenceLevel; // "HIGH", "MEDIUM", "LOW"
-    private String verificationStatus; // "PENDING"/ "VERIFIED"/ "REJECTED"
+    private String confidenceLevel;
+    private String verificationStatus;
 }

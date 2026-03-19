@@ -28,11 +28,9 @@ public class MerchantDocument {
     @Column(name = "data", nullable = false)
     private byte[] data;
 
-    /** e.g. "SELFIE", "ID_FRONT", "ID_BACK", "PASSPORT_PHOTO", "PROOF_OF_BUSINESS" */
     @Column(name = "document_type")
     private String documentType;
 
-    /** Null means no expiry. Selfies are set to uploadedAt + 5 days. */
     @Column(name = "expires_at")
     private LocalDateTime expiresAt;
 }

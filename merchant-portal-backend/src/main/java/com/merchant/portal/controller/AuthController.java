@@ -58,13 +58,13 @@ public class AuthController {
             // Use BCrypt to verify password
             if (passwordEncoder.matches(loginRequest.password, user.getPassword())) {
 
-                // 0. CHECK IF ACCOUNT IS REVOKED
+                // 1. Check if the account is revoked
                 if ("Revoked".equals(user.getStatus())) {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .body(Map.of("error", "Your account has been revoked. Please contact the reviewer."));
                 }
 
-                // 1. MANDATORY 2FA CHECK
+                // 2. 2FA check
                 if (!user.isMfaEnabled()) {
                     return ResponseEntity.status(HttpStatus.ACCEPTED)
                             .body(Map.of(
@@ -74,7 +74,7 @@ public class AuthController {
                             ));
                 }
 
-                // 2. VERIFY CODE
+                // 3. verify code
                 if (loginRequest.code == null) {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                             .body(Map.of(
@@ -89,7 +89,7 @@ public class AuthController {
                             .body(Map.of("error", "Invalid 2FA Code"));
                 }
 
-                // 3. SUCCESS - Generate JWT token
+                // 4. success - generate JWT token
                 String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
 
                 return ResponseEntity.ok(Map.of(
@@ -152,7 +152,7 @@ public class AuthController {
         }
         User user = userOptional.get();
 
-        // CHECK IF ACCOUNT IS REVOKED
+        // check if account is revoked
         if ("Revoked".equals(user.getStatus())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(Map.of("error", "Your account has been revoked. Please contact the reviewer."));

@@ -36,7 +36,7 @@ public class AdminController {
                     .body(Map.of("message", "Username \"" + user.getUsername() + "\" is already taken. Please use a different username."));
         }
 
-        // Role is set
+        // Set role
         if (user.getRole() == null || user.getRole().isEmpty()) {
             user.setRole("admin");
         }
@@ -59,15 +59,13 @@ public class AdminController {
     }
 
     // 1b. Check if a username is already taken (GET /api/admins/check-username?username=xxx)
-    //     Returns { "exists": true } or { "exists": false }
-    //     The frontend can call this on blur / before submit to give instant feedback.
     @GetMapping("/check-username")
     public ResponseEntity<Map<String, Boolean>> checkUsername(@RequestParam String username) {
         boolean exists = userRepository.findByUsername(username).isPresent();
         return ResponseEntity.ok(Map.of("exists", exists));
     }
 
-    // 2. Get all Admins (GET /api/admins) - Used by ManageAdminsComponent
+    // 2. Get all Admins (GET /api/admins)
     @GetMapping
     public ResponseEntity<List<User>> getAllAdmins() {
 
@@ -76,7 +74,7 @@ public class AdminController {
         return ResponseEntity.ok(admins);
     }
 
-    // 3. Revoke/Grant placeholder methods (Optional, prevents 404 errors if you click those buttons)
+    // 3. Revoke/ Grant Access
     @PostMapping("/{id}/revoke")
     public ResponseEntity<?> revokeAdmin(@PathVariable Long id) {
         Optional<User> optionalUser = userRepository.findById(id);

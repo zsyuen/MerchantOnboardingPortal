@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 @Entity
-@Table(name = "userrole",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role_id"}))
+@Table(name = "userrole", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role_id"}))
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class UserRole {
 
     @Id

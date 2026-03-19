@@ -17,7 +17,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     List<Application> findByStatusIgnoreCase(String status);
 
-    /** Nulls out selfieImage on any Application that references the given document UUID. */
+    // Nulls out selfieImage on any Application that references the given document UUID
     @Modifying
     @Query("UPDATE Application a SET a.selfieImage = NULL WHERE a.selfieImage = :documentId")
     void clearSelfieImageByDocumentId(@Param("documentId") String documentId);

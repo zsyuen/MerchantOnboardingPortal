@@ -77,14 +77,14 @@ public class ApplicationController {
             UUID ownerIdBackId     = fileStorageService.save(ownerIdBack);
             UUID passportPhotoId   = fileStorageService.save(passportPhoto);
             UUID proofOfBusinessId = fileStorageService.save(proofOfBusiness);
-            // Selfie is saved with a 5-day retention window — scheduler will purge it after expiry
+            // Selfie is saved with a 5-day retention — scheduler will purge it after expiry
             UUID liveSelfieId      = fileStorageService.save(liveSelfie, "SELFIE", LocalDateTime.now().plusDays(5));
 
-            // Retrieve raw bytes from DB for face comparison (no disk I/O)
+            // Retrieve raw bytes from DB for face comparison
             byte[] passportBytes = fileStorageService.getFile(passportPhotoId).getData();
             byte[] selfieBytes   = fileStorageService.getFile(liveSelfieId).getData();
 
-            // Compare passport photo against live selfie for best face-match accuracy
+            // Compare passport photo against live selfie and get similarity score
             double score = faceVerificationService.compareFaces(passportBytes, selfieBytes);
             // Get Confidence level (High/ Medium/ Low) for admin reviewing
             String confidence = faceVerificationService.getConfidenceLevel(score);
@@ -92,7 +92,6 @@ public class ApplicationController {
             // Set initial status to Pending for admin review
             String initialStatus = "Pending";
 
-            // Manually build the Application object
             Application app = new Application();
             app.setCompanyName(companyName);
             app.setBusinessRegNo(businessRegNo);
@@ -125,7 +124,7 @@ public class ApplicationController {
             app.setFacilityRequired(facilityRequired);
             app.setSelfieImage(liveSelfieId.toString());
             app.setFacialSimilarityScore(score);
-            app.setConfidenceLevel(confidence); //Admin sees High/ Medium/ Low
+            app.setConfidenceLevel(confidence);
             app.setVerificationStatus(initialStatus);
 
             // Store document UUIDs as references in the Application record
@@ -182,7 +181,6 @@ public class ApplicationController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateApplication(@PathVariable Long id, @RequestBody Application updated) {
         try {
-            // keep existing immutable-ish fields if client omitted them
             Application existing = applicationService.findById(id);
             if (isBlank(updated.getReferenceId())) {
                 updated.setReferenceId(existing.getReferenceId());

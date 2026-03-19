@@ -39,13 +39,13 @@ public class DataSeeder implements CommandLineRunner {
         Permission manageAdmin   = seedPermission("MANAGE_ADMIN_ACCESS", "Grant or revoke admin access");
 
         // 2. Seed Roles
-        Role reviewerRole = seedRole("reviewer", "Super admin - can approve/reject and manage admins");
-        Role adminRole    = seedRole("admin",    "Admin - can approve/reject merchant applications");
+        Role reviewerRole = seedRole("reviewer", "Super admin - can approve/ reject and manage admins");
+        Role adminRole    = seedRole("admin",    "Admin - can approve/ reject merchant applications");
 
         // 3. Seed Role-Permission mappings
         seedRolePermission(reviewerRole, approveReject);
         seedRolePermission(reviewerRole, manageAdmin);
-        seedRolePermission(adminRole,    approveReject);
+        seedRolePermission(adminRole, approveReject);
 
         // 4. Seed default reviewer user
         if (userRepository.findByUsername("reviewer").isEmpty()) {

@@ -33,7 +33,6 @@ public class FaceVerificationService {
         Image img2 = ImageFactory.getInstance().fromInputStream(new ByteArrayInputStream(selfieBytes));
 
         // 1. Define Preprocessing Pipeline
-        // The FaceNet model we generated expects 160x160 pixels
         Pipeline pipeline = new Pipeline();
         pipeline.add(new Resize(160, 160));
         pipeline.add(new ToTensor());
