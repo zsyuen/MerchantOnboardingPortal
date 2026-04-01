@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { PortalService } from '../../services/portal.service';
-import * as faceapi from 'face-api.js';
+import { FaceDetector, FilesetResolver } from '@mediapipe/tasks-vision';
 
 function minAgeValidator(minAge: number) {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -50,6 +50,8 @@ export class MerchantRegisterComponent implements OnInit {
 
   countdownTimer: any = null;
   countdownValue: number = 0;
+  faceDetector: FaceDetector | null = null;
+  staticFaceDetector: FaceDetector | null = null;
 
   // Live feedback message
   feedbackMessage: string = '';
@@ -84,7 +86,7 @@ export class MerchantRegisterComponent implements OnInit {
     this.form.get('facilityRequired')?.markAsTouched();
   }
 
-  constructor(private fb: FormBuilder, private portal: PortalService, private router: Router) { }
+  constructor(private fb: FormBuilder, private portal: PortalService, private router: Router, private cdr: ChangeDetectorRef) { }
 
   async ngOnInit(): Promise<void> {
     this.form = this.fb.group({
@@ -131,17 +133,29 @@ export class MerchantRegisterComponent implements OnInit {
       this.feedbackMessage = 'Loading face detection models...';
       this.feedbackClass = 'warning';
 
-      const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model';
+      const vision = await FilesetResolver.forVisionTasks(
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+      );
+      this.faceDetector = await FaceDetector.createFromOptions(vision, {
+        baseOptions: {
+          modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite",
+          delegate: "GPU"
+        },
+        runningMode: "VIDEO"
+      });
 
-      await Promise.all([
-        faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
-        faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-      ]);
+      this.staticFaceDetector = await FaceDetector.createFromOptions(vision, {
+        baseOptions: {
+          modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite",
+          delegate: "GPU"
+        },
+        runningMode: "IMAGE"
+      });
 
       this.modelsLoaded = true;
       this.feedbackMessage = 'Models loaded. Starting camera...';
       this.feedbackClass = 'success';
-      console.log('✅ Models Loaded from CDN');
+      console.log('MediaPipe Models Loaded');
     } catch (error) {
       console.error('Failed to load models:', error);
       this.feedbackMessage = 'Failed to load models. Check connection.';
@@ -157,6 +171,9 @@ export class MerchantRegisterComponent implements OnInit {
 
     this.isImageCaptured = false;
     this.capturedImageBlob = null;
+    this.countdownValue = 0;
+    this.cancelCountdown();
+
     this.isCameraActive = true;
     this.feedbackMessage = 'Accessing camera...';
     this.feedbackClass = 'warning';
@@ -164,6 +181,7 @@ export class MerchantRegisterComponent implements OnInit {
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(stream => {
         this.videoElement.nativeElement.srcObject = stream;
+        this.videoElement.nativeElement.play();
         this.feedbackMessage = 'Position your face in the frame';
         this.feedbackClass = 'warning';
         this.detectFace();
@@ -176,89 +194,94 @@ export class MerchantRegisterComponent implements OnInit {
   }
 
   async detectFace() {
-    if (!this.isCameraActive || this.isImageCaptured) return;
+    if (!this.isCameraActive || this.isImageCaptured || !this.faceDetector) return;
 
     const video = this.videoElement.nativeElement;
 
-    if(video.readyState === 4) {
-      const detections = await faceapi.detectAllFaces(
-        video,
-        new faceapi.SsdMobilenetv1Options({ minConfidence: 0.5 })
-      ).withFaceLandmarks();
+    if(video.readyState >= 2) {
+      const startTimeMs = performance.now();
+      const results = this.faceDetector.detectForVideo(video, startTimeMs);
 
       // IMPORTANT: the async face detection takes a few milliseconds.
       // If a photo was captured *during* this wait time, stop processing immediately
       // to prevent overwriting the success message or starting a new countdown!
       if (!this.isCameraActive || this.isImageCaptured) return;
 
-      if (detections.length === 0) {
+      if (!results || !results.detections || results.detections.length === 0) {
         this.cancelCountdown();
         this.isFaceDetected = false;
         this.feedbackMessage = 'No face detected. Please look at the camera.';
         this.feedbackClass = 'danger';
-      } else if (detections.length > 1) {
+      } else if (results.detections.length > 1) {
         this.cancelCountdown();
         this.isFaceDetected = false;
         this.feedbackMessage = 'Multiple faces detected. Only one person allowed.';
         this.feedbackClass = 'danger';
       } else {
-        const detection = detections[0];
-        const box = detection.detection.box;
+        const detection = results.detections[0];
+        const box = detection.boundingBox;
         const videoWidth = video.videoWidth;
         const videoHeight = video.videoHeight;
-
-        // Calculate face size relative to frame
-        const faceWidth = box.width;
-        const faceHeight = box.height;
-        const faceArea = faceWidth * faceHeight;
-        const frameArea = videoWidth * videoHeight;
-        const faceRatio = faceArea / frameArea;
-
-        // Check if face is centered
-        const faceCenterX = box.x + box.width / 2;
-        const faceCenterY = box.y + box.height / 2;
-        const frameCenterX = videoWidth / 2;
-        const frameCenterY = videoHeight / 2;
-        const offsetX = Math.abs(faceCenterX - frameCenterX);
-        const offsetY = Math.abs(faceCenterY - frameCenterY);
-
-        if (faceRatio < 0.08) {
+        
+        if (!box) {
           this.cancelCountdown();
           this.isFaceDetected = false;
-          this.feedbackMessage = 'Move closer to the camera';
-          this.feedbackClass = 'warning';
-        } else if (faceRatio > 0.4) {
-          this.cancelCountdown();
-          this.isFaceDetected = false;
-          this.feedbackMessage = 'Move further from the camera';
-          this.feedbackClass = 'warning';
-        } else if (offsetX > videoWidth * 0.15) {
-          this.cancelCountdown();
-          this.isFaceDetected = false;
-          this.feedbackMessage = 'Center your face horizontally';
-          this.feedbackClass = 'warning';
-        } else if (offsetY > videoHeight * 0.15) {
-          this.cancelCountdown();
-          this.isFaceDetected = false;
-          this.feedbackMessage = 'Center your face vertically';
+          this.feedbackMessage = 'Calculating face position...';
           this.feedbackClass = 'warning';
         } else {
-          this.isFaceDetected = true;
-          this.feedbackClass = 'success';
-          
-          if (!this.countdownTimer) {
-            this.countdownValue = 3;
-            this.feedbackMessage = `✓ Perfect! Capturing in ${this.countdownValue}...`;
+          // Calculate face size relative to frame
+          const faceWidth = box.width;
+          const faceHeight = box.height;
+          const faceArea = faceWidth * faceHeight;
+          const frameArea = videoWidth * videoHeight;
+          const faceRatio = faceArea / frameArea;
+
+          // Check if face is centered
+          const faceCenterX = box.originX + box.width / 2;
+          const faceCenterY = box.originY + box.height / 2;
+          const frameCenterX = videoWidth / 2;
+          const frameCenterY = videoHeight / 2;
+          const offsetX = Math.abs(faceCenterX - frameCenterX);
+          const offsetY = Math.abs(faceCenterY - frameCenterY);
+
+          if (faceRatio < 0.04) {
+            this.cancelCountdown();
+            this.isFaceDetected = false;
+            this.feedbackMessage = 'Move closer to the camera';
+            this.feedbackClass = 'warning';
+          } else if (faceRatio > 0.6) {
+            this.cancelCountdown();
+            this.isFaceDetected = false;
+            this.feedbackMessage = 'Move further from the camera';
+            this.feedbackClass = 'warning';
+          } else if (offsetX > videoWidth * 0.25) {
+            this.cancelCountdown();
+            this.isFaceDetected = false;
+            this.feedbackMessage = 'Center your face horizontally';
+            this.feedbackClass = 'warning';
+          } else if (offsetY > videoHeight * 0.25) {
+            this.cancelCountdown();
+            this.isFaceDetected = false;
+            this.feedbackMessage = 'Center your face vertically';
+            this.feedbackClass = 'warning';
+          } else {
+            this.isFaceDetected = true;
+            this.feedbackClass = 'success';
             
-            this.countdownTimer = setInterval(() => {
-              this.countdownValue--;
-              if (this.countdownValue > 0) {
-                this.feedbackMessage = `✓ Perfect! Capturing in ${this.countdownValue}...`;
-              } else {
-                this.cancelCountdown();
-                this.capturePhoto();
-              }
-            }, 1000);
+            if (!this.countdownTimer && !this.isImageCaptured) {
+              this.countdownValue = 3;
+              this.feedbackMessage = `✓ Perfect! Capturing in ${this.countdownValue}...`;
+              
+              this.countdownTimer = setInterval(() => {
+                this.countdownValue--;
+                if (this.countdownValue > 0) {
+                  this.feedbackMessage = `✓ Perfect! Capturing in ${this.countdownValue}...`;
+                } else {
+                  this.cancelCountdown();
+                  this.capturePhoto();
+                }
+              }, 1000);
+            }
           }
         }
       }
@@ -268,7 +291,9 @@ export class MerchantRegisterComponent implements OnInit {
       this.feedbackClass = 'warning';
     }
 
-    requestAnimationFrame(() => this.detectFace());
+    if (!this.isImageCaptured) {
+      requestAnimationFrame(() => this.detectFace());
+    }
   }
 
   cancelCountdown() {
@@ -281,7 +306,7 @@ export class MerchantRegisterComponent implements OnInit {
   capturePhoto() {
     if (this.isImageCaptured) return; // Prevent double capture
 
-    if (!this.isFaceDetected) {
+    if (!this.isFaceDetected || !this.faceDetector) {
       alert("No face detected! Please position yourself clearly.");
       return;
     }
@@ -291,13 +316,39 @@ export class MerchantRegisterComponent implements OnInit {
     this.isImageCaptured = true;
 
     const video = this.videoElement.nativeElement;
+
+    // 1. Detect face one last time precisely at the moment of capture
+    const results = this.faceDetector.detectForVideo(video, performance.now());
+    let cropBox = null;
+    if (results && results.detections && results.detections.length > 0 && results.detections[0].boundingBox) {
+       cropBox = results.detections[0].boundingBox;
+    }
+
     const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth || 640;
-    canvas.height = video.videoHeight || 480;
-    canvas.getContext('2d')?.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const ctx = canvas.getContext('2d');
+
+    // 2. Crop the image down to just the face area if found
+    if (cropBox) {
+        // Add 20% padding
+        const padX = cropBox.width * 0.2;
+        const padY = cropBox.height * 0.2;
+        const cropX = Math.max(0, cropBox.originX - padX);
+        const cropY = Math.max(0, cropBox.originY - padY);
+        const cropW = Math.min(video.videoWidth - cropX, cropBox.width + padX * 2);
+        const cropH = Math.min(video.videoHeight - cropY, cropBox.height + padY * 2);
+
+        canvas.width = cropW;
+        canvas.height = cropH;
+        ctx?.drawImage(video, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+    } else {
+        // Fallback to full frame if detection fails exactly on the capture frame
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 480;
+        ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
+    }
 
     this.capturedImagePreview = canvas.toDataURL('image/jpeg');
-    this.feedbackMessage = 'Photo captured successfully!';
+    this.feedbackMessage = 'Photo cropped and captured successfully!';
     this.feedbackClass = 'success';
 
     canvas.toBlob((blob) => {
@@ -307,6 +358,7 @@ export class MerchantRegisterComponent implements OnInit {
       if (stream) {
         stream.getTracks().forEach(track => track.stop());
       }
+      this.cdr.detectChanges();
     }, 'image/jpeg');
   }
 
@@ -392,9 +444,54 @@ export class MerchantRegisterComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       const file = input.files[0];
-      control?.setValue(file);
-      control?.markAsDirty();
-      control?.updateValueAndValidity();
+      
+      if (controlName === 'passportPhoto') {
+        const img = new Image();
+        img.onload = async () => {
+           if (!this.staticFaceDetector) {
+              await this.loadModels();
+           }
+  
+           const results = this.staticFaceDetector?.detect(img);
+           if (results && results.detections && results.detections.length > 0 && results.detections[0].boundingBox) {
+              const box = results.detections[0].boundingBox;
+              const canvas = document.createElement('canvas');
+  
+              // Add padding so we don't cut off chin/hair
+              const padX = box.width * 0.2;
+              const padY = box.height * 0.2;
+  
+              const cropX = Math.max(0, box.originX - padX);
+              const cropY = Math.max(0, box.originY - padY);
+              const cropW = Math.min(img.width - cropX, box.width + padX * 2);
+              const cropH = Math.min(img.height - cropY, box.height + padY * 2);
+  
+              canvas.width = cropW;
+              canvas.height = cropH;
+              canvas.getContext('2d')?.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+  
+              canvas.toBlob((blob) => {
+                if (blob) {
+                  const croppedFile = new File([blob], "passport-crop.jpg", { type: "image/jpeg" });
+                  control?.setValue(croppedFile);
+                  control?.markAsDirty();
+                  control?.updateValueAndValidity();
+                  this.cdr.detectChanges();
+                }
+              }, 'image/jpeg');
+           } else {
+              control?.setValue(file); // fallback to original
+              control?.markAsDirty();
+              control?.updateValueAndValidity();
+              this.cdr.detectChanges();
+           }
+        };
+        img.src = URL.createObjectURL(file);
+      } else {
+        control?.setValue(file);
+        control?.markAsDirty();
+        control?.updateValueAndValidity();
+      }
     }
   }
 
