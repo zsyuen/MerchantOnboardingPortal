@@ -48,6 +48,9 @@ export class MerchantRegisterComponent implements OnInit {
   capturedImageBlob: Blob | null = null;
   modelsLoaded = false;
 
+  countdownTimer: any = null;
+  countdownValue: number = 0;
+
   // Live feedback message
   feedbackMessage: string = '';
   feedbackClass: string = ''; // 'success', 'warning', 'danger'
@@ -183,11 +186,18 @@ export class MerchantRegisterComponent implements OnInit {
         new faceapi.SsdMobilenetv1Options({ minConfidence: 0.5 })
       ).withFaceLandmarks();
 
+      // IMPORTANT: the async face detection takes a few milliseconds.
+      // If a photo was captured *during* this wait time, stop processing immediately
+      // to prevent overwriting the success message or starting a new countdown!
+      if (!this.isCameraActive || this.isImageCaptured) return;
+
       if (detections.length === 0) {
+        this.cancelCountdown();
         this.isFaceDetected = false;
         this.feedbackMessage = 'No face detected. Please look at the camera.';
         this.feedbackClass = 'danger';
       } else if (detections.length > 1) {
+        this.cancelCountdown();
         this.isFaceDetected = false;
         this.feedbackMessage = 'Multiple faces detected. Only one person allowed.';
         this.feedbackClass = 'danger';
@@ -213,28 +223,47 @@ export class MerchantRegisterComponent implements OnInit {
         const offsetY = Math.abs(faceCenterY - frameCenterY);
 
         if (faceRatio < 0.08) {
+          this.cancelCountdown();
           this.isFaceDetected = false;
           this.feedbackMessage = 'Move closer to the camera';
           this.feedbackClass = 'warning';
         } else if (faceRatio > 0.4) {
+          this.cancelCountdown();
           this.isFaceDetected = false;
           this.feedbackMessage = 'Move further from the camera';
           this.feedbackClass = 'warning';
         } else if (offsetX > videoWidth * 0.15) {
+          this.cancelCountdown();
           this.isFaceDetected = false;
           this.feedbackMessage = 'Center your face horizontally';
           this.feedbackClass = 'warning';
         } else if (offsetY > videoHeight * 0.15) {
+          this.cancelCountdown();
           this.isFaceDetected = false;
           this.feedbackMessage = 'Center your face vertically';
           this.feedbackClass = 'warning';
         } else {
           this.isFaceDetected = true;
-          this.feedbackMessage = '✓ Perfect! Ready to capture';
           this.feedbackClass = 'success';
+          
+          if (!this.countdownTimer) {
+            this.countdownValue = 3;
+            this.feedbackMessage = `✓ Perfect! Capturing in ${this.countdownValue}...`;
+            
+            this.countdownTimer = setInterval(() => {
+              this.countdownValue--;
+              if (this.countdownValue > 0) {
+                this.feedbackMessage = `✓ Perfect! Capturing in ${this.countdownValue}...`;
+              } else {
+                this.cancelCountdown();
+                this.capturePhoto();
+              }
+            }, 1000);
+          }
         }
       }
     } else {
+      this.cancelCountdown();
       this.feedbackMessage = 'Initializing camera...';
       this.feedbackClass = 'warning';
     }
@@ -242,28 +271,42 @@ export class MerchantRegisterComponent implements OnInit {
     requestAnimationFrame(() => this.detectFace());
   }
 
+  cancelCountdown() {
+    if (this.countdownTimer) {
+      clearInterval(this.countdownTimer);
+      this.countdownTimer = null;
+    }
+  }
+
   capturePhoto() {
+    if (this.isImageCaptured) return; // Prevent double capture
+
     if (!this.isFaceDetected) {
       alert("No face detected! Please position yourself clearly.");
       return;
     }
 
+    this.cancelCountdown(); // Force stop countdown immediately
+    this.isCameraActive = false;
+    this.isImageCaptured = true;
+
     const video = this.videoElement.nativeElement;
     const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext('2d')?.drawImage(video, 0, 0);
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
+    canvas.getContext('2d')?.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    this.capturedImagePreview = canvas.toDataURL('image/jpeg');
+    this.feedbackMessage = 'Photo captured successfully!';
+    this.feedbackClass = 'success';
 
     canvas.toBlob((blob) => {
       this.capturedImageBlob = blob;
-      this.capturedImagePreview = canvas.toDataURL('image/jpeg');
-      this.isImageCaptured = true;
-      this.isCameraActive = false;
-      this.feedbackMessage = 'Photo captured successfully!';
-      this.feedbackClass = 'success';
 
       const stream = video.srcObject as MediaStream;
-      stream.getTracks().forEach(track => track.stop());
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
     }, 'image/jpeg');
   }
 

@@ -10,29 +10,49 @@
         </div>
     </div>
 
-    <div class="stats" *ngIf="!isLoading">
-        <div class="card card-low">
+    <div class="stats" *ngIf="!isLoading && statusFilter === 'Pending'">
+        <div class="card card-summary" (click)="setView('Pending', 'All')" [class.active-card]="statusFilter === 'Pending' && confidenceFilter === 'All'">
+            <h2>{{ pendingTotal }}</h2>
+            <p>Total Pending</p>
+        </div>
+
+        <div class="card card-low" (click)="setView('Pending', 'Low')" [class.active-card]="statusFilter === 'Pending' && confidenceFilter === 'Low'">
             <h2>{{ lowCount }}</h2>
             <p>Low Match Confidence</p>
         </div>
 
-        <div class="card card-medium">
+        <div class="card card-medium" (click)="setView('Pending', 'Medium')" [class.active-card]="statusFilter === 'Pending' && confidenceFilter === 'Medium'">
             <h2>{{ mediumCount }}</h2>
             <p>Medium Match Confidence</p>
         </div>
 
-        <div class="card card-high">
+        <div class="card card-high" (click)="setView('Pending', 'High')" [class.active-card]="statusFilter === 'Pending' && confidenceFilter === 'High'">
             <h2>{{ highCount }}</h2>
             <p>High Match Confidence</p>
         </div>
     </div>
 
-    <div class="filters">
-        <div class="filter-buttons">
-            <button [class.active]="currentConfidenceFilter === 'All'" (click)="setFilter('All')">All</button>
-            <button [class.active]="currentConfidenceFilter === 'Low'" (click)="setFilter('Low')">Low</button>
-            <button [class.active]="currentConfidenceFilter === 'Medium'" (click)="setFilter('Medium')">Medium</button>
-            <button [class.active]="currentConfidenceFilter === 'High'" (click)="setFilter('High')">High</button>
+    <div class="filters" *ngIf="!isLoading">
+        <div class="filter-controls">
+            <div class="view-selector">
+                <label>Status:</label>
+                <select [(ngModel)]="statusFilter" (change)="filterApplications()" class="form-select">
+                    <option value="All">All Statuses</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+            </div>
+
+            <div class="view-selector">
+                <label>Match Confidence:</label>
+                <select [(ngModel)]="confidenceFilter" (change)="filterApplications()" class="form-select">
+                    <option value="All">All Confidences</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
         </div>
 
         <div class="search-box">

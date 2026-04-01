@@ -40,7 +40,7 @@
   font-size: 0.875rem;
   outline: none;
   transition: border-color 0.15s;
-  min-width: 220px;
+  min-width: 400px;
 }
 
 .search-box input:focus { border-color: var(--clr-primary); }
@@ -48,6 +48,8 @@
 /* ===== Table Action Buttons ===== */
 .action-btn {
   padding: 0.3rem 0.9rem;
+  min-width: 85px;
+  text-align: center;
   border: none;
   border-radius: var(--radius-sm);
   font-size: 0.8rem;

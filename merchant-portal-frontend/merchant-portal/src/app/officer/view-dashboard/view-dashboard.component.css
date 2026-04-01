@@ -1,7 +1,7 @@
 /* ===== Stats Cards ===== */
 .stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
@@ -12,12 +12,18 @@
   padding: 1.5rem;
   text-align: center;
   box-shadow: var(--shadow);
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition: transform 0.15s, box-shadow 0.15s, border 0.15s;
+  cursor: pointer;
 }
 
 .stats .card:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-md);
+}
+
+.stats .card.active-card {
+  outline: 2px solid var(--clr-primary);
+  outline-offset: 2px;
 }
 
 .stats .card h2 {
@@ -36,11 +42,12 @@
   opacity: 0.85;
 }
 
+.card-summary { background: #f8fafc; color: #334155; border-left: 4px solid #64748b; }
 .card-low    { background: #fff7ed; color: #c2410c; border-left: 4px solid #f97316; }
 .card-medium { background: #fefce8; color: #854d0e; border-left: 4px solid #eab308; }
 .card-high   { background: #f0fdf4; color: #15803d; border-left: 4px solid #22c55e; }
 
-/* ===== Filters Bar ===== */
+/* ===== Unified Filters Bar ===== */
 .filters {
   display: flex;
   align-items: center;
@@ -55,33 +62,41 @@
   flex-wrap: wrap;
 }
 
-.filter-buttons {
+.filter-controls {
   display: flex;
-  gap: 0.4rem;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
-.filter-buttons button {
-  padding: 0.35rem 1rem;
-  border-radius: 2rem;
-  border: 1.5px solid var(--clr-border);
-  background: transparent;
-  color: var(--clr-text-muted);
-  font-size: 0.82rem;
+.view-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.view-selector label {
   font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--clr-text-muted);
+}
+
+.form-select {
+  padding: 0.45rem 2.2rem 0.45rem 0.8rem;
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--clr-text);
+  background-color: #fff;
   cursor: pointer;
-  transition: all 0.15s;
+  outline: none;
+  min-width: 200px;
+  transition: border-color 0.15s;
 }
 
-.filter-buttons button:hover {
+.form-select:focus {
   border-color: var(--clr-primary);
-  color: var(--clr-primary);
-  background: var(--clr-primary-light);
-}
-
-.filter-buttons button.active {
-  background: var(--clr-primary);
-  border-color: var(--clr-primary);
-  color: #fff;
 }
 
 /* ===== Search Box ===== */
@@ -92,7 +107,7 @@
   font-size: 0.875rem;
   outline: none;
   transition: border-color 0.15s;
-  min-width: 220px;
+  min-width: 400px;
 }
 
 .search-box input:focus { border-color: var(--clr-primary); }

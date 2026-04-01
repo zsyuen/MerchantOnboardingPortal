@@ -879,13 +879,6 @@
                       d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5m0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0" />
                   </svg>
                 </button>
-                <button type="button" class="btn camera-capture-btn" (click)="capturePhoto()"
-                  *ngIf="isCameraActive && !isImageCaptured" [disabled]="!isFaceDetected" title="Capture Photo">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                    viewBox="0 0 16 16">
-                    <circle cx="8" cy="8" r="3" />
-                  </svg>
-                </button>
               </div>
             </div>
             <div class="camera-feedback" *ngIf="feedbackMessage">

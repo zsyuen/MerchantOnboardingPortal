@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PortalService } from '../../services/portal.service';
 
 @Component({
@@ -18,6 +18,7 @@ export class ViewApplicationComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private svc: PortalService
   ) { }
 
@@ -79,6 +80,7 @@ export class ViewApplicationComponent implements OnInit {
       next: (updatedApplication) => {
         this.application.status = updatedApplication.status;
         alert(`Application has been ${newStatus.toLowerCase()}!`);
+        this.router.navigate(['/officer/dashboard']);
       },
       error: (err) => {
         console.error('Failed to update status:', err);
