@@ -670,14 +670,16 @@
           <div class="col-md-6 mb-3">
             <label>ID Upload (Front) *</label>
             <input type="file" class="form-control" (change)="onFileChange($event, 'ownerIdFront')"
-              [ngClass]="{'is-invalid': showError('ownerIdFront')}">
+              [ngClass]="{'is-invalid': showError('ownerIdFront') || (fileUploadErrors['ownerIdFront'] ? true : false) }">
             <div *ngIf="showError('ownerIdFront')" class="invalid-feedback">Upload required.</div>
+            <div *ngIf="fileUploadErrors['ownerIdFront'] && !showError('ownerIdFront')" class="invalid-feedback">{{ fileUploadErrors['ownerIdFront'] }}</div>
           </div>
           <div class="col-md-6 mb-3">
             <label>ID Upload (Back) *</label>
             <input type="file" class="form-control" (change)="onFileChange($event, 'ownerIdBack')"
-              [ngClass]="{'is-invalid': showError('ownerIdBack')}">
+              [ngClass]="{'is-invalid': showError('ownerIdBack') || (fileUploadErrors['ownerIdBack'] ? true : false) }">
             <div *ngIf="showError('ownerIdBack')" class="invalid-feedback">Upload required.</div>
+            <div *ngIf="fileUploadErrors['ownerIdBack'] && !showError('ownerIdBack')" class="invalid-feedback">{{ fileUploadErrors['ownerIdBack'] }}</div>
           </div>
           <div class="col-md-6 mb-3">
             <label class="d-flex align-items-center gap-1">
@@ -690,8 +692,9 @@
               </span>
             </label>
             <input type="file" class="form-control" accept="image/*" (change)="onFileChange($event, 'passportPhoto')"
-              [ngClass]="{'is-invalid': showError('passportPhoto')}">
+              [ngClass]="{'is-invalid': showError('passportPhoto') || (fileUploadErrors['passportPhoto'] ? true : false) }">
             <div *ngIf="showError('passportPhoto')" class="invalid-feedback">Upload required.</div>
+            <div *ngIf="fileUploadErrors['passportPhoto'] && !showError('passportPhoto')" class="invalid-feedback">{{ fileUploadErrors['passportPhoto'] }}</div>
           </div>
 
           <!-- Passport Photo Good/Bad Modal -->
@@ -783,8 +786,9 @@
               </span>
             </label>
             <input type="file" class="form-control" (change)="onFileChange($event, 'proofOfBusiness')"
-              [ngClass]="{'is-invalid': showError('proofOfBusiness')}">
+              [ngClass]="{'is-invalid': showError('proofOfBusiness') || (fileUploadErrors['proofOfBusiness'] ? true : false) }">
             <div *ngIf="showError('proofOfBusiness')" class="invalid-feedback">Upload required.</div>
+            <div *ngIf="fileUploadErrors['proofOfBusiness'] && !showError('proofOfBusiness')" class="invalid-feedback">{{ fileUploadErrors['proofOfBusiness'] }}</div>
           </div>
           <div class="col-12 mb-3">
             <label class="d-block">Scheme Required *</label>

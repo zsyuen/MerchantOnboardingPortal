@@ -3,7 +3,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractContro
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { PortalService } from '../../services/portal.service';
-import { FaceDetector, FilesetResolver } from '@mediapipe/tasks-vision';
+import { FaceLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
 
 function minAgeValidator(minAge: number) {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -50,8 +50,11 @@ export class MerchantRegisterComponent implements OnInit {
 
   countdownTimer: any = null;
   countdownValue: number = 0;
-  faceDetector: FaceDetector | null = null;
-  staticFaceDetector: FaceDetector | null = null;
+  faceLandmarker: FaceLandmarker | null = null;
+  staticFaceLandmarker: FaceLandmarker | null = null;
+
+  // Liveness state
+  livenessStep: 'detecting' | 'blink_wait_close' | 'blink_wait_open' | 'passed' = 'detecting';
 
   // Live feedback message
   feedbackMessage: string = '';
@@ -60,6 +63,11 @@ export class MerchantRegisterComponent implements OnInit {
   // Tooltip / modal state
   proofTooltipOpen = false;
   passportModalOpen = false;
+
+  // File upload limits (must match backend: 10MB per file, 30MB total)
+  readonly MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
+  readonly MAX_TOTAL_SIZE = 30 * 1024 * 1024; // 30MB in bytes
+  fileUploadErrors: { [key: string]: string } = {};
 
   // Today's date string for date input max attributes (YYYY-MM-DD)
   todayStr = new Date().toISOString().split('T')[0];
@@ -136,20 +144,23 @@ export class MerchantRegisterComponent implements OnInit {
       const vision = await FilesetResolver.forVisionTasks(
         "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
       );
-      this.faceDetector = await FaceDetector.createFromOptions(vision, {
+      this.faceLandmarker = await FaceLandmarker.createFromOptions(vision, {
         baseOptions: {
-          modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite",
+          modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
           delegate: "GPU"
         },
-        runningMode: "VIDEO"
+        outputFaceBlendshapes: true,
+        runningMode: "VIDEO",
+        numFaces: 1
       });
 
-      this.staticFaceDetector = await FaceDetector.createFromOptions(vision, {
+      this.staticFaceLandmarker = await FaceLandmarker.createFromOptions(vision, {
         baseOptions: {
-          modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite",
+          modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
           delegate: "GPU"
         },
-        runningMode: "IMAGE"
+        runningMode: "IMAGE",
+        numFaces: 1
       });
 
       this.modelsLoaded = true;
@@ -172,6 +183,7 @@ export class MerchantRegisterComponent implements OnInit {
     this.isImageCaptured = false;
     this.capturedImageBlob = null;
     this.countdownValue = 0;
+    this.livenessStep = 'detecting';
     this.cancelCountdown();
 
     this.isCameraActive = true;
@@ -194,36 +206,53 @@ export class MerchantRegisterComponent implements OnInit {
   }
 
   async detectFace() {
-    if (!this.isCameraActive || this.isImageCaptured || !this.faceDetector) return;
+    if (!this.isCameraActive || this.isImageCaptured || !this.faceLandmarker) return;
 
     const video = this.videoElement.nativeElement;
 
     if(video.readyState >= 2) {
       const startTimeMs = performance.now();
-      const results = this.faceDetector.detectForVideo(video, startTimeMs);
+      const results = this.faceLandmarker.detectForVideo(video, startTimeMs);
 
       // IMPORTANT: the async face detection takes a few milliseconds.
       // If a photo was captured *during* this wait time, stop processing immediately
       // to prevent overwriting the success message or starting a new countdown!
       if (!this.isCameraActive || this.isImageCaptured) return;
 
-      if (!results || !results.detections || results.detections.length === 0) {
+      if (!results || !results.faceLandmarks || results.faceLandmarks.length === 0) {
         this.cancelCountdown();
         this.isFaceDetected = false;
         this.feedbackMessage = 'No face detected. Please look at the camera.';
         this.feedbackClass = 'danger';
-      } else if (results.detections.length > 1) {
+        this.livenessStep = 'detecting';
+      } else if (results.faceLandmarks.length > 1) {
         this.cancelCountdown();
         this.isFaceDetected = false;
         this.feedbackMessage = 'Multiple faces detected. Only one person allowed.';
         this.feedbackClass = 'danger';
+        this.livenessStep = 'detecting';
       } else {
-        const detection = results.detections[0];
-        const box = detection.boundingBox;
+        const landmarks = results.faceLandmarks[0];
+        
+        // Calculate Bounding Box from Landmarks manually
+        let minX = 1, minY = 1, maxX = 0, maxY = 0;
+        for (const pt of landmarks) {
+          if (pt.x < minX) minX = pt.x;
+          if (pt.y < minY) minY = pt.y;
+          if (pt.x > maxX) maxX = pt.x;
+          if (pt.y > maxY) maxY = pt.y;
+        }
+
         const videoWidth = video.videoWidth;
         const videoHeight = video.videoHeight;
-        
-        if (!box) {
+        const box = {
+          originX: minX * videoWidth,
+          originY: minY * videoHeight,
+          width: (maxX - minX) * videoWidth,
+          height: (maxY - minY) * videoHeight
+        };
+
+        if (box.width === 0) {
           this.cancelCountdown();
           this.isFaceDetected = false;
           this.feedbackMessage = 'Calculating face position...';
@@ -247,35 +276,70 @@ export class MerchantRegisterComponent implements OnInit {
           if (faceRatio < 0.04) {
             this.cancelCountdown();
             this.isFaceDetected = false;
+            this.livenessStep = 'detecting';
             this.feedbackMessage = 'Move closer to the camera';
             this.feedbackClass = 'warning';
           } else if (faceRatio > 0.6) {
             this.cancelCountdown();
             this.isFaceDetected = false;
+            this.livenessStep = 'detecting';
             this.feedbackMessage = 'Move further from the camera';
             this.feedbackClass = 'warning';
           } else if (offsetX > videoWidth * 0.25) {
             this.cancelCountdown();
             this.isFaceDetected = false;
+            this.livenessStep = 'detecting';
             this.feedbackMessage = 'Center your face horizontally';
             this.feedbackClass = 'warning';
           } else if (offsetY > videoHeight * 0.25) {
             this.cancelCountdown();
             this.isFaceDetected = false;
+            this.livenessStep = 'detecting';
             this.feedbackMessage = 'Center your face vertically';
             this.feedbackClass = 'warning';
           } else {
             this.isFaceDetected = true;
             this.feedbackClass = 'success';
+
+            // Start Liveness Check if face is correctly positioned
+            if (this.livenessStep === 'detecting') {
+              this.livenessStep = 'blink_wait_close';
+            }
+
+            if (this.livenessStep === 'blink_wait_close' || this.livenessStep === 'blink_wait_open') {
+              // Extract Blendshapes if available
+              if (results.faceBlendshapes && results.faceBlendshapes.length > 0) {
+                const blendshapes = results.faceBlendshapes[0].categories;
+                const leftBlink = blendshapes.find(b => b.categoryName === 'eyeBlinkLeft')?.score || 0;
+                const rightBlink = blendshapes.find(b => b.categoryName === 'eyeBlinkRight')?.score || 0;
+
+                if (this.livenessStep === 'blink_wait_close') {
+                  this.feedbackMessage = 'Active Liveness: Please blink your eyes...';
+                  // Check if both eyes are closed (score > 0.4 typically implies closed eye in blendshapes)
+                  if (leftBlink > 0.4 && rightBlink > 0.4) {
+                    this.livenessStep = 'blink_wait_open';
+                    this.feedbackMessage = 'Active Liveness: Now open your eyes...';
+                  }
+                } else if (this.livenessStep === 'blink_wait_open') {
+                  this.feedbackMessage = 'Active Liveness: Great, now open your eyes...';
+                  // Check if eyes are reopened (score < 0.2 means wide open)
+                  if (leftBlink < 0.2 && rightBlink < 0.2) {
+                    this.livenessStep = 'passed';
+                  }
+                }
+              } else {
+                this.feedbackMessage = 'Liveness error: blendshapes unsupported';
+              }
+            }
             
-            if (!this.countdownTimer && !this.isImageCaptured) {
+            if (this.livenessStep === 'passed' && !this.countdownTimer && !this.isImageCaptured) {
               this.countdownValue = 3;
-              this.feedbackMessage = `✓ Perfect! Capturing in ${this.countdownValue}...`;
+              this.feedbackMessage = `✓ Liveness passed! Capturing in ${this.countdownValue}...`;
               
               this.countdownTimer = setInterval(() => {
                 this.countdownValue--;
                 if (this.countdownValue > 0) {
-                  this.feedbackMessage = `✓ Perfect! Capturing in ${this.countdownValue}...`;
+                  this.feedbackMessage = `✓ Liveness passed! Capturing in ${this.countdownValue}...`;
                 } else {
                   this.cancelCountdown();
                   this.capturePhoto();
@@ -306,7 +370,7 @@ export class MerchantRegisterComponent implements OnInit {
   capturePhoto() {
     if (this.isImageCaptured) return; // Prevent double capture
 
-    if (!this.isFaceDetected || !this.faceDetector) {
+    if (!this.isFaceDetected || !this.faceLandmarker) {
       alert("No face detected! Please position yourself clearly.");
       return;
     }
@@ -318,10 +382,27 @@ export class MerchantRegisterComponent implements OnInit {
     const video = this.videoElement.nativeElement;
 
     // 1. Detect face one last time precisely at the moment of capture
-    const results = this.faceDetector.detectForVideo(video, performance.now());
+    const results = this.faceLandmarker.detectForVideo(video, performance.now());
     let cropBox = null;
-    if (results && results.detections && results.detections.length > 0 && results.detections[0].boundingBox) {
-       cropBox = results.detections[0].boundingBox;
+    
+    if (results && results.faceLandmarks && results.faceLandmarks.length > 0) {
+        const landmarks = results.faceLandmarks[0];
+        let minX = 1, minY = 1, maxX = 0, maxY = 0;
+        for (const pt of landmarks) {
+          if (pt.x < minX) minX = pt.x;
+          if (pt.y < minY) minY = pt.y;
+          if (pt.x > maxX) maxX = pt.x;
+          if (pt.y > maxY) maxY = pt.y;
+        }
+
+        const videoWidth = video.videoWidth;
+        const videoHeight = video.videoHeight;
+        cropBox = {
+          originX: minX * videoWidth,
+          originY: minY * videoHeight,
+          width: (maxX - minX) * videoWidth,
+          height: (maxY - minY) * videoHeight
+        };
     }
 
     const canvas = document.createElement('canvas');
@@ -445,16 +526,50 @@ export class MerchantRegisterComponent implements OnInit {
     if (input.files && input.files.length) {
       const file = input.files[0];
       
+      // Validate individual file size (10MB limit)
+      if (file.size > this.MAX_FILE_SIZE) {
+        this.fileUploadErrors[controlName] = `File "${file.name}" exceeds the maximum size of 10MB. Please select a smaller file.`;
+        control?.setValue(null);
+        input.value = ''; // Clear the input
+        return;
+      }
+
+      // Validate total upload size (30MB limit)
+      const totalSize = this.calculateTotalFileSize(controlName, file);
+      if (totalSize > this.MAX_TOTAL_SIZE) {
+        this.fileUploadErrors[controlName] = `Total upload size exceeds the maximum limit of 30MB. Please reduce the file sizes.`;
+        control?.setValue(null);
+        input.value = ''; // Clear the input
+        return;
+      }
+
+      // Clear any previous error
+      this.fileUploadErrors[controlName] = '';
+      
       if (controlName === 'passportPhoto') {
         const img = new Image();
         img.onload = async () => {
-           if (!this.staticFaceDetector) {
+           if (!this.staticFaceLandmarker) {
               await this.loadModels();
            }
   
-           const results = this.staticFaceDetector?.detect(img);
-           if (results && results.detections && results.detections.length > 0 && results.detections[0].boundingBox) {
-              const box = results.detections[0].boundingBox;
+           const results = this.staticFaceLandmarker?.detect(img);
+           
+           if (results && results.faceLandmarks && results.faceLandmarks.length > 0) {
+              const landmarks = results.faceLandmarks[0];
+              let minX = 1, minY = 1, maxX = 0, maxY = 0;
+              for (const pt of landmarks) {
+                if (pt.x < minX) minX = pt.x;
+                if (pt.y < minY) minY = pt.y;
+                if (pt.x > maxX) maxX = pt.x;
+                if (pt.y > maxY) maxY = pt.y;
+              }
+              const box = {
+                 originX: minX * img.width,
+                 originY: minY * img.height,
+                 width: (maxX - minX) * img.width,
+                 height: (maxY - minY) * img.height
+              };
               const canvas = document.createElement('canvas');
   
               // Add padding so we don't cut off chin/hair
@@ -493,6 +608,26 @@ export class MerchantRegisterComponent implements OnInit {
         control?.updateValueAndValidity();
       }
     }
+  }
+
+  calculateTotalFileSize(currentControlName: string, newFile: File): number {
+    const fileControls = ['ownerIdFront', 'ownerIdBack', 'passportPhoto', 'proofOfBusiness'];
+    let totalSize = 0;
+
+    fileControls.forEach(controlName => {
+      if (controlName === currentControlName) {
+        // Use the new file size for the control being updated
+        totalSize += newFile.size;
+      } else {
+        // Add existing file sizes
+        const existingFile = this.form.get(controlName)?.value;
+        if (existingFile instanceof File) {
+          totalSize += existingFile.size;
+        }
+      }
+    });
+
+    return totalSize;
   }
 
   toggleProofTooltip(event: Event): void {
