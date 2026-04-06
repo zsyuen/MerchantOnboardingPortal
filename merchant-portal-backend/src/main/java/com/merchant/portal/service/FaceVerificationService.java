@@ -24,8 +24,8 @@ import java.io.IOException;
 @Service
 public class FaceVerificationService {
 
-    private static final double THRESHOLD_HIGH = 0.60;
-    private static final double THRESHOLD_MEDIUM = 0.40;
+    private static final double THRESHOLD_HIGH = 0.70;
+    private static final double THRESHOLD_MEDIUM = 0.55;
 
     public double compareFaces(byte[] idCardBytes, byte[] selfieBytes) throws IOException, ModelNotFoundException, MalformedModelException, TranslateException {
 
