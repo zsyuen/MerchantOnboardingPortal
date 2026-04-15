@@ -8,6 +8,7 @@ export const roleGuard: CanActivateFn = (route, state) => {
 
   // 1. First, ensure the user is actually logged in (defensive check)
   if (!authService.isAuthenticated()) {
+    alert('Access Denied: You must be logged in to access this page.');
     router.navigate(['/officer/login']);
     return false;
   }
