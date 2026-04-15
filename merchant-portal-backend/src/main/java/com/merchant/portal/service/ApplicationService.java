@@ -61,21 +61,12 @@ public class ApplicationService {
     // Read by ID
     public Application findById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Application not found with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Application not found with ID: " + id));
     }
 
     // Read by status
     public List<Application> findByStatus(String status) {
         return repository.findByStatusIgnoreCase(status);
-    }
-
-    //General Update
-    public Application update(Long id, Application updated) {
-        Application existing = findById(id);
-        existing.setStatus(updated.getStatus());
-        existing.setCompanyName(updated.getCompanyName());
-        existing.setTaxId(updated.getTaxId());
-        return repository.save(existing);
     }
 
     //Specific Status Update
@@ -88,7 +79,7 @@ public class ApplicationService {
     //Delete
     public void delete(Long id) {
         if (!repository.existsById(id)) {
-            throw new EntityNotFoundException("Application not found with id: " + id);
+            throw new EntityNotFoundException("Application not found with ID: " + id);
         }
         repository.deleteById(id);
     }

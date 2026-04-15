@@ -177,27 +177,6 @@ public class ApplicationController {
         }
     }
 
-    // Update
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateApplication(@PathVariable Long id, @RequestBody Application updated) {
-        try {
-            Application existing = applicationService.findById(id);
-            if (isBlank(updated.getReferenceId())) {
-                updated.setReferenceId(existing.getReferenceId());
-            }
-            if (updated.getSubmissionDate() == null) {
-                updated.setSubmissionDate(existing.getSubmissionDate());
-            }
-            Application result = applicationService.update(id, updated);
-            return ResponseEntity.ok(result);
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Cannot update. Application not found with ID: " + id);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to update application: " + e.getMessage());
-        }
-    }
 
     // Delete
     @DeleteMapping("/{id}")
