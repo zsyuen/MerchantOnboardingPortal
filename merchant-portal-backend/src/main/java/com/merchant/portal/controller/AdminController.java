@@ -2,6 +2,7 @@ package com.merchant.portal.controller;
 
 import com.merchant.portal.model.User;
 import com.merchant.portal.repository.UserRepository;
+import com.merchant.portal.repository.UserRoleRepository;
 import com.merchant.portal.service.UserRoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +21,13 @@ public class AdminController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRoleService userRoleService;
+    private final UserRoleRepository userRoleRepository;
 
-    public AdminController(UserRepository userRepository, PasswordEncoder passwordEncoder, UserRoleService userRoleService) {
+    public AdminController(UserRepository userRepository, PasswordEncoder passwordEncoder, UserRoleService userRoleService, UserRoleRepository userRoleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userRoleService = userRoleService;
+        this.userRoleRepository = userRoleRepository;
     }
 
     // 1. Create a new Admin (POST /api/admins)
@@ -103,5 +106,19 @@ public class AdminController {
         userRepository.save(user);
 
         return ResponseEntity.ok(user);
+    }
+
+    // 4. Delete an Admin (DELETE /api/admins/{id})
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteAdmin(@PathVariable Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "Admin not found with id: " + id));
+        }
+        // Remove associated user_role rows first to avoid FK constraint violation
+        userRoleRepository.deleteByUser(optionalUser.get());
+        userRepository.deleteById(id);
+        return ResponseEntity.ok(Map.of("message", "Admin deleted successfully."));
     }
 }
