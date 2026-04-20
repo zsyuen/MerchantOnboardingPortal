@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { tap, switchMap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -34,23 +34,7 @@ export class AuthService {
       code: typeof payload.code === 'string' ? parseInt(payload.code, 10) : payload.code
     };
     console.log('Sending verifyTotp payload:', body);
-    return this.http.post(`${this.apiUrl}/verify-totp`, body).pipe(
-      tap((response: any) => {
-        if (response.token) {
-          this.saveToken(response.token);
-          this.saveRole(response.role);
-        }
-      }),
-      switchMap((response: any) => {
-        if (response.token) {
-          // Fetch and store permissions after successful login
-          return this.fetchAndStorePermissions().pipe(
-            switchMap(() => of(response))
-          );
-        }
-        return of(response);
-      })
-    );
+    return this.http.post(`${this.apiUrl}/verify-totp`, body);
   }
 
   /** Fetches permissions from backend and stores them in localStorage */

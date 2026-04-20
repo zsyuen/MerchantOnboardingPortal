@@ -72,6 +72,10 @@ export class PortalService {
     return this.http.post(`${this.apiBase}/admins/${adminId}/revoke`, {}, { headers: this.getAuthHeaders() });
   }
 
+  deleteAdmin(adminId: number): Observable<any> {
+    return this.http.delete(`${this.apiBase}/admins/${adminId}`, { headers: this.getAuthHeaders() });
+  }
+
   /**
    * Fetches a document by its UUID from the backend as a binary Blob.
    * responseType: 'blob' tells Angular to treat the response as raw binary data

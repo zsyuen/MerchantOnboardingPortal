@@ -50,24 +50,26 @@ export class ManageAdminsComponent implements OnInit {
       this.filteredAdmins = this.admins;
     } else {
       const term = this.searchTerm.toLowerCase();
-      this.filteredAdmins = this.admins.filter(admin => 
-        (admin.username && admin.username.toLowerCase().includes(term)) || 
+      this.filteredAdmins = this.admins.filter(admin =>
+        (admin.username && admin.username.toLowerCase().includes(term)) ||
         (admin.email && admin.email.toLowerCase().includes(term))
       );
     }
   }
 
   grantAccess(adminId: number): void {
-    this.svc.grantAdmin(adminId).subscribe({
-      next: () => {
-        alert('Access granted successfully!');
-        this.loadAdmins(); // Refresh the list
-      },
-      error: (err) => {
-        console.error('Error granting access', err);
-        alert('Failed to grant access.');
-      }
-    });
+    if (confirm('Are you sure you want to grant access to this admin?')) {
+      this.svc.grantAdmin(adminId).subscribe({
+        next: () => {
+          alert('Access granted successfully!');
+          this.loadAdmins(); // Refresh the list
+        },
+        error: (err) => {
+          console.error('Error granting access', err);
+          alert('Failed to grant access.');
+        }
+      });
+    }
   }
 
   revokeAccess(adminId: number): void {
@@ -80,6 +82,21 @@ export class ManageAdminsComponent implements OnInit {
         error: (err) => {
           console.error('Error revoking access', err);
           alert('Failed to revoke access.');
+        }
+      });
+    }
+  }
+
+  deleteAdmin(adminId: number): void {
+    if (confirm('Are you sure you want to delete this admin? This action cannot be undone.')) {
+      this.svc.deleteAdmin(adminId).subscribe({
+        next: () => {
+          alert('Admin deleted successfully!');
+          this.loadAdmins();
+        },
+        error: (err) => {
+          console.error('Error deleting admin', err);
+          alert('Failed to delete admin.');
         }
       });
     }

@@ -25,24 +25,26 @@
                 <th>Action</th>
             </tr>
         </thead>
-        
+
         <tbody>
             <tr *ngFor="let admin of filteredAdmins">
                 <td>{{ admin.username }}</td>
                 <td>{{ admin.email }}</td>
-                
+
                 <td [ngClass]="{'text-success': admin.status === 'Granted', 'text-danger': admin.status !== 'Granted'}">
                     {{ admin.status || 'Revoked' }}
                 </td>
-                
+
                 <td>
                     <button *ngIf="admin.status === 'Granted'" class="action-btn revoke" (click)="revokeAccess(admin.id)">
                         Revoke
                     </button>
-                    
+
                     <button *ngIf="admin.status !== 'Granted'" class="action-btn grant" (click)="grantAccess(admin.id)">
                         Grant
                     </button>
+
+                    <button class="delete-btn" (click)="deleteAdmin(admin.id)" title="Delete"><i class="bi bi-trash"></i></button>
                 </td>
             </tr>
 
