@@ -22,6 +22,7 @@ export class DashboardComponent implements OnInit {
   
   // Search and Filter
   searchTerm = '';
+  pendingSearchTerm = '';
   statusFilter = 'Pending';
   confidenceFilter = 'All';
 
@@ -114,6 +115,11 @@ export class DashboardComponent implements OnInit {
     });
 
     this.filteredApplications = tempApps;
+  }
+
+  triggerSearch() {
+    this.searchTerm = this.pendingSearchTerm;
+    this.filterApplications();
   }
 
   setView(status: string, confidence: string) {

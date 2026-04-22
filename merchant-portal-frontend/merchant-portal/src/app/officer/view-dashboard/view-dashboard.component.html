@@ -55,8 +55,11 @@
             </div>
         </div>
 
-        <div class="search-box">
-            <input type="text" placeholder="Search by merchant, ref ID" [(ngModel)]="searchTerm" (input)="filterApplications()">
+        <div class="search-wrapper">
+            <div class="search-box">
+                <input type="text" placeholder="Search by merchant, ref ID" [(ngModel)]="pendingSearchTerm" (keyup.enter)="triggerSearch()">
+            </div>
+            <button class="search-btn" (click)="triggerSearch()" title="Search"><i class="bi bi-search"></i></button>
         </div>
     </div>
 

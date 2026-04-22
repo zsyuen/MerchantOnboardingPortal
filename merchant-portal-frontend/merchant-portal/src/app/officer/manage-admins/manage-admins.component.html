@@ -8,8 +8,11 @@
     <div class="controls">
         <button class="add-btn" routerLink="/officer/register-admins">Add new admin</button>
 
-        <div class="search-box">
-            <input type="text" placeholder="Search by username" [(ngModel)]="searchTerm" (input)="filterAdmins()">
+        <div class="search-wrapper">
+            <div class="search-box">
+                <input type="text" placeholder="Search by username" [(ngModel)]="pendingSearchTerm" (keyup.enter)="triggerSearch()">
+            </div>
+            <button class="search-btn" (click)="triggerSearch()" title="Search"><i class="bi bi-search"></i></button>
         </div>
     </div>
 

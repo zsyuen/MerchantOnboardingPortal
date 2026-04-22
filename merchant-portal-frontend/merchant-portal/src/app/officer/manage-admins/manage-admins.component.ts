@@ -15,6 +15,7 @@ export class ManageAdminsComponent implements OnInit {
   admins: any[] = [];
   filteredAdmins: any[] = [];
   searchTerm = '';
+  pendingSearchTerm = '';
   isLoading = true;
   errorMsg = '';
 
@@ -43,6 +44,11 @@ export class ManageAdminsComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  triggerSearch(): void {
+    this.searchTerm = this.pendingSearchTerm;
+    this.filterAdmins();
   }
 
   filterAdmins(): void {
