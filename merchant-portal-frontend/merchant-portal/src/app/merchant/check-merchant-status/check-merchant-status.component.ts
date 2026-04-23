@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { PortalService } from '../../services/portal.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-merchant-status',
@@ -11,12 +12,16 @@ import { PortalService } from '../../services/portal.service';
   templateUrl: './check-merchant-status.component.html',
   styleUrls: ['./check-merchant-status.component.css']
 })
-export class MerchantStatusComponent {
+export class MerchantStatusComponent implements OnInit {
   refId: string = '';
   result: any = null;
   errorMsg: string = '';
 
-  constructor(private svc: PortalService) { }
+  constructor(private svc: PortalService, private titleService: Title) { }
+
+  ngOnInit(): void {
+    this.titleService.setTitle('Merchant Onboarding Portal');
+  }
 
   checkStatus(): void {
     this.result = null;

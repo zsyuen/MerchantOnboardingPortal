@@ -1,7 +1,8 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { AuthService } from '../../services/auth.service';
 import QRCode from 'qrcode';
 
@@ -12,7 +13,7 @@ import QRCode from 'qrcode';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
   @ViewChild('qrCanvas') qrCanvas!: ElementRef<HTMLCanvasElement>;
   loginForm: FormGroup;
@@ -27,7 +28,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private titleService: Title
   ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
@@ -37,6 +39,10 @@ export class LoginComponent {
     this.totpForm = this.fb.group({
       totpCode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
     });
+  }
+
+  ngOnInit(): void {
+    this.titleService.setTitle('Bank Officer Portal');
   }
 
   // Helper method to clear lingering Bootstrap modal backdrops

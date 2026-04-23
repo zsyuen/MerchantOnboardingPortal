@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
@@ -94,9 +95,10 @@ export class MerchantRegisterComponent implements OnInit {
     this.form.get('facilityRequired')?.markAsTouched();
   }
 
-  constructor(private fb: FormBuilder, private portal: PortalService, private router: Router, private cdr: ChangeDetectorRef) { }
+  constructor(private fb: FormBuilder, private portal: PortalService, private router: Router, private cdr: ChangeDetectorRef, private titleService: Title) { }
 
   async ngOnInit(): Promise<void> {
+    this.titleService.setTitle('Merchant Onboarding Portal');
     this.form = this.fb.group({
       businessRegNo: ['', Validators.required],
       companyName: ['', Validators.required],

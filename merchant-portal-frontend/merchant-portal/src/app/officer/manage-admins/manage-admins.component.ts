@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { PortalService } from '../../services/portal.service';
 
 @Component({
@@ -19,9 +20,10 @@ export class ManageAdminsComponent implements OnInit {
   isLoading = true;
   errorMsg = '';
 
-  constructor(private svc: PortalService) { }
+  constructor(private svc: PortalService, private titleService: Title) { }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Bank Officer Portal');
     this.loadAdmins();
   }
 

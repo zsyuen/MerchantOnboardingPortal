@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { PortalService } from '../../services/portal.service';
 
 interface AdminData {
@@ -18,16 +19,20 @@ interface AdminData {
   templateUrl: './register-admins.component.html',
   styleUrls: ['./register-admins.component.css']
 })
-export class AdminRegisterComponent {
+export class AdminRegisterComponent implements OnInit {
   form: FormGroup;
 
-  constructor(private fb: FormBuilder, private svc: PortalService, private router: Router) {
+  constructor(private fb: FormBuilder, private svc: PortalService, private router: Router, private titleService: Title) {
     this.form = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required]
     }, { validators: this.passwordMatchValidator });
+  }
+
+  ngOnInit(): void {
+    this.titleService.setTitle('Bank Officer Portal');
   }
 
   passwordMatchValidator(group: AbstractControl): { [key: string]: boolean } | null {

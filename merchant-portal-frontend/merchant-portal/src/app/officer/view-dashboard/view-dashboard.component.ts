@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { PortalService } from '../../services/portal.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -15,7 +16,13 @@ import { AuthService } from '../../services/auth.service';
 export class DashboardComponent implements OnInit {
   applications: any[] = [];
   filteredApplications: any[] = [];
-  
+  pagedApplications: any[] = [];
+
+  // Pagination
+  currentPage = 1;
+  pageSize = 10;
+  totalPages = 1;
+
   isLoading = true;
   errorMsg = '';
   isReviewer = false;
@@ -35,10 +42,12 @@ export class DashboardComponent implements OnInit {
   constructor(
     private svc: PortalService, 
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private titleService: Title
   ) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Bank Officer Portal');
     console.log('Stored role:', this.authService.getRole());
     this.isReviewer = this.authService.isReviewer(); 
     console.log('isReviewer:', this.isReviewer);
@@ -46,8 +55,8 @@ export class DashboardComponent implements OnInit {
     this.svc.getApplications().subscribe({
       next: (data: any[]) => {
         this.applications = data;
-        this.filteredApplications = data;
         this.calculateStats();
+        this.filterApplications();
         this.isLoading = false;
       },
       error: (err) => {
@@ -98,23 +107,32 @@ export class DashboardComponent implements OnInit {
       );
     }
 
-    // Apply Sorting: Pending always at the top,
-    // then sort chronologically from oldest to newest
+    // Sort: newest submission date first
     tempApps.sort((a, b) => {
-      const statusA = a.status ? a.status.toLowerCase() : '';
-      const statusB = b.status ? b.status.toLowerCase() : '';
-      
-      // If one is pending and the other isn't, pending moves precisely to the top
-      if (statusA === 'pending' && statusB !== 'pending') return -1;
-      if (statusA !== 'pending' && statusB === 'pending') return 1;
-
-      // Otherwise, parse their respective dates to sort oldest to newest (ascending)
       const dateA = a.submissionDate ? new Date(a.submissionDate).getTime() : 0;
       const dateB = b.submissionDate ? new Date(b.submissionDate).getTime() : 0;
-      return dateA - dateB;
+      return dateB - dateA; // descending: newest first
     });
 
     this.filteredApplications = tempApps;
+    this.currentPage = 1;
+    this.updatePage();
+  }
+
+  updatePage() {
+    this.totalPages = Math.max(1, Math.ceil(this.filteredApplications.length / this.pageSize));
+    const start = (this.currentPage - 1) * this.pageSize;
+    this.pagedApplications = this.filteredApplications.slice(start, start + this.pageSize);
+  }
+
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.updatePage();
+  }
+
+  get pageNumbers(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
   triggerSearch() {
@@ -133,8 +151,8 @@ export class DashboardComponent implements OnInit {
       this.svc.deleteApplication(String(appId)).subscribe({
         next: () => {
           this.applications = this.applications.filter(app => app.id !== appId);
-          this.calculateStats(); // Recalculate cards after delete
-          this.filterApplications(); // Re-filter table after delete
+          this.calculateStats();
+          this.filterApplications();
           alert('Application deleted successfully.');
         },
         error: (err) => {

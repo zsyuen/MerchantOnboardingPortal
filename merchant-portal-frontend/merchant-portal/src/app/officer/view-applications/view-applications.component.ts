@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { PortalService } from '../../services/portal.service';
 
 @Component({
@@ -19,10 +20,12 @@ export class ViewApplicationComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private svc: PortalService
+    private svc: PortalService,
+    private titleService: Title
   ) { }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Bank Officer Portal');
     const appId = this.route.snapshot.paramMap.get('id');
     if (appId) {
       this.svc.getApplicationById(appId).subscribe({
