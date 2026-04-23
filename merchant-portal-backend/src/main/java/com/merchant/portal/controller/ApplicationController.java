@@ -72,13 +72,13 @@ public class ApplicationController {
             @RequestPart("liveSelfie") MultipartFile liveSelfie
     ) {
         try {
-            // Save files to DB and get their generated UUIDs
-            UUID ownerIdFrontId    = fileStorageService.save(ownerIdFront);
-            UUID ownerIdBackId     = fileStorageService.save(ownerIdBack);
-            UUID passportPhotoId   = fileStorageService.save(passportPhoto);
-            UUID proofOfBusinessId = fileStorageService.save(proofOfBusiness);
-            // Selfie is saved with a 5-day retention — scheduler will purge it after expiry
-            UUID liveSelfieId      = fileStorageService.save(liveSelfie, "SELFIE", LocalDateTime.now().plusDays(5));
+            // Save files temporarily without application link (application not yet saved)
+            UUID ownerIdFrontId    = fileStorageService.save(ownerIdFront,    "ID_FRONT",          null, null);
+            UUID ownerIdBackId     = fileStorageService.save(ownerIdBack,     "ID_BACK",           null, null);
+            UUID passportPhotoId   = fileStorageService.save(passportPhoto,   "PASSPORT_PHOTO",    null, null);
+            UUID proofOfBusinessId = fileStorageService.save(proofOfBusiness, "PROOF_OF_BUSINESS", null, null);
+            // Selfie saved with 5-day retention
+            UUID liveSelfieId      = fileStorageService.save(liveSelfie, "SELFIE", LocalDateTime.now().plusDays(5), null);
 
             // Retrieve raw bytes from DB for face comparison
             byte[] passportBytes = fileStorageService.getFile(passportPhotoId).getData();
@@ -134,6 +134,26 @@ public class ApplicationController {
             app.setProofOfBusiness(proofOfBusinessId.toString());
 
             Application saved = applicationService.save(app);
+
+            // Now that application is saved, link each document back to it
+            com.merchant.portal.model.MerchantDocument docFront    = fileStorageService.getFile(ownerIdFrontId);
+            com.merchant.portal.model.MerchantDocument docBack     = fileStorageService.getFile(ownerIdBackId);
+            com.merchant.portal.model.MerchantDocument docPassport = fileStorageService.getFile(passportPhotoId);
+            com.merchant.portal.model.MerchantDocument docProof    = fileStorageService.getFile(proofOfBusinessId);
+            com.merchant.portal.model.MerchantDocument docSelfie   = fileStorageService.getFile(liveSelfieId);
+
+            docFront.setApplication(saved);
+            docBack.setApplication(saved);
+            docPassport.setApplication(saved);
+            docProof.setApplication(saved);
+            docSelfie.setApplication(saved);
+
+            fileStorageService.saveDocument(docFront);
+            fileStorageService.saveDocument(docBack);
+            fileStorageService.saveDocument(docPassport);
+            fileStorageService.saveDocument(docProof);
+            fileStorageService.saveDocument(docSelfie);
+
             return ResponseEntity.status(HttpStatus.CREATED).body(saved);
 
         } catch (Exception e) {

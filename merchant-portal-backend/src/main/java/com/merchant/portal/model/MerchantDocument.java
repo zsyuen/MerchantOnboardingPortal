@@ -18,14 +18,14 @@ public class MerchantDocument {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "file_name", nullable = false)
+    @Column(name = "file_name", nullable = false) //file name that user uploads
     private String fileName;
 
-    @Column(name = "content_type", nullable = false)
+    @Column(name = "content_type", nullable = false) //jpeg, jpg, pdf
     private String contentType;
 
     @Lob
-    @Column(name = "data", nullable = false)
+    @Column(name = "data", nullable = false) //convert files into byte array
     private byte[] data;
 
     @Column(name = "document_type")
@@ -33,5 +33,8 @@ public class MerchantDocument {
 
     @Column(name = "expires_at")
     private LocalDateTime expiresAt;
-}
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "application_id")
+    private Application application;
+}

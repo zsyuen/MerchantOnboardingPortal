@@ -1,5 +1,6 @@
 package com.merchant.portal.service;
 
+import com.merchant.portal.model.Application;
 import com.merchant.portal.model.MerchantDocument;
 import com.merchant.portal.repository.MerchantDocumentRepository;
 import org.springframework.stereotype.Service;
@@ -18,26 +19,18 @@ public class FileStorageService {
         this.merchantDocumentRepository = merchantDocumentRepository;
     }
 
-    /**
-     * Saves a multipart file to the database and returns the generated document UUID.
-     *
-     * @param file the uploaded file
-     * @return the UUID of the saved MerchantDocument, or null if the file is empty
-     */
+    /** Saves a file without linking to any application. */
     public UUID save(MultipartFile file) {
-        return save(file, null, null);
+        return save(file, null, null, null);
     }
 
-    /**
-     * Saves a multipart file with an explicit document type and expiry timestamp.
-     * Use this for files that must be purged after a retention period (e.g. selfies).
-     *
-     * @param file         the uploaded file
-     * @param documentType a label such as "SELFIE", "ID_FRONT", etc.
-     * @param expiresAt    when this document should be deleted; null means never expires
-     * @return the UUID of the saved MerchantDocument, or null if the file is empty
-     */
+    /** Saves a file with document type and expiry, without linking to an application. */
     public UUID save(MultipartFile file, String documentType, LocalDateTime expiresAt) {
+        return save(file, documentType, expiresAt, null);
+    }
+
+    /** Saves a file and links it to the given Application (sets the FK). */
+    public UUID save(MultipartFile file, String documentType, LocalDateTime expiresAt, Application application) {
         if (file.isEmpty()) {
             return null;
         }
@@ -48,6 +41,7 @@ public class FileStorageService {
             document.setData(file.getBytes());
             document.setDocumentType(documentType);
             document.setExpiresAt(expiresAt);
+            document.setApplication(application);
 
             MerchantDocument saved = merchantDocumentRepository.save(document);
             return saved.getId();
@@ -57,11 +51,14 @@ public class FileStorageService {
     }
 
     /**
+     * Persists an existing MerchantDocument entity (e.g. to update its application link).
+     */
+    public void saveDocument(MerchantDocument document) {
+        merchantDocumentRepository.save(document);
+    }
+
+    /**
      * Retrieves a stored document by its UUID.
-     *
-     * @param id the UUID of the document
-     * @return the MerchantDocument entity
-     * @throws RuntimeException if no document is found with the given ID
      */
     public MerchantDocument getFile(UUID id) {
         return merchantDocumentRepository.findById(id)
