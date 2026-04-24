@@ -1,37 +1,65 @@
 <div class="container">
-
     <div class="top-bar">
         <h1>Hello {{ isReviewer ? 'Reviewer' : 'Admin' }}!</h1>
-
-        <div>
+        <div class="top-bar-actions">
             <button class="admin-btn btn-logout" (click)="logout()">Logout</button>
-            <button *ngIf="isReviewer" routerLink="/officer/manage-admins" class="admin-btn">Manage Admin Access</button>
-
+            <button *ngIf="!isReviewer" class="admin-btn btn-settings" routerLink="/officer/manage-thresholds" title="View Thresholds">
+                View Thresholds
+            </button>
+            <button *ngIf="isReviewer" class="admin-btn btn-settings" (click)="showSettings = true" title="Management">
+                Management
+            </button>
         </div>
     </div>
 
+    <!-- Reviewer Settings Drawer (slide-in from right) -->
+    <div class="drawer-overlay" *ngIf="isReviewer && showSettings" (click)="showSettings = false"></div>
+    <div class="settings-drawer" [class.open]="isReviewer && showSettings" *ngIf="isReviewer">
+        <div class="drawer-header">
+            <span><i class="bi bi-gear"></i> Management</span>
+            <button class="drawer-close-btn" (click)="showSettings = false" title="Close">&times;</button>
+        </div>
+
+        <!-- Nav link: Admin Management -->
+        <div class="drawer-section">
+            <h4 class="drawer-section-title"><i class="bi bi-people"></i> Admin Management</h4>
+            <a routerLink="/officer/manage-admins" class="drawer-nav-link" (click)="showSettings = false">
+                <i class="bi bi-shield-lock"></i>
+                <span>Manage Admin Access</span>
+                <i class="bi bi-chevron-right drawer-chevron"></i>
+            </a>
+        </div>
+
+        <div class="drawer-divider"></div>
+
+        <!-- Nav link: Threshold Management -->
+        <div class="drawer-section">
+            <h4 class="drawer-section-title"><i class="bi bi-sliders"></i> Facial Recognition</h4>
+            <a routerLink="/officer/manage-thresholds" class="drawer-nav-link" (click)="showSettings = false">
+                <i class="bi bi-bar-chart-line"></i>
+                <span>Manage Thresholds</span>
+                <i class="bi bi-chevron-right drawer-chevron"></i>
+            </a>
+        </div>
+    </div>
     <div class="stats" *ngIf="!isLoading && statusFilter === 'Pending'">
         <div class="card card-summary" (click)="setView('Pending', 'All')" [class.active-card]="statusFilter === 'Pending' && confidenceFilter === 'All'">
             <h2>{{ pendingTotal }}</h2>
             <p>Total Pending</p>
         </div>
-
         <div class="card card-low" (click)="setView('Pending', 'Low')" [class.active-card]="statusFilter === 'Pending' && confidenceFilter === 'Low'">
             <h2>{{ lowCount }}</h2>
             <p>Low Match Confidence</p>
         </div>
-
         <div class="card card-medium" (click)="setView('Pending', 'Medium')" [class.active-card]="statusFilter === 'Pending' && confidenceFilter === 'Medium'">
             <h2>{{ mediumCount }}</h2>
             <p>Medium Match Confidence</p>
         </div>
-
         <div class="card card-high" (click)="setView('Pending', 'High')" [class.active-card]="statusFilter === 'Pending' && confidenceFilter === 'High'">
             <h2>{{ highCount }}</h2>
             <p>High Match Confidence</p>
         </div>
     </div>
-
     <div class="filters" *ngIf="!isLoading">
         <div class="filter-controls">
             <div class="view-selector">
@@ -43,7 +71,6 @@
                     <option value="Rejected">Rejected</option>
                 </select>
             </div>
-
             <div class="view-selector">
                 <label>Match Confidence:</label>
                 <select [(ngModel)]="confidenceFilter" (change)="filterApplications()" class="form-select">
@@ -54,18 +81,15 @@
                 </select>
             </div>
         </div>
-
         <div class="search-wrapper">
             <div class="search-box">
-                <input type="text" placeholder="Search by merchant, ref ID" [(ngModel)]="pendingSearchTerm" (keyup.enter)="triggerSearch()">
+                <input type="text" placeholder="Search by Merchant Name, Reference ID" [(ngModel)]="pendingSearchTerm" (keyup.enter)="triggerSearch()">
             </div>
             <button class="search-btn" (click)="triggerSearch()" title="Search"><i class="bi bi-search"></i></button>
         </div>
     </div>
-
     <div *ngIf="isLoading" style="text-align: center; margin-top: 20px;">Loading applications...</div>
     <div *ngIf="errorMsg" style="color: red; text-align: center; margin-top: 20px;">{{ errorMsg }}</div>
-
     <table *ngIf="!isLoading">
         <thead>
             <tr>
@@ -96,7 +120,6 @@
             </tr>
         </tbody>
     </table>
-
     <div class="pagination" *ngIf="!isLoading && totalPages > 1">
         <button class="page-btn" (click)="goToPage(1)" [disabled]="currentPage === 1" title="First">&laquo;</button>
         <button class="page-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1" title="Previous">&lsaquo;</button>
@@ -109,5 +132,4 @@
         <button class="page-btn" (click)="goToPage(totalPages)" [disabled]="currentPage === totalPages" title="Last">&raquo;</button>
         <span class="page-info">Page {{ currentPage }} of {{ totalPages }} &nbsp;({{ filteredApplications.length }} records)</span>
     </div>
-
 </div>

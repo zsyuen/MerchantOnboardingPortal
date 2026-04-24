@@ -89,4 +89,14 @@ export class PortalService {
       responseType: 'blob'
     });
   }
+  // ===== Facial Threshold Settings =====
+  getFacialThresholds(): Observable<any> {
+    return this.http.get(`${this.apiBase}/settings/facial-thresholds`, { headers: this.getAuthHeaders() });
+  }
+  updateFacialThresholds(thresholdHigh: number, thresholdMedium: number): Observable<any> {
+    return this.http.put(`${this.apiBase}/settings/facial-thresholds`,
+      { thresholdHigh, thresholdMedium },
+      { headers: this.getAuthHeaders() }
+    );
+  }
 }

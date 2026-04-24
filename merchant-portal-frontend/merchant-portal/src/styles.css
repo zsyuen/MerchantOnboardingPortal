@@ -1,6 +1,6 @@
 :root {
-  --clr-primary:        #62bce6;
-  --clr-primary-hover:  #41acc7;
+  --clr-primary:        #6366f1;
+  --clr-primary-hover:  #4f46e5;
   --clr-primary-light:  #eff4ff;
   --clr-success:        #16a34a;
   --clr-success-light:  #dcfce7;
@@ -100,11 +100,10 @@ body {
 .admin-btn:active { opacity: 1;    transform: translateY(0); }
 
 .btn-logout {
-  background-color: #f1f5f9;
-  color: var(--clr-text);
-  margin-right: 0.5rem;
+  background-color: #fee2e2;
+  color: #dc2626;
 }
-.btn-logout:hover { background-color: #e2e8f0; }
+.btn-logout:hover { background-color: #fecaca; color: #b91c1c; }
 
 /* ===== Bootstrap Primary Colour Override ===== */
 .btn-primary             { background-color: var(--clr-primary); border-color: var(--clr-primary); color: #fff !important; }

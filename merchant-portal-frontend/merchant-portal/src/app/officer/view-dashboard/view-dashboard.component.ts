@@ -39,6 +39,9 @@ export class DashboardComponent implements OnInit {
   mediumCount = 0;
   highCount = 0;
 
+  // Drawer
+  showSettings = false;
+
   constructor(
     private svc: PortalService, 
     private router: Router,

@@ -36,6 +36,7 @@
         </div>
 
         <hr class="my-4">
+        <p class="required-note"><span class="text-danger">*</span> Required</p>
 
         <h5 class="fw-bold mt-3">Merchant Information</h5>
         <div class="row">
@@ -669,15 +670,19 @@
           </div>
           <div class="col-md-6 mb-3">
             <label>ID Upload (Front) *</label>
-            <input type="file" class="form-control" (change)="onFileChange($event, 'ownerIdFront')"
-              [ngClass]="{'is-invalid': showError('ownerIdFront') || (fileUploadErrors['ownerIdFront'] ? true : false) }">
+            <div class="file-upload-wrap" [class.is-invalid]="showError('ownerIdFront') || fileUploadErrors['ownerIdFront']">
+              <label class="file-upload-btn">Upload <input type="file" hidden (change)="onFileChange($event, 'ownerIdFront')"></label>
+              <span class="file-name-display">{{ form.get('ownerIdFront')?.value?.name || 'No file chosen' }}</span>
+            </div>
             <div *ngIf="showError('ownerIdFront')" class="invalid-feedback">Upload required.</div>
             <div *ngIf="fileUploadErrors['ownerIdFront'] && !showError('ownerIdFront')" class="invalid-feedback">{{ fileUploadErrors['ownerIdFront'] }}</div>
           </div>
           <div class="col-md-6 mb-3">
             <label>ID Upload (Back) *</label>
-            <input type="file" class="form-control" (change)="onFileChange($event, 'ownerIdBack')"
-              [ngClass]="{'is-invalid': showError('ownerIdBack') || (fileUploadErrors['ownerIdBack'] ? true : false) }">
+            <div class="file-upload-wrap" [class.is-invalid]="showError('ownerIdBack') || fileUploadErrors['ownerIdBack']">
+              <label class="file-upload-btn">Upload <input type="file" hidden (change)="onFileChange($event, 'ownerIdBack')"></label>
+              <span class="file-name-display">{{ form.get('ownerIdBack')?.value?.name || 'No file chosen' }}</span>
+            </div>
             <div *ngIf="showError('ownerIdBack')" class="invalid-feedback">Upload required.</div>
             <div *ngIf="fileUploadErrors['ownerIdBack'] && !showError('ownerIdBack')" class="invalid-feedback">{{ fileUploadErrors['ownerIdBack'] }}</div>
           </div>
@@ -691,8 +696,10 @@
                 </svg>
               </span>
             </label>
-            <input type="file" class="form-control" accept="image/*" (change)="onFileChange($event, 'passportPhoto')"
-              [ngClass]="{'is-invalid': showError('passportPhoto') || (fileUploadErrors['passportPhoto'] ? true : false) }">
+            <div class="file-upload-wrap" [class.is-invalid]="showError('passportPhoto') || fileUploadErrors['passportPhoto']">
+              <label class="file-upload-btn">Upload <input type="file" accept="image/*" hidden (change)="onFileChange($event, 'passportPhoto')"></label>
+              <span class="file-name-display">{{ form.get('passportPhoto')?.value?.name || 'No file chosen' }}</span>
+            </div>
             <div *ngIf="showError('passportPhoto')" class="invalid-feedback">Upload required.</div>
             <div *ngIf="fileUploadErrors['passportPhoto'] && !showError('passportPhoto')" class="invalid-feedback">{{ fileUploadErrors['passportPhoto'] }}</div>
           </div>
@@ -785,8 +792,10 @@
                 </div>
               </span>
             </label>
-            <input type="file" class="form-control" (change)="onFileChange($event, 'proofOfBusiness')"
-              [ngClass]="{'is-invalid': showError('proofOfBusiness') || (fileUploadErrors['proofOfBusiness'] ? true : false) }">
+            <div class="file-upload-wrap" [class.is-invalid]="showError('proofOfBusiness') || fileUploadErrors['proofOfBusiness']">
+              <label class="file-upload-btn">Upload <input type="file" hidden (change)="onFileChange($event, 'proofOfBusiness')"></label>
+              <span class="file-name-display">{{ form.get('proofOfBusiness')?.value?.name || 'No file chosen' }}</span>
+            </div>
             <div *ngIf="showError('proofOfBusiness')" class="invalid-feedback">Upload required.</div>
             <div *ngIf="fileUploadErrors['proofOfBusiness'] && !showError('proofOfBusiness')" class="invalid-feedback">{{ fileUploadErrors['proofOfBusiness'] }}</div>
           </div>

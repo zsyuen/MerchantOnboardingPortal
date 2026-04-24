@@ -1,0 +1,138 @@
+<div class="container">
+
+  <div class="top-bar">
+    <div class="top-bar-title">
+      <h1>Manage Thresholds</h1>
+      <p class="page-subtitle">Configure facial recognition confidence thresholds for merchant applications.</p>
+    </div>
+    <button class="btn-back" routerLink="/officer/dashboard"><i class="bi bi-arrow-left"></i>Back to Dashboard</button>
+  </div>
+
+  <div class="threshold-page-card">
+
+    <!-- How it works -->
+    <div class="how-it-works">
+      <p class="how-it-works-heading"><i class="bi bi-info-circle"></i> How It Works</p>
+      <p>The system compares a merchant's <strong>Passport photo</strong> with their <strong>Live selfie</strong> using facial recognition, producing a similarity score from <strong>0</strong> (No match) to <strong>1</strong> (Identical). The thresholds below determine how each score is classified.</p>
+    </div>
+
+    <!-- Live Score Band -->
+    <div class="score-band-section">
+      <h4 class="section-label"><i class="bi bi-bar-chart-line"></i> Live Score Band Preview</h4>
+      <div class="score-band-bar">
+        <div class="score-band-low"    [style.width.%]="thresholdMedium * 100">
+          <span *ngIf="thresholdMedium > 0.08">Low</span>
+        </div>
+        <div class="score-band-medium" [style.width.%]="(thresholdHigh - thresholdMedium) * 100">
+          <span *ngIf="(thresholdHigh - thresholdMedium) > 0.08">Medium</span>
+        </div>
+        <div class="score-band-high"   [style.flex]="1">
+          <span>High</span>
+        </div>
+      </div>
+      <div class="score-band-labels">
+        <span>0</span>
+        <span class="band-marker" [style.left.%]="thresholdMedium * 100">{{ thresholdMedium | number:'1.2-2' }}</span>
+        <span class="band-marker" [style.left.%]="thresholdHigh * 100">{{ thresholdHigh | number:'1.2-2' }}</span>
+        <span style="margin-left:auto">1</span>
+      </div>
+    </div>
+
+    <!-- Classification cards -->
+    <div class="legend-grid">
+      <div class="legend-card legend-card--low">
+        <div class="legend-card-header">
+          <span class="status-badge status-rejected">Low</span>
+          <span class="legend-range">0 – {{ thresholdMedium | number:'1.2-2' }}</span>
+        </div>
+        <p class="legend-card-desc">Likely different people. Flag for investigation.</p>
+      </div>
+      <div class="legend-card legend-card--medium">
+        <div class="legend-card-header">
+          <span class="status-badge status-pending">Medium</span>
+          <span class="legend-range">{{ thresholdMedium | number:'1.2-2' }} – {{ thresholdHigh | number:'1.2-2' }}</span>
+        </div>
+        <p class="legend-card-desc">Uncertain match. Officer should review manually.</p>
+      </div>
+      <div class="legend-card legend-card--high">
+        <div class="legend-card-header">
+          <span class="status-badge status-approved">High</span>
+          <span class="legend-range">{{ thresholdHigh | number:'1.2-2' }} – 1</span>
+        </div>
+        <p class="legend-card-desc">Very likely the same person. Eligible for accelerated review.</p>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="threshold-form-section">
+      <div class="form-section-header">
+        <h4 class="section-label"><i class="bi bi-sliders"></i> Adjust Thresholds</h4>
+        <button *ngIf="isReviewer" class="reset-btn" (click)="resetToDefaults()" title="Reset to recommended values">
+          <i class="bi bi-arrow-counterclockwise"></i> Reset to Defaults
+        </button>
+      </div>
+
+      <!-- Read-only notice for non-reviewers -->
+      <div *ngIf="!isReviewer" class="msg msg--readonly">
+        <i class="bi bi-eye"></i> You have view-only access. Only Reviewers can modify threshold values.
+      </div>
+
+      <div *ngIf="isReviewer && !isValid" class="msg msg--error validation-banner">
+        <i class="bi bi-exclamation-triangle"></i>
+        Medium threshold must be <strong>less than</strong> High threshold.
+      </div>
+
+      <!-- Medium Threshold -->
+      <div class="threshold-field">
+        <div class="field-label-row">
+          <label for="inp-medium">Medium Threshold</label>
+        </div>
+        <div class="slider-row">
+          <input type="range" id="slider-medium" [(ngModel)]="thresholdMedium"
+                 step="0.01" min="0" max="1"
+                 class="threshold-slider slider-medium"
+                 [disabled]="!isReviewer"
+                 (ngModelChange)="onThresholdChange()">
+          <input type="number" id="inp-medium" [(ngModel)]="thresholdMedium"
+                 step="0.01" min="0" max="1"
+                 class="threshold-number" [class.input-invalid]="!isValid"
+                 [readonly]="!isReviewer"
+                 (ngModelChange)="onThresholdChange()">
+        </div>
+        <small>Applications scoring between the Medium and High values are classified as Medium confidence.</small>
+      </div>
+
+      <!-- High Threshold -->
+      <div class="threshold-field">
+        <div class="field-label-row">
+          <label for="inp-high">High Threshold</label>
+        </div>
+        <div class="slider-row">
+          <input type="range" id="slider-high" [(ngModel)]="thresholdHigh"
+                 step="0.01" min="0" max="1"
+                 class="threshold-slider slider-high"
+                 [disabled]="!isReviewer"
+                 (ngModelChange)="onThresholdChange()">
+          <input type="number" id="inp-high" [(ngModel)]="thresholdHigh"
+                 step="0.01" min="0" max="1"
+                 class="threshold-number" [class.input-invalid]="!isValid"
+                 [readonly]="!isReviewer"
+                 (ngModelChange)="onThresholdChange()">
+        </div>
+        <small>Applications scoring at or above this value are classified as High confidence.</small>
+      </div>
+
+      <div *ngIf="isReviewer" class="form-actions">
+        <button class="save-btn" (click)="save()" [disabled]="isSaving || !isValid || !isDirty">
+          <i class="bi bi-check-lg"></i> {{ isSaving ? 'Saving...' : 'Save Thresholds' }}
+        </button>
+        <span class="dirty-hint" *ngIf="!isDirty && !successMsg">No unsaved changes.</span>
+      </div>
+
+      <div *ngIf="successMsg" class="msg msg--success"><i class="bi bi-check-circle"></i> {{ successMsg }}</div>
+      <div *ngIf="errorMsg" class="msg msg--error"><i class="bi bi-exclamation-circle"></i> {{ errorMsg }}</div>
+    </div>
+
+  </div>
+
+</div>

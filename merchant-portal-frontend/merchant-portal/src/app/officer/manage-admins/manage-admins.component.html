@@ -2,7 +2,7 @@
 
     <div class="top-bar">
         <h1>Hello Reviewer!</h1>
-        <button class="back-btn" routerLink="/officer/dashboard">Back to Dashboard</button>
+        <button class="back-btn" routerLink="/officer/dashboard"><i class="bi bi-arrow-left"></i> Back to Dashboard</button>
     </div>
 
     <div class="controls">
@@ -10,7 +10,7 @@
 
         <div class="search-wrapper">
             <div class="search-box">
-                <input type="text" placeholder="Search by username" [(ngModel)]="pendingSearchTerm" (keyup.enter)="triggerSearch()">
+                <input type="text" placeholder="Search by Name" [(ngModel)]="pendingSearchTerm" (keyup.enter)="triggerSearch()">
             </div>
             <button class="search-btn" (click)="triggerSearch()" title="Search"><i class="bi bi-search"></i></button>
         </div>
@@ -34,20 +34,24 @@
                 <td>{{ admin.username }}</td>
                 <td>{{ admin.email }}</td>
 
-                <td [ngClass]="{'text-success': admin.status === 'Granted', 'text-danger': admin.status !== 'Granted'}">
-                    {{ admin.status || 'Revoked' }}
+                <td>
+                    <span class="status-badge" [ngClass]="admin.status === 'Granted' ? 'status-approved' : 'status-rejected'">
+                        {{ admin.status || 'Revoked' }}
+                    </span>
                 </td>
 
                 <td>
-                    <button *ngIf="admin.status === 'Granted'" class="action-btn revoke" (click)="revokeAccess(admin.id)">
-                        Revoke
-                    </button>
+                    <div class="action-buttons">
+                        <button *ngIf="admin.status === 'Granted'" class="action-icon-btn revoke-icon" (click)="revokeAccess(admin.id)" title="Revoke Access">
+                            <i class="bi bi-shield-x"></i>
+                        </button>
 
-                    <button *ngIf="admin.status !== 'Granted'" class="action-btn grant" (click)="grantAccess(admin.id)">
-                        Grant
-                    </button>
+                        <button *ngIf="admin.status !== 'Granted'" class="action-icon-btn grant-icon" (click)="grantAccess(admin.id)" title="Grant Access">
+                            <i class="bi bi-shield-check"></i>
+                        </button>
 
-                    <button class="delete-btn" (click)="deleteAdmin(admin.id)" title="Delete"><i class="bi bi-trash"></i></button>
+                        <button class="action-icon-btn delete-icon" (click)="deleteAdmin(admin.id)" title="Delete"><i class="bi bi-trash"></i></button>
+                    </div>
                 </td>
             </tr>
 

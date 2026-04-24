@@ -1,3 +1,9 @@
+.required-note {
+  font-size: 0.82rem;
+  color: var(--clr-text-muted);
+  margin-bottom: 0.25rem;
+}
+
 /* ===== Already Applied CTA banner ===== */
 .already-applied-bar {
   display: flex;
@@ -6,8 +12,8 @@
   gap: 1rem;
   margin-bottom: 1.1rem;
   padding: 1rem 1.5rem;
-  background: #FFF3E0;
-  border: 2px solid #FF9800;
+  background: #eef2ff;
+  border: 2px solid #6366f1;
   border-radius: var(--radius-sm);
   font-size: 1rem;
   color: var(--clr-text);
@@ -24,7 +30,7 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.5rem 1.2rem;
-  background: #FF9800;
+  background: #6366f1;
   color: #fff;
   font-weight: 700;
   font-size: 0.95rem;
@@ -37,7 +43,7 @@
 }
 
 .already-applied-link:hover {
-  background: #F57C00;
+  background: #4f46e5;
   color: #fff;
   text-decoration: none;
   transform: translateY(-1px);
@@ -49,7 +55,16 @@
   display: flex;
   align-items: center;
   gap: 0;
-  padding: 0.5rem 0 1rem;
+  padding: 0.75rem 0;
+  position: sticky;
+  top: 0;
+  background: var(--clr-card);
+  z-index: 100;
+  border-bottom: 1px solid var(--clr-border);
+  margin: -2rem -2rem 1rem -2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  border-radius: var(--radius) var(--radius) 0 0;
 }
 
 .step-item {
@@ -79,7 +94,7 @@
   background: var(--clr-primary);
   border-color: var(--clr-primary);
   color: #fff;
-  box-shadow: 0 0 0 4px rgba(98, 188, 230, 0.2);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
 }
 
 .step-item.done .step-circle {
@@ -218,7 +233,7 @@ input[type='date']::-webkit-datetime-edit-year-field {
 .form-control:focus,
 .form-select:focus {
   border-color: var(--clr-primary);
-  box-shadow: 0 0 0 3px rgba(98, 188, 230, 0.15);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
   outline: none;
 }
 
@@ -713,4 +728,49 @@ hr.my-4 {
 .passport-example-badge--bad {
   background: #e63946;
   color: #fff;
+}
+
+/* ===== Custom File Upload Widget ===== */
+.file-upload-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+
+.file-upload-wrap.is-invalid {
+  border-color: var(--clr-danger);
+}
+
+.file-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.9rem;
+  background: #fff;
+  color: var(--clr-text);
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
+  margin: 0;
+}
+
+.file-upload-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.file-name-display {
+  font-size: 0.85rem;
+  color: var(--clr-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

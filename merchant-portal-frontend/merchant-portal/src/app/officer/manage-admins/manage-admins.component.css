@@ -80,41 +80,35 @@
   opacity: 0.9;
 }
 
-/* ===== Table Action Buttons ===== */
-.action-btn {
-  padding: 0.3rem 0.9rem;
-  min-width: 85px;
-  text-align: center;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: opacity 0.15s, transform 0.1s;
+/* ===== Table Action Icon Buttons ===== */
+.action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
 }
 
-.action-btn:hover { opacity: 0.82; transform: translateY(-1px); }
-
-.revoke { background: var(--clr-danger-light);  color: var(--clr-danger);  }
-.grant  { background: var(--clr-success-light); color: var(--clr-success); }
-.delete-btn {
+.action-icon-btn {
   width: 2rem;
   height: 2rem;
   padding: 0;
   border: none;
   border-radius: var(--radius-sm);
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   background: transparent;
   color: #94a3b8;
-  margin-left: 0.4rem;
-  transition: opacity 0.15s, transform 0.1s;
+  transition: color 0.15s, transform 0.1s;
 }
 
-.delete-btn:hover { opacity: 0.82; transform: translateY(-1px); }
+.action-icon-btn:hover { transform: translateY(-1px); }
+
+.revoke-icon:hover { color: var(--clr-danger); }
+.grant-icon:hover  { color: var(--clr-success); }
+.delete-icon:hover { color: var(--clr-danger); }
 
 /* Status text colours in table */
 .text-success { color: var(--clr-success) !important; font-weight: 600; }
@@ -124,16 +118,18 @@
 .back-btn {
   display: inline-flex;
   align-items: center;
+  gap: 0.35rem;
   padding: 0.45rem 1.1rem;
-  background: #f1f5f9;
-  color: var(--clr-text);
-  border: 1.5px solid var(--clr-border);
+  background: var(--clr-primary);
+  color: #fff;
+  border: none;
   border-radius: var(--radius-sm);
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s, transform 0.12s;
+  text-decoration: none;
 }
 
-.back-btn:hover  { background: #e2e8f0; transform: translateY(-1px); }
+.back-btn:hover  { background: var(--clr-primary-hover); transform: translateY(-1px); }
 .back-btn:active { transform: translateY(0); }

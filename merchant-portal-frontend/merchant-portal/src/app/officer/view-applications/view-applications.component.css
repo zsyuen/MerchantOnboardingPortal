@@ -21,16 +21,16 @@
   align-items: center;
   gap: 0.35rem;
   padding: 0.4rem 1rem;
-  background: #f1f5f9;
-  color: var(--clr-text);
-  border: 1px solid var(--clr-border);
+  background: var(--clr-primary);
+  color: #fff;
+  border: 1px solid var(--clr-primary);
   border-radius: var(--radius-sm);
   font-size: 0.85rem;
   font-weight: 600;
   text-decoration: none;
-  transition: background 0.15s;
+  transition: background 0.15s, transform 0.12s;
 }
-.btn-back:hover { background: #e2e8f0; }
+.btn-back:hover { background: var(--clr-primary-hover); color: #fff; transform: translateY(-1px); }
 
 /* ===== Card Body ===== */
 .card-body {

@@ -4,6 +4,7 @@ import { MerchantStatusComponent } from './merchant/check-merchant-status/check-
 import { DashboardComponent } from './officer/view-dashboard/view-dashboard.component';
 import { AdminRegisterComponent } from './officer/register-admins/register-admins.component';
 import { ManageAdminsComponent } from './officer/manage-admins/manage-admins.component';
+import { ManageThresholdsComponent } from './officer/manage-thresholds/manage-thresholds.component';
 import { ViewApplicationComponent } from './officer/view-applications/view-applications.component';
 import { LoginComponent } from './officer/login/login.component';
 import { authGuard } from './guards/auth.guard';
@@ -32,6 +33,11 @@ export const routes: Routes = [
     path: 'officer/manage-admins', 
     component: ManageAdminsComponent,
     canActivate: [authGuard, roleGuard]
+  },
+  { 
+    path: 'officer/manage-thresholds', 
+    component: ManageThresholdsComponent,
+    canActivate: [authGuard]
   },
   { 
     path: 'officer/view/:id', 

@@ -91,7 +91,7 @@
 
 .login-container .form-control:focus {
   border-color: var(--clr-primary);
-  box-shadow: 0 0 0 3px rgba(98, 188, 230, 0.15);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
   outline: none;
 }
 
@@ -327,7 +327,7 @@
 
 .login-container .totp-input:focus {
   border-color: var(--clr-primary);
-  box-shadow: 0 0 0 3px rgba(98, 188, 230, 0.15);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
   outline: none;
 }
 
