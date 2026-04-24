@@ -1,12 +1,22 @@
 package com.merchant.portal.service;
 
+import com.merchant.portal.repository.SystemSettingRepository;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class FaceVerificationServiceTest {
 
-    private final FaceVerificationService service = new FaceVerificationService();
+    private final SystemSettingRepository settingRepository = mock(SystemSettingRepository.class);
+    private final FaceVerificationService service = new FaceVerificationService(settingRepository);
+
+    // Default thresholds used when no DB settings exist (HIGH=0.70, MEDIUM=0.55)
+    {
+        when(settingRepository.findBySettingKey(anyString())).thenReturn(Optional.empty());
+    }
 
     @Test
     void getConfidenceLevel_shouldReturnHigh() {

@@ -16,6 +16,7 @@ import ai.djl.translate.TranslatorContext;
 import ai.djl.translate.Batchifier;
 import ai.djl.translate.TranslateException;
 import ai.djl.training.util.ProgressBar;
+import com.merchant.portal.repository.SystemSettingRepository;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -24,8 +25,14 @@ import java.io.IOException;
 @Service
 public class FaceVerificationService {
 
-    private static final double THRESHOLD_HIGH = 0.70;
-    private static final double THRESHOLD_MEDIUM = 0.55;
+    private static final double DEFAULT_THRESHOLD_HIGH = 0.70;
+    private static final double DEFAULT_THRESHOLD_MEDIUM = 0.55;
+
+    private final SystemSettingRepository systemSettingRepository;
+
+    public FaceVerificationService(SystemSettingRepository systemSettingRepository) {
+        this.systemSettingRepository = systemSettingRepository;
+    }
 
     public double compareFaces(byte[] idCardBytes, byte[] selfieBytes) throws IOException, ModelNotFoundException, MalformedModelException, TranslateException {
 
@@ -63,9 +70,18 @@ public class FaceVerificationService {
     }
 
     public String getConfidenceLevel(double score) {
-        if (score >= THRESHOLD_HIGH) return "High";
-        if (score >= THRESHOLD_MEDIUM) return "Medium";
+        double thresholdHigh = getThreshold("THRESHOLD_HIGH", DEFAULT_THRESHOLD_HIGH);
+        double thresholdMedium = getThreshold("THRESHOLD_MEDIUM", DEFAULT_THRESHOLD_MEDIUM);
+
+        if (score >= thresholdHigh) return "High";
+        if (score >= thresholdMedium) return "Medium";
         return "Low";
+    }
+
+    private double getThreshold(String key, double defaultValue) {
+        return systemSettingRepository.findBySettingKey(key)
+                .map(s -> Double.parseDouble(s.getSettingValue()))
+                .orElse(defaultValue);
     }
 
     private double calculateCosineSimilarity(float[] vectorA, float[] vectorB) {

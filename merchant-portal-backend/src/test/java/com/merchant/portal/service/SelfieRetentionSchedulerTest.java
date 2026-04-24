@@ -32,7 +32,7 @@ class SelfieRetentionSchedulerTest {
 
     @Test
     void purgeExpiredSelfies_shouldDoNothingWhenNoExpired() {
-        when(merchantDocumentRepository.findByDocumentTypeAndExpiresAtBefore(eq("SELFIE"), any(LocalDateTime.class)))
+        when(merchantDocumentRepository.findExpiredSelfiesExcludingPending(eq("SELFIE"), any(LocalDateTime.class)))
                 .thenReturn(Collections.emptyList());
 
         scheduler.purgeExpiredSelfies();
@@ -49,7 +49,7 @@ class SelfieRetentionSchedulerTest {
         doc.setDocumentType("SELFIE");
         doc.setExpiresAt(LocalDateTime.now().minusDays(1));
 
-        when(merchantDocumentRepository.findByDocumentTypeAndExpiresAtBefore(eq("SELFIE"), any(LocalDateTime.class)))
+        when(merchantDocumentRepository.findExpiredSelfiesExcludingPending(eq("SELFIE"), any(LocalDateTime.class)))
                 .thenReturn(List.of(doc));
 
         scheduler.purgeExpiredSelfies();
@@ -65,7 +65,7 @@ class SelfieRetentionSchedulerTest {
         MerchantDocument doc2 = new MerchantDocument();
         doc2.setId(UUID.randomUUID());
 
-        when(merchantDocumentRepository.findByDocumentTypeAndExpiresAtBefore(eq("SELFIE"), any(LocalDateTime.class)))
+        when(merchantDocumentRepository.findExpiredSelfiesExcludingPending(eq("SELFIE"), any(LocalDateTime.class)))
                 .thenReturn(List.of(doc1, doc2));
 
         scheduler.purgeExpiredSelfies();

@@ -47,6 +47,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/applications/ref/**").permitAll()
                         // Document viewing — requires JWT (admin only)
                         .requestMatchers(HttpMethod.GET, "/api/documents/**").authenticated()
+                        // Threshold management — only reviewer can update thresholds
+                        .requestMatchers(HttpMethod.PUT, "/api/settings/facial-thresholds").hasRole("reviewer")
+                        // Both admin and reviewer can view thresholds
+                        .requestMatchers(HttpMethod.GET, "/api/settings/facial-thresholds").hasAnyRole("reviewer", "admin")
                         // All other endpoints require a valid JWT token
                         .anyRequest().authenticated()
                 )

@@ -41,10 +41,15 @@ class SelfieRetentionSchedulerIntegrationTest extends BaseIntegrationTest {
 
         String docId = selfieDoc.getId().toString();
 
-        // 2. Create an Application that references this selfie
+        // 2. Create an Application that references this selfie (Approved — not Pending)
         Application app = createTestApplication();
+        app.setStatus("Approved");
         app.setSelfieImage(docId);
         app = applicationRepository.save(app);
+
+        // Link the document back to the application
+        selfieDoc.setApplication(app);
+        selfieDoc = merchantDocumentRepository.save(selfieDoc);
 
         // 3. Run the scheduler
         scheduler.purgeExpiredSelfies();
@@ -95,6 +100,40 @@ class SelfieRetentionSchedulerIntegrationTest extends BaseIntegrationTest {
         // Verify it was NOT deleted (scheduler only targets SELFIE type)
         assertTrue(merchantDocumentRepository.findById(idDoc.getId()).isPresent(),
                 "Non-SELFIE documents should NOT be deleted even if expired");
+    }
+
+    @Test
+    void purgeExpiredSelfies_shouldNotDeleteSelfieForPendingApplication() {
+        // 1. Create an expired selfie document
+        MerchantDocument selfieDoc = new MerchantDocument();
+        selfieDoc.setFileName("pending-selfie.jpg");
+        selfieDoc.setContentType("image/jpeg");
+        selfieDoc.setData(new byte[]{10, 11, 12});
+        selfieDoc.setDocumentType("SELFIE");
+        selfieDoc.setExpiresAt(LocalDateTime.now().minusDays(1)); // expired
+        selfieDoc = merchantDocumentRepository.save(selfieDoc);
+
+        String docId = selfieDoc.getId().toString();
+
+        // 2. Create a Pending application referencing this selfie
+        Application app = createTestApplication();
+        app.setStatus("Pending");
+        app.setSelfieImage(docId);
+        selfieDoc.setApplication(app);
+        app = applicationRepository.save(app);
+        merchantDocumentRepository.save(selfieDoc);
+
+        // 3. Run the scheduler
+        scheduler.purgeExpiredSelfies();
+
+        // 4. Verify selfie was NOT deleted (Pending app must be reviewed first)
+        assertTrue(merchantDocumentRepository.findById(selfieDoc.getId()).isPresent(),
+                "Expired selfie for Pending application should NOT be deleted");
+
+        // 5. Verify application's selfieImage reference is still intact
+        Application updatedApp = applicationRepository.findById(app.getId()).orElseThrow();
+        assertEquals(docId, updatedApp.getSelfieImage(),
+                "Pending application's selfieImage should remain intact");
     }
 
     /**

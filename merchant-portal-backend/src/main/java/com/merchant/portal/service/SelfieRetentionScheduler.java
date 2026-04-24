@@ -3,6 +3,7 @@ package com.merchant.portal.service;
 import com.merchant.portal.model.MerchantDocument;
 import com.merchant.portal.repository.ApplicationRepository;
 import com.merchant.portal.repository.MerchantDocumentRepository;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +29,19 @@ public class SelfieRetentionScheduler {
     }
 
     /**
+     * Runs once immediately when Spring Boot starts.
+     */
+    @PostConstruct
+    public void runOnStartup() {
+        log.info("[SelfieRetention] Running purge on application startup...");
+        purgeExpiredSelfies();
+    }
+
+    /**
      * Runs every day at midnight.
-     * Finds all SELFIE documents whose expiresAt has passed, nulls the selfieImage
-     * reference in the parent Application, then deletes the document row.
+     * Finds all SELFIE documents whose expiresAt has passed, BUT only for
+     * applications that are NOT in "Pending" status (admin must approve/reject first).
+     * Then nulls the selfieImage reference in the parent Application and deletes the document row.
      *
      * Cron: "0 0 0 * * *" = second=0, minute=0, hour=0, every day
      */
@@ -38,7 +49,7 @@ public class SelfieRetentionScheduler {
     @Transactional
     public void purgeExpiredSelfies() {
         List<MerchantDocument> expired =
-                merchantDocumentRepository.findByDocumentTypeAndExpiresAtBefore(SELFIE_TYPE, LocalDateTime.now());
+                merchantDocumentRepository.findExpiredSelfiesExcludingPending(SELFIE_TYPE, LocalDateTime.now());
 
         if (expired.isEmpty()) {
             log.info("[SelfieRetention] No expired selfies found.");
