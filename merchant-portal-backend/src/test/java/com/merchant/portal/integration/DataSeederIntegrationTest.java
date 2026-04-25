@@ -67,13 +67,14 @@ class DataSeederIntegrationTest extends BaseIntegrationTest {
         Role reviewerRole = roleRepository.findByRoleName("reviewer").orElseThrow();
         List<RolePermission> perms = rolePermissionRepository.findByRole(reviewerRole);
 
-        // Reviewer should have both APPROVE_REJECT_APPLICATION and MANAGE_ADMIN_ACCESS
-        assertEquals(2, perms.size());
+        // Reviewer should have APPROVE_REJECT_APPLICATION, MANAGE_ADMIN_ACCESS, and MANAGE_THRESHOLDS
+        assertEquals(3, perms.size());
         List<String> permNames = perms.stream()
                 .map(rp -> rp.getPermission().getPermissionName())
                 .toList();
         assertTrue(permNames.contains("APPROVE_REJECT_APPLICATION"));
         assertTrue(permNames.contains("MANAGE_ADMIN_ACCESS"));
+        assertTrue(permNames.contains("MANAGE_THRESHOLDS"));
     }
 
     @Test
@@ -102,9 +103,10 @@ class DataSeederIntegrationTest extends BaseIntegrationTest {
         User reviewer = userRepository.findByUsername("reviewer").orElseThrow();
         List<String> permissions = userRoleService.getPermissionsForUser(reviewer);
 
-        assertEquals(2, permissions.size());
+        assertEquals(3, permissions.size());
         assertTrue(permissions.contains("APPROVE_REJECT_APPLICATION"));
         assertTrue(permissions.contains("MANAGE_ADMIN_ACCESS"));
+        assertTrue(permissions.contains("MANAGE_THRESHOLDS"));
     }
 
     @Test
