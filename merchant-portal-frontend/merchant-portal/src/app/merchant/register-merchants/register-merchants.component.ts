@@ -589,7 +589,7 @@ export class MerchantRegisterComponent implements OnInit {
   
               canvas.toBlob((blob) => {
                 if (blob) {
-                  const croppedFile = new File([blob], "passport-crop.jpg", { type: "image/jpeg" });
+                  const croppedFile = new File([blob], file.name, { type: "image/jpeg" });
                   control?.setValue(croppedFile);
                   control?.markAsDirty();
                   control?.updateValueAndValidity();
