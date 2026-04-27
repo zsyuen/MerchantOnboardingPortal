@@ -45,8 +45,14 @@ export class ManageThresholdsComponent implements OnInit {
     });
   }
 
+  get isRangeValid(): boolean {
+    const h = +this.thresholdHigh;
+    const m = +this.thresholdMedium;
+    return h >= 0 && h <= 1 && m >= 0 && m <= 1;
+  }
+
   get isValid(): boolean {
-    return +this.thresholdMedium < +this.thresholdHigh;
+    return this.isRangeValid && +this.thresholdMedium < +this.thresholdHigh;
   }
 
   get isDirty(): boolean {
@@ -57,6 +63,32 @@ export class ManageThresholdsComponent implements OnInit {
   onThresholdChange(): void {
     this.successMsg = '';
     this.errorMsg   = '';
+
+    const h = +this.thresholdHigh;
+    const m = +this.thresholdMedium;
+
+    if (isNaN(h) || isNaN(m)) {
+      this.errorMsg = 'Please enter valid numeric values.';
+      return;
+    }
+    if (h < 0 || h > 1 || m < 0 || m > 1) {
+      this.errorMsg = 'Thresholds must be between 0 and 1.';
+      return;
+    }
+    if (m >= h) {
+      this.errorMsg = 'Medium threshold must be lower than High threshold.';
+    }
+  }
+
+  /** Blocks non-numeric keypresses (allows digits, dot, backspace, arrows) */
+  onKeyPress(event: KeyboardEvent): boolean {
+    const allowed = /[\d.]/;
+    if (!allowed.test(event.key) && event.key !== 'Backspace' && event.key !== 'Delete'
+        && !event.key.startsWith('Arrow')) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
   }
 
   resetToDefaults(): void {
