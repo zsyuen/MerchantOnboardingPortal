@@ -76,6 +76,34 @@
   color: var(--clr-primary-hover);
 }
 
+/* ===== View Document Buttons ===== */
+.btn-view-doc {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  background: #f1f5f9;
+  color: var(--clr-primary);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.12s;
+  white-space: nowrap;
+}
+
+.btn-view-doc:hover {
+  background: var(--clr-primary-light, #e0e7ff);
+  border-color: var(--clr-primary);
+  color: var(--clr-primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-view-doc i {
+  font-size: 0.95rem;
+}
+
 /* ===== Sticky Action Bar ===== */
 .sticky-action-bar {
   position: fixed;
