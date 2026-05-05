@@ -3,8 +3,9 @@ package com.merchant.portal.service;
 import com.merchant.portal.model.MerchantDocument;
 import com.merchant.portal.repository.ApplicationRepository;
 import com.merchant.portal.repository.MerchantDocumentRepository;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,9 +30,10 @@ public class SelfieRetentionScheduler {
     }
 
     /**
-     * Runs once immediately when Spring Boot starts.
+     * Runs once immediately after Spring Boot fully starts (all proxies ready).
      */
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
+    @Transactional
     public void runOnStartup() {
         log.info("[SelfieRetention] Running purge on application startup...");
         purgeExpiredSelfies();
