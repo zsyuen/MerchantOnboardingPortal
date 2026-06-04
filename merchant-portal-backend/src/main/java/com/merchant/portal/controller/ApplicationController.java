@@ -1,10 +1,8 @@
 package com.merchant.portal.controller;
 
 import com.merchant.portal.model.Application;
-import com.merchant.portal.repository.ApplicationRepository;
 import com.merchant.portal.service.ApplicationService;
 import com.merchant.portal.service.FileStorageService;
-import com.merchant.portal.service.MerchantAiService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,21 +23,13 @@ public class ApplicationController {
 
     private static final Logger log = LoggerFactory.getLogger(ApplicationController.class);
     private final ApplicationService applicationService;
-    private final ApplicationRepository applicationRepository;
     private final FileStorageService fileStorageService;
     private final FaceVerificationService faceVerificationService;
-    private final MerchantAiService merchantAiService;
 
-    public ApplicationController(ApplicationService applicationService,
-                                 ApplicationRepository applicationRepository,
-                                 FileStorageService fileStorageService,
-                                 FaceVerificationService faceVerificationService,
-                                 MerchantAiService merchantAiService) {
+    public ApplicationController(ApplicationService applicationService, FileStorageService fileStorageService, FaceVerificationService faceVerificationService) {
         this.applicationService = applicationService;
-        this.applicationRepository = applicationRepository;
         this.fileStorageService = fileStorageService;
         this.faceVerificationService = faceVerificationService;
-        this.merchantAiService = merchantAiService;
     }
 
     // Handle form data
@@ -204,27 +194,6 @@ public class ApplicationController {
         } catch (EntityNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Application not found with ID: " + id);
-        }
-    }
-
-    @PostMapping(value = "/{id}/analyze", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<?> analyzeApplication(@PathVariable Long id) {
-        try {
-            Application application = applicationRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("Application not found with ID: " + id));
-
-            double faceMatchScore = application.getFacialSimilarityScore() != null
-                    ? application.getFacialSimilarityScore()
-                    : 0.0d;
-
-            String analysis = merchantAiService.analyzeMerchantApplication(application, faceMatchScore);
-            return ResponseEntity.ok(analysis);
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (Exception ex) {
-            log.error("Failed to analyze application {}", id, ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to analyze application: " + ex.getMessage());
         }
     }
 
