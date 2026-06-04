@@ -1,59 +1,61 @@
-# MerchantPortal
+# Merchant Onboarding Portal
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.3.
+## Project Overview
+The Merchant Onboarding Portal is a full-stack application designed to manage the merchant onboarding process. It enables merchants to submit applications and allows bank officers to log in, view/manage applications, manage admins and configure facial recognition thresholds.
 
-## Development server
+## Technology Stack Used
+- **Frontend:** Angular 20, TypeScript, WebGL/FaMediaPipe (for face detection/landmarks), QRCode.
+- **Backend:** Java 21, Spring Boot 3.5.5 (Spring Web, Spring Data JPA, Validation).
+- **Database:** PostgreSQL.
+- **Additional Tools:** SMTP4Dev (for local mock email delivery).
 
-To start a local development server, run:
+## Prerequisites and Required Software
+- **Node.js & npm**
+- **Angular CLI** (`npm install -g @angular/cli`)
+- **Java Development Kit (JDK) 21**
+- **Maven** (or use the provided `mvnw` wrapper in the backend directory)
+- **PostgreSQL** (running on default port 5432)
+- **SMTP4Dev** (running locally on port 25)
+- **Authenticator App** (e.g., Google Authenticator, Microsoft Authenticator, Authy) on your mobile device for Bank Officer Two-Factor Authentication (2FA) login.
 
-```bash
-ng serve
-```
+## Database Setup
+1. Ensure your local PostgreSQL server is running.
+2. Create a new database named `merchantdb`.
+3. The backend expects the following credentials by default in `application.properties`:
+   *(Update `merchant-portal-backend/src/main/resources/application.properties` if your credentials differ).*
+4. The database tables will be automatically generated upon starting the backend application, as Hibernate is configured to `update` the schema.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Setup and Installation Steps
 
-## Code scaffolding
+### Backend
+1. Open a terminal and navigate to the `merchant-portal-backend` directory.
+2. Download dependencies and build the project:
+   ```bash
+   ./mvnw clean install
+   ```
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Frontend
+1. Open a terminal and navigate to the `merchant-portal-frontend/merchant-portal` directory.
+2. Install the necessary Node modules:
+   ```bash
+   npm install
+   ```
 
-```bash
-ng generate component component-name
-```
+## How to Run the Application
+1. Ensure your **PostgreSQL** database and **SMTP4Dev** are actively running.
+2. Start the **backend** application:
+   ```bash
+   cd merchant-portal-backend
+   ./mvnw spring-boot:run
+   ```
+   *The backend will run on `http://localhost:8080`.*
+3. Start the **frontend** development server:
+   ```bash
+   cd merchant-portal-frontend/merchant-portal
+   npm start
+   ```
+4. Access the web interface by navigating to `http://localhost:4200/` in your browser.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Important Notes & Known Limitations
+- **Face Landmark Models:** The frontend utilizes facial recognition models stored in `public/assets/models/`. These paths must not be altered, or the `face-api.js` integration will fail.
+- **Email Server:** SMTP4Dev must be running on port 25 to capture system emails. Otherwise, backend registration/notification flows might encounter connection errors.
