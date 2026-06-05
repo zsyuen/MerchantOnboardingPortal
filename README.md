@@ -4,7 +4,7 @@
 The Merchant Onboarding Portal is a full-stack application designed to manage the merchant onboarding process. It enables merchants to submit applications and allows bank officers to log in, view/manage applications, manage admins and configure facial recognition thresholds.
 
 ## Technology Stack Used
-- **Frontend:** Angular 20, TypeScript, WebGL/FaMediaPipe (for face detection/landmarks), QRCode.
+- **Frontend:** Angular 20, TypeScript, MediaPipe (for face detection/landmarks).
 - **Backend:** Java 21, Spring Boot 3.5.5 (Spring Web, Spring Data JPA, Validation).
 - **Database:** PostgreSQL.
 - **Additional Tools:** SMTP4Dev (for local mock email delivery).
@@ -57,5 +57,6 @@ The Merchant Onboarding Portal is a full-stack application designed to manage th
 4. Access the web interface by navigating to `http://localhost:4200/` in your browser.
 
 ## Important Notes & Known Limitations
-- **Face Landmark Models:** The frontend utilizes facial recognition models stored in `public/assets/models/`. These paths must not be altered, or the `face-api.js` integration will fail.
+- **Frontend Face Models:** The frontend utilizes MediaPipe face landmarker models which are obtained dynamically from Google Cloud Storage.
+- **Backend Face Models:** The backend utilizes a PyTorch Facenet model stored in public/assets/models/. These paths must not be altered, or the facial feature extraction will fail.
 - **Email Server:** SMTP4Dev must be running on port 25 to capture system emails. Otherwise, backend registration/notification flows might encounter connection errors.
