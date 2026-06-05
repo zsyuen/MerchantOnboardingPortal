@@ -1,66 +1,61 @@
-# Merchant Onboarding Portal (Angular + Spring Boot)
+# Merchant Onboarding Portal
 
-A full-stack web app for merchant onboarding:
-Frontend: Angular standalone components, Reactive Forms, centralised HTTP service.
-Backend: Spring Boot REST API with resource-oriented endpoints and server-side defaults (reference ID, submission date, initial status).
-DB: PostgreSQL (configurable).
+## Project Overview
+The Merchant Onboarding Portal is a full-stack application designed to manage the merchant onboarding process. It enables merchants to submit applications and allows bank officers to log in, view/manage applications, manage admins and configure facial recognition thresholds.
 
-## Features
-Merchant submission form.\
-Status lookup by reference ID.\
-Officer dashboard.\
-Server-generated referenceId and timestamps.
+## Technology Stack Used
+- **Frontend:** Angular 20, TypeScript, WebGL/FaMediaPipe (for face detection/landmarks), QRCode.
+- **Backend:** Java 21, Spring Boot 3.5.5 (Spring Web, Spring Data JPA, Validation).
+- **Database:** PostgreSQL.
+- **Additional Tools:** SMTP4Dev (for local mock email delivery).
 
-## Tech Stack
-Frontend: Angular 15+ (standalone), RxJS, Bootstrap.\
-Backend: Java 17+, Spring Boot (Web, Data JPA), PostgreSQL.\
-Build/Run: Angular CLI, Maven.
+## Prerequisites and Required Software
+- **Node.js & npm**
+- **Angular CLI** (`npm install -g @angular/cli`)
+- **Java Development Kit (JDK) 21**
+- **Maven** (or use the provided `mvnw` wrapper in the backend directory)
+- **PostgreSQL** (running on default port 5432)
+- **SMTP4Dev** (running locally on port 25)
+- **Authenticator App** (e.g., Google Authenticator, Microsoft Authenticator, Authy) on your mobile device for Bank Officer Two-Factor Authentication (2FA) login.
 
-## Prerequisites
-Node 18+ and Angular CLI\
-JDK 17+ and Maven\
-PostgreSQL
+## Database Setup
+1. Ensure your local PostgreSQL server is running.
+2. Create a new database named `merchantdb`.
+3. The backend expects the following credentials by default in `application.properties`:
+   *(Update `merchant-portal-backend/src/main/resources/application.properties` if your credentials differ).*
+4. The database tables will be automatically generated upon starting the backend application, as Hibernate is configured to `update` the schema.
 
-## Setup
-### 1) Backend setup
-cd merchant-portal-backend\
-#application.properties (example)\
-#src/main/resources/application.properties\
-#-----------------------------------------\
-#spring.datasource.url=jdbc:postgresql://localhost:5432/merchantdb\
-#spring.datasource.username=postgres\
-#spring.datasource.password=system\
-#spring.jpa.hibernate.ddl-auto=update\
-#server.port=8080\
-mvn spring-boot:run\
-
-Key endpoints (base: http://localhost:8080/api) \
-POST /applications → create application\
-GET /applications → list applications\
-GET /applications/by-ref?refId=...\
-GET /applications/by-status?status=...\
-PUT /applications/{id} / DELETE /applications/{id}\
-The controller applies defaults (e.g., referenceId via ApplicationIdGenerator.generateId(), submissionDate, and status="SUBMITTED").
-
-### 2) Frontend setup
-cd merchant-portal-frontend/merchant-portal\
-#src/environments/environment.ts (example)\
-#-----------------------------------------\
-#export const environment = {\
-#production: false,\
-#apiBase: 'http://localhost:8080/api'\
-#};\
-npm install\
-ng serve\
-#open http://localhost:4200
-
-## Project Structure
-<img width="504" height="426" alt="image" src="https://github.com/user-attachments/assets/eeaa424b-2997-4031-9dd6-c6dabd15225b" />
-
-
-## NPM / Maven Scripts
-### Frontend
-ng serve – dev server at :4200
+## Setup and Installation Steps
 
 ### Backend
-mvn spring-boot:run – run API at :8080
+1. Open a terminal and navigate to the `merchant-portal-backend` directory.
+2. Download dependencies and build the project:
+   ```bash
+   ./mvnw clean install
+   ```
+
+### Frontend
+1. Open a terminal and navigate to the `merchant-portal-frontend` directory.
+2. Install the necessary Node modules:
+   ```bash
+   npm install
+   ```
+
+## How to Run the Application
+1. Ensure your **PostgreSQL** database and **SMTP4Dev** are actively running.
+2. Start the **backend** application:
+   ```bash
+   cd merchant-portal-backend
+   ./mvnw spring-boot:run
+   ```
+   *The backend will run on `http://localhost:8080`.*
+3. Start the **frontend** development server:
+   ```bash
+   cd merchant-portal-frontend
+   npm start
+   ```
+4. Access the web interface by navigating to `http://localhost:4200/` in your browser.
+
+## Important Notes & Known Limitations
+- **Face Landmark Models:** The frontend utilizes facial recognition models stored in `public/assets/models/`. These paths must not be altered, or the `face-api.js` integration will fail.
+- **Email Server:** SMTP4Dev must be running on port 25 to capture system emails. Otherwise, backend registration/notification flows might encounter connection errors.
